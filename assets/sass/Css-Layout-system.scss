@@ -1,0 +1,84 @@
+///////////////////////////
+// Global level variables
+///////////////////////////
+$layout__gutter: 10px !global;
+$layout__columns: 12 !global;
+$responsive__margins__ratio: 2px !global;
+$responsive__paddings__ratio: 2px !global;
+
+
+
+
+///////////////////////////
+// Global level styles
+///////////////////////////
+html {
+    box-sizing: border-box;
+  }
+  
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
+
+///////////////////////////
+// Global level functions
+///////////////////////////
+
+// Set layout item width
+@function layout--item--width($columns, $span, $full) {
+    @if $full == false { @return calc(((100% - (#{$layout__gutter} * 2) * #{$columns}) / #{$layout__columns}) * #{$span});}
+    @if $full == true { @return calc(((100% ) / #{$layout__columns}) * #{$span});}
+    
+  }
+
+
+
+///////////////////////////
+// CSS Layout System Mixins
+///////////////////////////
+
+// Clear fix mixin
+  @mixin clearfix {
+    &:after {
+      display: block;
+      clear: both;
+      content: '';
+    }
+  }
+
+//layout container mixin
+@mixin layout--container {
+    max-width: 1140px;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+    overflow: visible;
+    @include clearfix;
+  }
+
+//layout item mixin
+@mixin layout--item {
+    
+    margin-right: $layout__gutter;
+    margin-left: $layout__gutter;
+    display: inline-block;
+    vertical-align: top;
+}
+//layout Horizontal centred
+@mixin H-centred {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// Set layout item offset
+@mixin layout--item--offset($columns, $offset) {
+   margin-left: calc(((100% - (#{$layout__gutter} * 2) * #{$columns}) / #{$layout__columns}) * #{$offset}) !important;
+}
+
+
+
+
+
