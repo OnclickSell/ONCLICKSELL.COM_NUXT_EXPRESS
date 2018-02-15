@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Onclicksell.com
 
 > My perfect Nuxt.js project
@@ -20,3 +21,6 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+=======
+# ONCLICKSELL.COM_NUXT_EXPRESS
+>>>>>>> cf13803bb3165e3453c253965f641955f0eec733

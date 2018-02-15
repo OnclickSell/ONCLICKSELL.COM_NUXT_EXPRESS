@@ -1,11 +1,14 @@
 
 
 const authModel = require('../models/auth');
-const validator = require('../../validators/check');
+// const validator = require('../../validators/check');
 const tokener = require('../../packages/token');
 const response = require('../../packages/response');
 const bcrypt = require('bcrypt');
 const wrapAsync = require('../../packages/wrapAsync')
+const validators = require('../../packages/validator')
+let validator = require('../../packages/validator');
+validator = new validator()
 
 
 
@@ -21,20 +24,23 @@ const wrapAsync = require('../../packages/wrapAsync')
 */
 
 exports.signIn = wrapAsync(async function(req, res, next) {
-    await validator.check(req.body, [
-        {
-            field: 'email',
-            rules: 'required|email|min:3'
-        },
-        {
-            field: 'password',
-            rules: 'required'
-        }
-    ])
+    try {
+        await validator.validate({
+            email: ['required', 'email'],
+            password: ['required', 'password']
+          }, req.body)
+
+    } catch (err) {
+        response.E404(req, res, {error: err})
+    }
+    
 
     try {
         const user = await authModel.signIn(req)
-        await bcrypt.compare(req.body.password, user[0].password)
+        const check = await bcrypt.compare(req.body.password, user[0].password)
+        if (!check) {
+            throw Error('Invalid credentials')
+        }
         const token = await tokener.issueToken(user[0].id)
         response.E200(req, res, {user: user[0], token: token})   
 
@@ -59,28 +65,17 @@ exports.signIn = wrapAsync(async function(req, res, next) {
 
 exports.signUp = wrapAsync( async (req, res, next) => {
 
-    await validator.check(req.body, [
-        {
-            field: 'full_name',
-            rules: 'required|min:2|max:75'
-        }
-        // {
-        //     field: 'age',
-        //     rules: 'required'
-        // },
-        // {
-        //     field: 'sex',
-        //     rules: 'required'
-        // },
-        // {
-        //     field: 'email',
-        //     rules: 'required|email'
-        // },
-        // {
-        //     field: 'password',
-        //     rules: 'required|min:8|max:128|password'
-        // }
-    ])
+    try {
+        await validator.validate({
+            email: ['required', 'email'],
+            password: ['required', 'password'],
+            full_name: ['required', 'min:35', 'max:80'],
+            sex: ['required', 'min:4', 'max:6']
+          }, req.body)
+
+    } catch (err) {
+        response.E404(req, res, {error: err})
+    }
 
     try {
         const user = await authModel.signUp(req, next)

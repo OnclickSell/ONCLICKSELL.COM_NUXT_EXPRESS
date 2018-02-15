@@ -4,14 +4,14 @@
         <div class='l-login'>
             <div class='login'>
                 <div class='l-login__inputs'>
-                    <!-- <os-input--tooltip v-show="errors.has('email')" top='300'>
+                    <os-input--tooltip v-show="errors.has('email')" top='300'>
                         <h6 slot="title">{{errors.first('email')}}</h6>
                         <p slot="description">{{errors.first('email')}}</p>
-                    </os-input--tooltip> -->
+                    </os-input--tooltip>
                     <input class='login__input' v-validate="'required|email'" v-model="credentials.email" type='text' name='email' placeholder="Email Address">
-                    <p>{{errors.first('email')}}</p>
+                    <!-- <p>{{errors.first('email')}}</p> -->
                     <input class='login__input' v-validate="'required'"  v-model="credentials.password" type='password' name='password' placeholder="Password">
-                    <p>{{errors.first('password')}}</p>
+                    <!-- <p>{{errors.first('password')}}</p> -->
                     <button class='login__button' @click="logIn" v-if="!loading">Login</button>
                     <span class='login__icon--arrow'>Icon</span>
                 </div>
@@ -28,7 +28,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-// import InputTooltip from '@/components/others/input--tooltip.vue'
+import InputTooltip from '@/components/others/input--tooltip.vue'
 
 export default {
   layout: 'main--layout',
@@ -50,10 +50,10 @@ export default {
     logIn () {
       this.$store.dispatch('authentication/logIn', this.credentials)
     }
+  },
+  components: {
+      'os-input--tooltip': InputTooltip
   }
-//   components: {
-//       'os-input--tooltip': InputTooltip
-//   }
 }
 </script>
 

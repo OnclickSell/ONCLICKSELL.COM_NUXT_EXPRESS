@@ -9,6 +9,9 @@ const wrapAsync = require('../../packages/wrapAsync')
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 const auth = require('../../packages/auth');
+let validator = require('../../packages/validator');
+validator = new validator()
+
 
 
 
@@ -27,6 +30,25 @@ router.get('/', wrapAsync(async function(req, res) {
     // Async error!
     throw Error('woops');
   }));
+
+router.post('/validate', (req, res, next) => {
+
+
+  validator.validate({
+      email: ['required', 'email'],
+      password: ['required', 'password']
+    }, req.body).then(value => {
+      res.status(200).json({
+        message: 'passed'
+      })
+    })
+    .catch(error => {
+      res.status(400).json({
+        message: error
+      })
+    })
+
+})
 
 
 module.exports = router;

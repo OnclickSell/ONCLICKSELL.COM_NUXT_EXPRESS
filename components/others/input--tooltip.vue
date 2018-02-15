@@ -27,6 +27,7 @@ export default {
 
 .input--tooltip {
     width: 280px;
+    height: 130px;
     background-color: #FFFFFF;
     border: 1px solid #eee;
     border-radius: 3px;
