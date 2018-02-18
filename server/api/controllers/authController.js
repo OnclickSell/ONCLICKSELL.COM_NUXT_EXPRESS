@@ -45,8 +45,7 @@ exports.signIn = wrapAsync(async function(req, res, next) {
         response.E200(req, res, {user: user[0], token: token})   
 
     }catch(err) {
-        console.log(err + ' From AuthController')
-        throw Error(err)
+        throw err
     }
 
     throw Error('woops')
@@ -69,7 +68,7 @@ exports.signUp = wrapAsync( async (req, res, next) => {
         await validator.validate({
             email: ['required', 'email'],
             password: ['required', 'password'],
-            full_name: ['required', 'min:35', 'max:80'],
+            full_name: ['required', 'min:5', 'max:80'],
             sex: ['required', 'min:4', 'max:6']
           }, req.body)
 
@@ -82,11 +81,8 @@ exports.signUp = wrapAsync( async (req, res, next) => {
         const token = await tokener.issueToken(user[0].id)
         response.E200(req, res, {user: user[0], token: token})
     } catch(err) {
-        console.log(err + ' From AuthController')
         throw err
     }
-
-    throw Error('woops')
 })
 
 /*
@@ -100,52 +96,23 @@ exports.signUp = wrapAsync( async (req, res, next) => {
 |
 */
 
-exports.emailCheck = (req, res, next) => {
+exports.emailCheck = wrapAsync( async (req, res, next) => {
 
-    return validator.check(req.body, [
-    ],
-    function(result) {
-        if(result.length > 10) {
-            res.status(400).json({
-                status: 'Failed',
-                code: 400,
-                messgage: "The provided email address already exists",
-                result: {
-                    email: req.query.email
-                }
-            })
-        } else {
-            return authModel.emailCheck(req.query.email, (err, value) => {
-                if(err) {
-                    res.status(500).json({
-                        status: 'Error',
-                        code: 500,
-                        messgage: "Something went wrong on the server. Try again",
-                        result: []
-                    })
-                } else {
-                    console.log(value.length)
-                    if (value.length !== 0) {
-                        res.status(400).json({
-                            status: 'Failed',
-                            code: 400,
-                            messgage: "The provided email address already exists",
-                            result: {
-                                email: req.query.email
-                            }
-                        })
-                    } else {
-                        res.status(200).json({
-                            status: "OK",
-                            code: 200,
-                            messgage: 'The email address is valid',
-                            result: {
-                                email: req.query.email
-                            }
-                        })
-                    }
-                }
-            })
-        }
-    })
-}
+    try {
+        await validator.validate({
+            email: ['required', 'email']
+          }, req.body)
+
+    } catch (err) {
+        response.E404(req, res, {error: err})
+    }
+
+    
+    try {
+        const email = await authModel.emailCheck(req.body.email)        
+        response.E200(req, res, {user: 'email is unique'})
+    } catch(err) {
+        throw err
+    }
+
+})

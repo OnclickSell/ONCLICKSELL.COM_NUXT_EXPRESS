@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary');
 const create_avatar = require('../../packages/detect_profile')
 const auth = require('../../packages/auth');
 const response = require('../../packages/response');
+const wrapAsync = require('../../packages/wrapAsync')
 const fs = require('fs');
 cloudinary.config({ 
     cloud_name: 'onclicksell-com', 
@@ -95,12 +96,15 @@ exports.get_single_user = (req, res, next) => {
 |
 */
 
-exports.get_auth_user = (req, res, next) => {
+exports.get_auth_user = wrapAsync( async (req, res, next) => {
 
-    return userModel.get_auth_user(2)
-    .then(result => response.E200(req, res, result))
-    .catch(err => response.E400(req, res, err))
-}
+    try {
+        const authUser = await userModel.get_auth_user(req)
+        response.E200(req, res, authUser)
+    }catch(err) {
+        throw Error(err)
+    }
+})
 
 /*
 |--------------------------------------------------------------------------

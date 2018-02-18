@@ -16,7 +16,9 @@ import Cookie from 'js-cookie'
 */
 
 
-const getExpirationDate = new Date().getTime() + 3.6e+6
+const getExpirationDate = (expiresIn) => {
+  return new Date().getTime() + expiresIn
+}
 
 
 
@@ -30,7 +32,8 @@ const getExpirationDate = new Date().getTime() + 3.6e+6
 */
 export const state = () => ({
   user: {},
-  token: null
+  token: null,
+  tokenExpiration: null
 })
 
 /*
@@ -60,10 +63,15 @@ export const plugins = [
 export const mutations = {
   setAuthUser (state, payload) {
     state.user = payload
+    Cookie.set('authUser', payload)
   },
   setToken (state, payload) {
     state.token = payload
-    state.tokenExpiration = getExpirationDate
+    Cookie.set('token', payload)
+  },
+  setTokenExpiration (state, payload) {
+    state.tokenExpiration = getExpirationDate(3600000)
+    Cookie.set('tokenExpiration', getExpirationDate(3600000))
   },
   persistToken (state, payload) {
     localStorage.setItem('token', payload)
@@ -75,8 +83,12 @@ export const mutations = {
     state.token = null
     Cookie.remove('token')
     Cookie.remove('tokenExpiration')
-    localStorage.removeItem('token')
-    localStorage.removeItem('tokenExpiration')
+    axios.setHeader('Authorization', null)
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('tokenExpiration')
+  },
+  clearAuthUser(state) {
+    state.user = null
   }
 }
 
@@ -99,7 +111,7 @@ export const actions = {
       .then(response => {
         commit('setAuthUser', response.data.Context.user)
         commit('setToken', response.data.Context.token)
-        commit('persistToken', response.data.Context.token)
+        commit('setTokenExpiration')
       })
       .catch(error => {
         console.log(error)
@@ -108,9 +120,9 @@ export const actions = {
   signUp ({commit, state}, data) {
     axios.post('/auth/signUp', data)
       .then(response => {
-        commit('setAuthUser', response.data)
-        commit('setToken', response.data)
-        commit('persistToken', response.data)
+        commit('setAuthUser', response.data.Context.user)
+        commit('setToken', response.data.Context.token)
+        commit('setTokenExpiration')
         this.$router.push('/register/preview')
       })
       .then(error => {
@@ -119,35 +131,45 @@ export const actions = {
   },
   logOut ({commit, state}, vuexContext) {
     commit('clearToken')
+    commit('clearAuthUser')
   },
   fetchAuthUser ({commit, state}, vuexContext) {
     return axios.get('/users')
       .then(response => {
-        commit('setAuthUser', response.data.Context[0])
+        console.log('Fetching the user')
+        commit('setAuthUser', response.data.Context)
       })
       .catch(error => {
         console.log(error)
       })
   },
   initAuth(vuexContext, req) {
-    if(req) {
+    if(process.server) {
       if(!req.headers.cookie) {
+        console.log('faild twice')
         return
       }
 
       token = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[1]
       tokenExpiration = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[2]
-
+      console.log(req.headers+ ' From authenticatino store')
+      // authUser = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[3]
+      if(process.isClient) {
+        console.log('I found it out')
+      }
     } else {
-      token = localStorage.getItem('token')
-      tokenExpiration = localStorage.getItem('tokenExpiration')
+      token = vuexContext.state.token
+      tokenExpiration = vuexContext.state.tokenExpiration
     }
 
-    if(new Date().getTime() > tokenExpiration || !token) {
-        vuexContext.commit('clearToken')
-        return
+    if (new Date().getTime() > +tokenExpiration || !token) {
+      console.log("No token or invalid token");
+      vuexContext.dispatch("logOut");
+      return;
     }
-      vuexContext.commit('setToken', token)
+    vuexContext.commit('setToken', token)
+    // Cookie.set('authUser', authUser)
+    vuexContext.state.tokenExpiration = tokenExpiration
   },
   updateUser ({commit, state}, data) {
     axios.put('/users', data)

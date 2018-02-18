@@ -4,14 +4,26 @@
         <div class='l-login'>
             <div class='login'>
                 <div class='l-login__inputs'>
-                    <os-input--tooltip v-show="errors.has('email')" top='300'>
-                        <h6 slot="title">{{errors.first('email')}}</h6>
-                        <p slot="description">{{errors.first('email')}}</p>
-                    </os-input--tooltip>
-                    <input class='login__input' v-validate="'required|email'" v-model="credentials.email" type='text' name='email' placeholder="Email Address">
-                    <!-- <p>{{errors.first('email')}}</p> -->
-                    <input class='login__input' v-validate="'required'"  v-model="credentials.password" type='password' name='password' placeholder="Password">
-                    <!-- <p>{{errors.first('password')}}</p> -->
+                    <os-input 
+                      v-model="credentials.email"
+                      InputType='email'
+                      v-validate="'required|email'"
+                      InputName='password'
+                      data-vv-value-path="innerValue"
+                      data-vv-name="email"
+                      InputHolder="Your Email Address"
+                      :InputError="errors.first('email')"
+                      :tooltip="{position: 'right', distance: 260}"/>
+                    <os-input 
+                      v-model="credentials.password"
+                      InputType='password'
+                      v-validate="'required'"
+                      InputName='password'
+                      data-vv-value-path="innerValue"
+                      data-vv-name="password"
+                      InputHolder="Your password"
+                      :InputError="errors.first('password')"
+                      :tooltip="{position: 'top', distance: 20}"/>
                     <button class='login__button' @click="logIn" v-if="!loading">Login</button>
                     <span class='login__icon--arrow'>Icon</span>
                 </div>
@@ -28,7 +40,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import InputTooltip from '@/components/others/input--tooltip.vue'
+import FromInput from '@/components/form/input.vue'
 
 export default {
   layout: 'main--layout',
@@ -48,11 +60,15 @@ export default {
   },
   methods: {
     logIn () {
-      this.$store.dispatch('authentication/logIn', this.credentials)
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+          this.$store.dispatch('authentication/logIn', this.credentials)
+        }
+      })
     }
   },
   components: {
-      'os-input--tooltip': InputTooltip
+      'os-input': FromInput
   }
 }
 </script>
@@ -101,17 +117,6 @@ export default {
         border-radius: 4px 0 0 4px;
         padding: 80px 50px;
     }
-}
-
-.login__input {
-    border: 3px;
-    border-radius: 3px;
-    background-color: rgba($color: #ffffff, $alpha: 1.0);
-    padding: 10px 5px;
-    color: #666666;
-    margin: 10px auto 0 auto;
-    width: 250px;
-    display: block;
 }
 
 .login__button {

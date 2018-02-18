@@ -2,12 +2,12 @@
     <div>
 
          <div class='l-register'>
-            <div>{{user[0].profile_picture}}</div>
-            <div>{{user[0].full_name}}</div>
-            <div>{{user[0].email}}</div>
-            <div>{{user[0].description}}</div>
-            <div>{{user[0].age}}</div>
-            <div>{{user[0].sex}}</div>
+             <img :src="user.profile_picture" width="200px" height="200px" :alt="user.full_name"/>
+            <div>{{user.full_name}}</div>
+            <div>{{user.email}}</div>
+            <div>{{user.description}}</div>
+            <div>{{user.age}}</div>
+            <div>{{user.sex}}</div>
             <button @click="skip">Skip</button>
             <button @click="update" :disabled="isUpdateOn">Update</button>
         </div>            
@@ -20,14 +20,14 @@ import { mapGetters, mapActions } from 'vuex'
 import Hamburger from '@/assets/icons/hamburger.vue'
 
 export default {
-  async fetch ({ store, params }) {
-      if(store.state.authentication.token) {
-          return
-      }
-    await store.dispatch('authentication/fetchAuthUser')
-  },
+//   async fetch ({ store, params }) {
+//       if(store.state.authentication.token) {
+//           return
+//       }
+//     await store.dispatch('authentication/fetchAuthUser')
+//   },
   layout: 'main--layout',
-//   middleware: 'notAuth',
+   middleware: 'checkAuth',
   data () {
     return {
       details: {

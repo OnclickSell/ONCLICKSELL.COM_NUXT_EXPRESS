@@ -15,17 +15,69 @@
                     <span class='register__email--or'>OR</span>
                     <div class='register__inputs'>
                         <h3 class='register__inputs--heading'>Create a New Account</h3>
-                        <input class='register__input' v-model="details.full_name" type='text' name='username' placeholder="Full Name"/>
-                        <input class='register__input' v-model="details.email" type='email' name='email' placeholder="Email Address"/>
-                        Male
-                        <input class='register__input' v-model="details.sex" type='radio' name='sex' value="male"/>
-                        Female
-                        <input class='register__input' v-model="details.sex" type='radio' name='sex' value='female'/>
-                        <!-- <os-input--tooltip top='300'/> -->
-                        <input class='register__input' v-model="details.password" type='password' name='password' placeholder="Password"/>
-                        <input class='register__input' v-model="details.confrimPassword" type='password' name='confirm-password' placeholder="Confirm Password"/>
-                        <!-- <p class='register__terms'>by clicking you agree to our  Privacy Policy and Terms & conditions.</p> -->
-                        <button class='register__button' v-if="!loading" @click="signUp(details)">Register</button>
+                        <os-input 
+                            v-model="details.full_name"
+                            InputType='full_name'
+                            v-validate="'required'"
+                            InputName='full_name'
+                            data-vv-value-path="innerValue"
+                            data-vv-name="full_name"
+                            InputHolder="Your full name e.g Jogn Smith"
+                            :InputError="errors.first('full_name')"
+                            :tooltip="{position: 'right', distance: 260}"/>
+                        <os-input 
+                            v-model="details.email"
+                            InputType='email'
+                            v-validate="'required|email|unique'"
+                            InputName='email'
+                            data-vv-value-path="innerValue"
+                            data-vv-name="email"
+                            InputHolder="Your email e.g JognSmith@example.com"
+                            :InputError="errors.first('email')"
+                            :tooltip="{position: 'right', distance: 260}"/>    
+                        <os-radio 
+                            v-model="details.sex"
+                            v-validate="'required|in:male,female'"
+                            InputName='sex'
+                            data-vv-value-path="innerValue"
+                            data-vv-name="sex"
+                            InputHolder="Male"
+                            InputValue="male"
+                            :InputDefault="true"
+                            :InputError="errors.first('sex')"
+                            :tooltip="{position: 'right', distance: 260}"/>    
+                        <os-radio 
+                            v-model="details.sex"
+                            InputName='sex'
+                            data-vv-value-path="innerValue"
+                            data-vv-name="sex"
+                            InputHolder="Female"
+                            InputValue="female"
+                            :InputError="errors.first('sex')"
+                            :tooltip="{position: 'right', distance: 260}"/>    
+                            
+                        <os-input 
+                            v-model="details.password"
+                            InputType='password'
+                            v-validate="'required'"
+                            InputName='password'
+                            data-vv-value-path="innerValue"
+                            data-vv-name="password"
+                            ref="password"
+                            InputHolder="Your password e.g *********"
+                            :InputError="errors.first('password')"
+                            :tooltip="{position: 'right', distance: 260}"/>
+                        <os-input 
+                            v-model="details.password_confirm"
+                            InputType='password'
+                            v-validate="'required|confirmed:password'"
+                            InputName='password_confirm'
+                            data-vv-value-path="innerValue"
+                            data-vv-name="password_confirm"
+                            InputHolder="Re-enter your password"
+                            :InputError="errors.first('password_confirm')"
+                            :tooltip="{position: 'right', distance: 260}"/>
+                        <button class='register__button' v-if="!loading" @click="signUp">Register</button>
                     </div>
 
                 </div>
@@ -36,9 +88,40 @@
     </div>         
 </template>
 <script>
-import InputTooltip from '@/components/others/input--tooltip.vue'
 import { mapGetters, mapActions } from 'vuex'
 import Hamburger from '@/assets/icons/hamburger.vue'
+import FromInput from '@/components/form/input.vue'
+import FromRadio from '@/components/form/radio.vue'
+import { instance as axios } from '@/plugins/axios'
+import { Validator } from 'vee-validate'
+
+const check_email = {
+  getMessage(field, params, data) {
+      return data
+  },
+  validate(value) {
+    return new Promise(resolve => {
+       axios.post('/auth/signUp/email_check', { email: value })
+      .then(response => {
+          resolve({
+            valid: true,
+            data: undefined
+          })
+      })
+      .catch(response => {
+        //   if(response.status === 400) {
+               resolve({
+                valid: false,
+                data: value + " is already taken"
+               })
+          //}
+      })
+    })
+  }
+};
+
+Validator.extend('unique', check_email);
+
 
 export default {
   layout: 'main--layout',
@@ -49,12 +132,14 @@ export default {
         full_name: '',
         email: '',
         sex: '',
-        password: ''
+        password: '',
+        password_confirm: ''
       }
     }
   },
   components: {
-    'os-input--tooltip': InputTooltip,
+    'os-input': FromInput,
+    'os-radio': FromRadio,
     'os-hamburger': Hamburger
   },
   computed: {
@@ -64,8 +149,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      signUp: 'authentication/signUp'
-    })
+    }),
+    signUp () {
+      this.$validator.validateAll().then((result) => {
+        if (result) {
+            this.$store.dispatch('authentication/signUp', this.details)
+        }
+      })
+    },
+    isEmailUnique () {
+    }
   }
 }
 </script>

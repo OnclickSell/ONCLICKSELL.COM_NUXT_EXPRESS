@@ -22,7 +22,7 @@ exports.signIn = (req) => {
     .select('id','full_name', 'email', 'age', 'description', 'sex', 'password')
     .then(data => {
         if(!data.length > 0) {
-            reject(new Error('woops'))
+            reject('whoops')
         }
         resolve(data)
     })
@@ -41,31 +41,31 @@ exports.signIn = (req) => {
 
 exports.signUp = (req) => {
     return new Promise((resolve, reject) => {
+        const detectSex = (sex) => {
+            if(sex.toUpperCase() === 'MALE') {
+                return 'http://res.cloudinary.com/onclicksell-com/image/upload/v1513505162/OnclickSell.com/Icons/Onclicksell.com-avatar-male-64px.svg'
+            }else {
+                return 'http://res.cloudinary.com/onclicksell-com/image/upload/v1513504833/OnclickSell.com/Icons/Conceptional-Avatar-Female-Final-Design.png'
+            }
+        }
+
         bcrypt.hash(req.body.password, 10, (err, hash) => {
             if(err) {
                 reject(err)
             } else {
-    
+        
                 db('users')
-                .insert({
+                    .insert({
                     full_name: req.body.full_name,
                     email: req.body.email,
                     sex: req.body.sex,
+                    profile_picture: detectSex(req.body.sex),
                     password: hash       
-                })
-                .then(result => {
-                    db("users").where('email', req.body.email )
-                    .select(
-                    'id',
-                    'full_name',
-                    'email',
-                    'description',
-                    'age',
-                    'profile_picture'
-                    ).then(result => resolve(result))
-                    .catch(err => reject(err))
-                })
-                .catch(err => reject(err))
+                   }).then(user => {
+                        db('users').where('id', user).select('*').then(result => resolve(result))
+                        .catch(err => reject(err))
+                   }).catch(err => reject(err))
+
             }
         })
     })
@@ -98,10 +98,17 @@ exports.roles = (email, callback) => {
 |
 */
 
-exports.emailCheck = (email, callback) => {
-    db('users').where('email', email).select('id')
-    .then(result => callback('', result))
-    .catch(err => callback(err, ''))
+exports.emailCheck = (email) => {
+    return new Promise((resolve, reject) => {
+        db('users').where('email', email).select('id')
+       .then(result => {
+           if(!result.length > 0) {
+             resolve(result)
+           }
+           reject('The email already exists')
+       })
+       .catch(err => reject(err))
+    })
 }
 
 

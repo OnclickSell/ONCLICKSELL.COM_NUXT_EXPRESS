@@ -45,13 +45,29 @@ exports.get_single_user = (id, callback) => {
 |
 */
 
-exports.get_auth_user = (id) => {
+exports.get_auth_user = (req) => {
     return new Promise((resolve, reject) => {
-    db('users')
-    .select('*')
-    .where('id', +1 )
-    .then(result => resolve(result))
-    .catch(err => reject(err))
+        auth.getUser(req, ['*']).then(result => resolve(result)).catch(err => reject(err))
+    
+            //  resolve({
+            //     age:null,
+            //     card_brand:null,
+            //     card_last_four:null,
+            //     created_at:null,
+            //     description:null,
+            //     email:"random11110@hotmail.com",
+            //     full_name:"sfasfasf",
+            //     id:109,
+            //     last_login:null,
+            //     password:"$2a$10$ZSuPd7PSxDpciJ9Ej66tl.nL7D.SWExgUm3cM8jcUmlTImoE114na",
+            //     permissions:null,
+            //     profile_picture:"http://res.cloudinary.com/onclicksell-com/image/upload/v1513504833/OnclickSell.com/Icons/Conceptional-Avatar-Female-Final-Design.png",
+            //     sex:"female",
+            //     stripe_id:null,
+            //     trial_ends_at:null,
+            //     updated_at:null
+            // })
+   
     })
 }
 

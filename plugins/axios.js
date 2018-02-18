@@ -14,6 +14,7 @@ export default ({store}) => {
     instance.interceptors.request.use(
       (config) => {
         if (store.state.authentication.token) {
+          console.log(store.state.authentication.user.email + 'From axios')
           config.headers.common['Authorization'] = `Bearer ${store.state.authentication.token}`
         }
         return config
@@ -36,7 +37,7 @@ export default ({store}) => {
             allowOutsideClick: false
           })
           .then(() => store.dispatch('logout'))
-          .catch(swal.noop)
+          .catch()
         }
         return Promise.reject(error)
       }
