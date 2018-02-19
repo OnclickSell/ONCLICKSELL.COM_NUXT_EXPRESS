@@ -82,51 +82,34 @@ exports.get_auth_user = (req) => {
 |
 */
 
-exports.update_single_user = (req) => {
+exports.update_user_details = (req, data) => {
     return new Promise((resolve, reject) => {
-        if (req.body.password) {
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                if(err) {
-                    reject(err)
-                } else {
-                    console.log(req.body.loginDeails + 'from user update model')
-                    db('users')
-                    .where('id', 1 )
-                    .update({
-                        password: hash,
-                        age: req.body.age,
-                        description: req.body.description,
-                        profile_picture: req.body.profile_picture
-                    })
-                    .then(result => {
-                        db('users')
-                        .select('*')
-                        .where('id', 1 )
-                        .then(result => resolve(result))
-                        .catch(err => reject(err))
-                    })
-                    .catch(err => reject(err))
-                }
-            })
-        } else {
-            console.log(req.body.password + 'from user update model')
-            db('users')
-            .where('id', 1 )
-            .update({
-                age: req.body.age,
-                description: req.body.description,
-                profile_picture: req.body.profile_picture
-            })
-            .then(result => {
-                db('users')
-                .select('*')
-                .where('id', 1 )
-                .then(result => resolve(result))
-                .catch(err => reject(err))
-            })
-            .catch(err => reject(err))
-        }
-        
+        db('users')
+        .where('id', +1)
+        .update(data)
+        .then(result => resolve(data))
+        .catch(err => reject(err))      
+    }) 
+}
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
+exports.update_user_avatar = (req, url) => {
+    return new Promise((resolve, reject) => {
+        db('users')
+        .where('id', +1)
+        .update('profile_picture', url)
+        .then(result => resolve(result))
+        .catch(err => reject(err))      
     }) 
 }
 

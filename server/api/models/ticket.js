@@ -1,6 +1,8 @@
 
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
+const auth = require('../../packages/auth');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,14 +15,13 @@ const bcrypt = require('bcrypt');
 |
 */
 
-exports.get_reviews = (req) => {
+exports.add_ticket = (req, ticket_details) => {
     return new Promise((resolve, reject) => {
-        db('review')
-        .select("*")
-        .where('user_id', 2)
+        db('ticket')
+        .insert(ticket_details)
         .then(result => resolve(result))
         .catch(err => reject(err))
-    })
+    })     
 }
 
 /*
@@ -34,57 +35,15 @@ exports.get_reviews = (req) => {
 |
 */
 
-exports.get_review = (req) => {
+exports.get_tickets = (req, ticket_details) => {
     return new Promise((resolve, reject) => {
-        db('review')
-        .select("*")
-        .where('listing_id', 2)
+        db('ticket')
+        .select('*')
+        .where('user_id', 5)
+        .leftOuterJoin('ticket_comment', 'ticket.id', 'ticket_comment.ticket_id')
         .then(result => resolve(result))
         .catch(err => reject(err))
-    })       
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.add_reviews = (req, data) => {
-    return new Promise((resolve, reject) => {
-        db('review')
-        .insert(data)
-        .then(result => resolve(result))
-        .catch(err => reject(err))
-    })       
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.update_reviews = (req, review_id, new_review) => {
-    return new Promise((resolve, reject) => {
-        db('review')
-        .where('id', review_id)
-        .update(new_review)
-        .then(result => resolve(result))
-        .catch(err => reject(err))
-    })
+    })     
 }
 
 /*
@@ -98,14 +57,36 @@ exports.update_reviews = (req, review_id, new_review) => {
 |
 */
 
-exports.delete_reviews = (req, review_id) => {
+exports.close_ticket = (req, ticket_id) => {
     return new Promise((resolve, reject) => {
-        db('review')
-        .where('id', review_id)
-        .del()
+        db('ticket')
+        .where('id', ticket_id)
+        .update({
+            'open': 0
+        })
         .then(result => resolve(result))
         .catch(err => reject(err))
-    })
+    })     
+}
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
+exports.add_comment = (req, comment) => {
+    return new Promise((resolve, reject) => {
+        db('ticket_comment')
+        .insert(comment)
+        .then(result => resolve(result))
+        .catch(err => reject(err))
+    })     
 }
 
 

@@ -1,0 +1,10 @@
+/**
+ Export to JSON plugin for PHPMyAdmin
+ @version 4.6.4
+ */
+
+// Database 'onclicksell.com'
+
+// onclicksell.com.ticket
+
+[{"id":"1","subject":"this is a new ticket","message":"is it really working?","email":"aliakbar.su@hotmail.com","listing_id":"3","user_id":"5","open":"0","file_name":null,"created_at":"2018-01-01 22:20:48","updated_at":null}]

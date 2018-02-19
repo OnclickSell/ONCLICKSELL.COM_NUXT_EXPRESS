@@ -5,6 +5,10 @@ const app = express()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
 
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').load();
+}
+
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
@@ -22,6 +26,10 @@ const listingsRoutes = require('./api/routes/listings');
 const authRoutes = require('./api/routes/authentication');
 
 const errorRouter = require('./api/routes/errorRouter');
+
+const reviewsRoutes = require('./api/routes/review')
+
+const ticketRoutes = require('./api/routes/ticket')
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,11 +49,13 @@ app.use('/api/v1/test/error', errorRouter)
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/listings', listingsRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/reviews', reviewsRoutes);
+app.use('/api/v1/tickets', ticketRoutes);
 
 // handles all global errors
 app.use(function(error, req, res, next) {
   res.json({
-    error: error,
+    error: error.message,
     message: 'it\'s working'
   }, 400)
 })

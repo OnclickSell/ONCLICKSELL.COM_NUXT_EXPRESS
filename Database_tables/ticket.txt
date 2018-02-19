@@ -1,0 +1,20 @@
+===Database onclicksell.com
+
+== Table structure for table ticket
+
+|------
+|Column|Type|Null|Default
+|------
+|//**id**//|int(11)|No|
+|subject|text|No|
+|message|text|No|
+|email|text|No|
+|listing_id|int(11)|No|
+|user_id|int(11)|No|
+|open|int(11)|No|1
+|file_name|text|Yes|NULL
+|created_at|timestamp|No|
+|updated_at|timestamp|Yes|NULL
+== Dumping data for table ticket
+
+|1|this is a new ticket|is it really working?|aliakbar.su@hotmail.com|3|5|0|NULL|2018-01-01 22:20:48|NULL

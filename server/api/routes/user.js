@@ -36,10 +36,9 @@ var upload = multer({ storage: storage })
 
 router.get('/', authMiddleware, userController.get_auth_user);
 router.get('/:id', userController.get_single_user);
-router.put('/', authMiddleware, userController.update_single_user);
+router.put('/', userController.update_user_details);
+router.put('/avatar', userController.update_user_avatar);
 router.put('/password', authMiddleware, userController.update_user_password);
 router.delete('/:id', authMiddleware, userController.delete_single_user);
 router.post('/', authMiddleware, userController.add_user_profile);
-router.post('/profile_picture', upload.single('profile_picture'), userController.update_profile_picture);
-
 module.exports = router;

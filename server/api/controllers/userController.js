@@ -1,17 +1,14 @@
 
 const userModel = require('../models/user');
 const validator = require('../../validators/input_validator');
-const cloudinary = require('cloudinary');
-const create_avatar = require('../../packages/detect_profile')
 const auth = require('../../packages/auth');
 const response = require('../../packages/response');
 const wrapAsync = require('../../packages/wrapAsync')
+const url = require('url');  
+const querystring = require('querystring');
 const fs = require('fs');
-cloudinary.config({ 
-    cloud_name: 'onclicksell-com', 
-    api_key: '122981766251813', 
-    api_secret: 'aMtJPB0uMuriTI3gMDZ_mBV7t-M' 
-});
+let uploader = require('../../packages/uploader')
+uploader = new uploader()
 
 /*
 |--------------------------------------------------------------------------
@@ -145,11 +142,61 @@ exports.delete_single_user = (req, res, next) => {
 |
 */
 
-exports.update_single_user = (req, res, next) => {
-    return userModel.update_single_user(req)
-    .then(result => response.E200(req, res, result))
-    .catch(err => response.E400(req, res,'', err))
-}
+exports.update_user_details = wrapAsync( async function(req, res, next) {
+    const rawUrl = req.url
+    const allowedDetails = ['description', 'age']
+    let newData = {}
+
+    try {
+        const parsedUrl = url.parse(rawUrl)
+        const parsedQs = querystring.parse(parsedUrl.query)
+        const paresedKeys = Object.keys(parsedQs)
+        
+        paresedKeys.forEach(element => {
+            if(allowedDetails.indexOf(element) == -1) {
+                throw new Error('Invalid user detail field')
+            }
+        })
+
+       
+        paresedKeys.forEach(key => {
+            newData[key] = parsedQs[key]
+        })
+    } catch(err) {
+        throw new Error(err)
+    }
+
+    
+
+    try {
+        const result = await userModel.update_user_details(req, newData)
+        response.E200(req, res, result)
+    }catch(err) {
+        throw new Error(err)
+    }
+})
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
+exports.update_user_avatar = wrapAsync( async function(req, res, next) {
+    try {
+        const avatar_link = await uploader.upload(req, res)
+        const result = await userModel.update_user_avatar(req, avatar_link.secure_url)
+        response.E200(req, res, result)
+    } catch(err) {
+        console.log(err)
+        throw new Error(err)
+    } 
+})
 
 
 /*

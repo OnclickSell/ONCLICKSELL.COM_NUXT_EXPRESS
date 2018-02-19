@@ -7,6 +7,8 @@ const response = require('../../packages/response');
 const bcrypt = require('bcrypt');
 const wrapAsync = require('../../packages/wrapAsync')
 const validators = require('../../packages/validator')
+let InternalServerError = require('../../packages/customError')
+// Errorer = new Errorer()
 let validator = require('../../packages/validator');
 validator = new validator()
 
@@ -97,13 +99,18 @@ exports.signUp = wrapAsync( async (req, res, next) => {
 */
 
 exports.emailCheck = wrapAsync( async (req, res, next) => {
+    
 
     try {
+        // throw InternalServerError(',fasfasfsf', 'fasfsaf', 'fasfasf', 'fasfasff')
         await validator.validate({
             email: ['required', 'email']
           }, req.body)
 
     } catch (err) {
+        if(err instanceof InternalServerError) {
+            console.log('fasfasf;asfjaskjf')
+        }
         response.E404(req, res, {error: err})
     }
 
