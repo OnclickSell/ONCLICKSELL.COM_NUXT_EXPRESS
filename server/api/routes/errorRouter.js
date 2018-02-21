@@ -12,6 +12,8 @@ validator = new validator()
 let uploader = require('../../packages/uploader')
 uploader = new uploader()
 
+let sender = require('../../packages/sender')
+
 
 
 
@@ -55,6 +57,19 @@ router.post('/upload', wrapAsync( async (req, res, next) => {
   
   
 }))
+
+router.get('/mail', wrapAsync( async (req, res, next) => {
+
+  try {
+   const result = await sender.send('<h1>Hi</h1>', 'aliakbar.su@hotmail.com')
+   console.log('email sent')
+  } catch(err) {
+    console.log(err)
+  }
+   
+   
+   
+ }))
 
 
 module.exports = router;

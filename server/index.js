@@ -31,6 +31,8 @@ const reviewsRoutes = require('./api/routes/review')
 
 const ticketRoutes = require('./api/routes/ticket')
 
+const technologyRoutes = require('./api/routes/technology')
+
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -51,6 +53,7 @@ app.use('/api/v1/listings', listingsRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/reviews', reviewsRoutes);
 app.use('/api/v1/tickets', ticketRoutes);
+app.use('/api/v1/technologies', technologyRoutes);
 
 // handles all global errors
 app.use(function(error, req, res, next) {

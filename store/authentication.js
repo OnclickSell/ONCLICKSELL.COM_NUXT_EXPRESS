@@ -83,7 +83,6 @@ export const mutations = {
     state.token = null
     Cookie.remove('token')
     Cookie.remove('tokenExpiration')
-    axios.setHeader('Authorization', null)
     // localStorage.removeItem('token')
     // localStorage.removeItem('tokenExpiration')
   },
@@ -149,10 +148,12 @@ export const actions = {
         console.log('faild twice')
         return
       }
+      console.log(req.headers.cookie)
 
       token = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[1]
+      console.log(token)
       tokenExpiration = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[2]
-      console.log(req.headers+ ' From authenticatino store')
+      console.log(req.headers + ' From authenticatino store')
       // authUser = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[3]
       if(process.isClient) {
         console.log('I found it out')
@@ -199,5 +200,8 @@ export const getters = {
   },
   GetAuthUser (state, getters, rootState) {
     return state.user
+  },
+  getToken (state, getters, rootState) {
+    return state.token
   }
 }

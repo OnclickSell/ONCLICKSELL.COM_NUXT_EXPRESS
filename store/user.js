@@ -38,9 +38,9 @@ export const plugins = [
 */
 
 export const mutations = {
-  setUser (vuexContext, payload) {
-    console.log(payload)
-    vuexContext.state.user = payload.Context
+  setUser (state, payload) {
+    // console.log(payload)
+    state.user = payload
   }
 }
 
