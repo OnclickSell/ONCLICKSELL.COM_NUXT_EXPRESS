@@ -6,14 +6,14 @@ export const mutations = {
 
 export const actions = {
   nuxtServerInit({state, dispatch}, context) {
-      return Promise.all([
-        dispatch('listings/fetchListings', {
-          limit: 20,
-          offset: 0,
-          order: 'id'
-        }),
-        dispatch('authentication/fetchAuthUser')
-      ])
+    // console.log("NuxtServerInit is running")
+    //   return Promise.all([
+    //     dispatch('listings/fetchListings', {
+    //       limit: 20,
+    //       offset: 0,
+    //       order: 'id'
+    //     })
+    //   ])
   }
 }
 

@@ -58,8 +58,13 @@ import Cards from '@/components/card/Cards.vue'
 import Filter from '@/components/others/Filter.vue'
 import NewLetter from '@/components/others/NewLetter.vue'
 import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
+  middleware: ['checkAuth', 'getAuth'],
+  fetch({store}) {
+    store.dispatch('authentication/fetchAuthUser')
+  },
   layout: 'main--layout',
   components: {
     'os-cards': Cards,

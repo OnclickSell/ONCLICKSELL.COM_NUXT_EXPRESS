@@ -1,12 +1,14 @@
 
 const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
+    console.log(req.query.token + ' From auth server middleware')
     try {
-        const token = req.headers.authorization.split(" ")[1];
+        const token = req.query.token
         const decoded = jwt.verify(token, 'secret');
         next();
     } catch (error) {
-        res.status(401).json({
+        console.log('Not authenticate')
+        res.status(200).json({
             message: 'You are not autenticated'
         });
     }

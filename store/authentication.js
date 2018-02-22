@@ -1,4 +1,4 @@
-import { instance as axios } from '@/plugins/axios'
+import axios from 'axios'
 import Cookie from 'js-cookie'
 
 
@@ -63,7 +63,6 @@ export const plugins = [
 export const mutations = {
   setAuthUser (state, payload) {
     state.user = payload
-    Cookie.set('authUser', payload)
   },
   setToken (state, payload) {
     state.token = payload
@@ -106,7 +105,7 @@ let tokenExpiration = null
 
 export const actions = {
   logIn ({commit, dispatch, state}, credentials) {
-    axios.post('/auth/signIn', credentials)
+    axios.post('http://localhost:3000/api/v1/auth/signIn', credentials)
       .then(response => {
         commit('setAuthUser', response.data.Context.user)
         commit('setToken', response.data.Context.token)
@@ -117,14 +116,14 @@ export const actions = {
       })
   },
   signUp ({commit, state}, data) {
-    axios.post('/auth/signUp', data)
+    axios.post('http://localhost:3000/api/v1/auth/signUp', data)
       .then(response => {
         commit('setAuthUser', response.data.Context.user)
         commit('setToken', response.data.Context.token)
         commit('setTokenExpiration')
         this.$router.push('/register/preview')
       })
-      .then(error => {
+      .catch(error => {
         console.log(error)
       })
   },
@@ -132,11 +131,10 @@ export const actions = {
     commit('clearToken')
     commit('clearAuthUser')
   },
-  fetchAuthUser ({commit, state}, vuexContext) {
-    return axios.get('/users')
+  fetchAuthUser (vuexContext) {
+      return axios.get('http://localhost:3000/api/v1/users?token=' + vuexContext.state.token)
       .then(response => {
-        console.log('Fetching the user')
-        commit('setAuthUser', response.data.Context)
+        vuexContext.commit('setAuthUser', response.data.Context)
       })
       .catch(error => {
         console.log(error)
@@ -145,19 +143,12 @@ export const actions = {
   initAuth(vuexContext, req) {
     if(process.server) {
       if(!req.headers.cookie) {
-        console.log('faild twice')
         return
       }
-      console.log(req.headers.cookie)
 
       token = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[1]
-      console.log(token)
       tokenExpiration = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[2]
-      console.log(req.headers + ' From authenticatino store')
-      // authUser = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[3]
-      if(process.isClient) {
-        console.log('I found it out')
-      }
+
     } else {
       token = vuexContext.state.token
       tokenExpiration = vuexContext.state.tokenExpiration
@@ -169,8 +160,8 @@ export const actions = {
       return;
     }
     vuexContext.commit('setToken', token)
-    // Cookie.set('authUser', authUser)
-    vuexContext.state.tokenExpiration = tokenExpiration
+    vuexContext.state.tokenExpiration = tokenExpiration || 'fasfsaf'
+    return vuexContext.dispatch('fetchAuthUser')
   },
   updateUser ({commit, state}, data) {
     axios.put('/users', data)
