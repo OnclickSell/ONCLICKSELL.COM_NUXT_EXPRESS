@@ -5,7 +5,7 @@
             <span slot='description'>Just for testing!</span>
         </os-input--tooltip>
         <label class='input__title'>{{ title }}</label>
-        <input :class="{'input__fill': fill}" type='text' class='basic-info__input__input' :placeholder="placeholder">
+        <input :class="{'input__fill': fill}" type='text' class='basic-info__input__input' :placeholder="placeholder" @input="change">
     </form>
 </template>
 
@@ -15,6 +15,11 @@ export default {
   props: ['placeholder', 'title', { fill: { default: true } }],
   components: {
     'os-input--tooltip': InputTooltip
+  },
+  methods: {
+    change (event) {
+        this.$emit('input', event.target.value )
+    }
   }
 }
 </script>

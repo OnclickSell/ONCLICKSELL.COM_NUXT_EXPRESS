@@ -4,8 +4,17 @@ export const state = () => ({
   listings: [],
   SingleListing: {},
   frontendTechnologies: {},
+  listingsDetails: {
+    title: '',
+    summary: ''
+  }
 })
 export const mutations = {
+  setBasicInfo (state, payload) {
+    console.log(payload)
+    state.listingsDetails.title = payload.title
+    state.listingsDetails.summary = payload.summary
+  },
   setListings (state, payload) {
     state.listings = payload.data.result.listings
   },
@@ -38,11 +47,11 @@ export const actions = {
     },
     fetchSingleListing (vuexContext, payload) {
       return axios.get('http://localhost:3000/api/v1/listings/' + payload.id + '/' + payload.title)
-        .then(function (response) {
+        .then(response => {
           vuexContext.commit('setSingleListing', response.data)
         })
-        .catch(function (error) {
-          console.log(error)
+        .catch(error => {
+          console.log(error.response)
         })
     }
 }

@@ -12,7 +12,7 @@
 
             <div class='basic-info__item basic-info__input'>
                 <os-input-help/>
-                <os-input placeholder='Laravel 5.5.5 Full Api' title='Project title'/>
+                <os-input placeholder='Laravel 5.5.5 Full Api' title='Project title' v-model="basicInfo.title"/>
             </div>
 
             <div class='basic-info__item basic-info__textarea'>
@@ -21,7 +21,8 @@
             </div>
 
             <div class='basic-info__item'>
-                <os-button title='NEXT'/>
+                <button @click="next">safjsakf</button>
+                <os-button title='NEXT' @click="next"/>
             </div>
 
             <div class='basic-info__item basic-info__input--top-margin'>
@@ -44,7 +45,14 @@ import InputHelp from '@/components/sell/input--help.vue'
 
 export default {
   layout: 'main--layout',
-  middleware: 'checkAuth',
+  data() {
+      return {
+        basicInfo: {
+          title: '',
+          summary: ''
+        }
+      }
+  },
   components: {
     'os-progress-bar': PrograssBar,
     'os-input': Input,
@@ -52,6 +60,12 @@ export default {
     'os-button': Button,
     'os-explainer': Explainer,
     'os-input-help': InputHelp
+  },
+  methods: {
+    next() {
+      this.$store.commit('listings/setBasicInfo', this.basicInfo)
+      this.$router.push('/sell/front-end')
+    }
   }
 }
 </script>

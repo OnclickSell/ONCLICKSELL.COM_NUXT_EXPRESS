@@ -63,6 +63,13 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.$store.dispatch('authentication/logIn', this.credentials)
+          .then(() => this.$router.push('/'))
+          .catch(err => {
+              const keys = Object.keys(err.Context)
+              keys.forEach(field => {
+                 this.$validator.errors.add(field, err.Context[field])
+              });
+          })
         }
       })
     }

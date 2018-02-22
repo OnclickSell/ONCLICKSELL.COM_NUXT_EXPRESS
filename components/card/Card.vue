@@ -3,7 +3,7 @@
 <div>
 
     <div class='card' v-if="card">      
-        <div v-for="list in listings" :key="list.id" class='l-card'>
+        <div v-for="list in listings" :key="list.id" class='l-card' v-on:click="showListing(list)">
             <div class='card__title'>{{ list.title }}</div>
             <img class='card__thumbnail' alt="Onclicksell.com Logo" src='http://res.cloudinary.com/onclicksell-com/image/upload/v1515050579/OnclickSell.com/Photos/home-office-2452806_960_720.jpg'>
             <button class='card__button'>VIEW</button>
@@ -46,6 +46,9 @@ export default {
     }
   },
   methods: {
+    showListing(list) {
+        this.$router.push('/listings/' + list.id + '/' + list.title)
+    }
   }
 }
 </script>

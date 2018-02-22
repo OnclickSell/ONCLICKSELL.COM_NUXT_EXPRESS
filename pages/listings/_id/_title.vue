@@ -18,10 +18,11 @@ import Hamburger from '@/assets/icons/hamburger.vue'
 
 export default {
   async fetch (vuexContext) {
-     await vuexContext.store.dispatch('listings/fetchSingleListing', { id: vuexContext.route.params.id, title: vuexContext.route.params.title})
+      console.log(vuexContext.params.id + ' fjsaklfjs;fjksjf')
+    await vuexContext.store.dispatch('listings/fetchSingleListing', { id: vuexContext.route.params.id, title: vuexContext.route.params.title})
   },
   layout: 'main--layout',
-//   middleware: 'notAuth',
+  middleware: 'validate_listing_id_title',
   data () {
     return {
       isUpdateOn: false

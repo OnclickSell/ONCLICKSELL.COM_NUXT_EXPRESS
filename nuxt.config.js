@@ -44,6 +44,12 @@ module.exports = {
     // '@nuxtjs/axios'
   ],
   /*
+  ** Nuxt.js routes
+  */
+  router: {
+    middleware: ['checkAuth']
+  },
+  /*
   ** Build configuration
   */
   build: {

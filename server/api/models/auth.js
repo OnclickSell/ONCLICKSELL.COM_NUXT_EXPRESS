@@ -19,12 +19,12 @@ exports.signIn = (req) => {
     return new Promise((resolve, reject) => {
 
     db("users").where('email', req.body.email)
-    .select('id','full_name', 'email', 'age', 'description', 'sex', 'password')
+    .select('id','full_name', 'email', 'age', 'description', 'sex', 'password', 'profile_picture')
     .then(data => {
         if(!data.length > 0) {
             reject('whoops')
         }
-        resolve(data)
+        resolve(data[0])
     })
     .catch(err => reject(err))
 })
@@ -62,7 +62,7 @@ exports.signUp = (req) => {
                     profile_picture: detectSex(req.body.sex),
                     password: hash       
                    }).then(user => {
-                        db('users').where('id', user).select('*').then(result => resolve(result))
+                        db('users').where('id', user).select('*').then(result => resolve(result[0]))
                         .catch(err => reject(err))
                    }).catch(err => reject(err))
 

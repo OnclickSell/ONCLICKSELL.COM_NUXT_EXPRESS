@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const wrapAsync = require('../../packages/wrapAsync')
 const validators = require('../../packages/validator')
 let InternalServerError = require('../../packages/customError')
+const responser = require('../../packages/responser')
 // Errorer = new Errorer()
 let validator = require('../../packages/validator');
 validator = new validator()
@@ -33,29 +34,42 @@ exports.signIn = wrapAsync(async function(req, res, next) {
           }, req.body)
 
     } catch (err) {
-        response.E404(req, res, {error: err})
+        throw { type: "BadRequest", message: err }
     }
     
 
     try {
+        //Get the user
         const user = await authModel.signIn(req)
-        const check = await bcrypt.compare(req.body.password, user[0].password)
+        //Check for credentials
+        const check = await bcrypt.compare(req.body.password, user.password)
         if (!check) {
-            throw Error('Invalid credentials')
+            throw {type: "BadRequest", message: "Invalid Creadentials"}
         }
-        const token = await tokener.issueToken(user[0].id)
-        response.E200(req, res, {user: user[0], token: token})   
+        //Issue Token
+        const token = await tokener.issueToken(user.id)
+
+
+        const userDetails = {
+            'id': user.id,
+            'full_name': user.full_name,
+            'email': user.email,
+            'age': user.age,
+            'description': user.description,
+            'profile_picture': user.profile_picture
+        }
+
+        //Send the user details
+        responser.send(res, 200, "Success", {user: userDetails, token: token})
 
     }catch(err) {
-        throw err
+        throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
     }
-
-    throw Error('woops')
 })
 
 /*
 |--------------------------------------------------------------------------
-| Application Name
+| 
 |--------------------------------------------------------------------------
 |
 | This value is the name of your application. This value is used when the
@@ -75,15 +89,18 @@ exports.signUp = wrapAsync( async (req, res, next) => {
           }, req.body)
 
     } catch (err) {
-        response.E404(req, res, {error: err})
+        throw { type: "BadRequest", message: err }
     }
 
     try {
+        //Add the user to Database
         const user = await authModel.signUp(req, next)
+        //Issue Token
         const token = await tokener.issueToken(user[0].id)
+        //Send the user details
         response.E200(req, res, {user: user[0], token: token})
     } catch(err) {
-        throw err
+        throw { type: "InternalServerError", message: "Something went wrong with the server. Please try again" }
     }
 })
 

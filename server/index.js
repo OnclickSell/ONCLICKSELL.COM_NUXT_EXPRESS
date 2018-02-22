@@ -9,8 +9,9 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
 }
 
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const error_handler = require('./packages/error_handler')
 
 app.set('port', port)
 
@@ -57,32 +58,8 @@ app.use('/api/v1/technologies', technologyRoutes);
 
 // handles all global errors
 app.use(function(error, req, res, next) {
-  res.json({
-    error: error.message,
-    message: 'it\'s working'
-  }, 400)
+  return error_handler.catch_error(error, res)
 })
-
-
-// app.use(function handleAssertionError(error, req, res, next) {
-//   if (error instanceof AssertionError) {
-//     return res.status(400).json({
-//       type: 'AssertionError',
-//       message: error.message
-//     });
-//   }
-//   next(error);
-// });
-
-// app.use(function handleDatabaseError(error, req, res, next) {
-//   if (error instanceof MongoError) {
-//     return res.status(503).json({
-//       type: 'MongoError',
-//       message: error.message
-//     });
-//   }
-//   next(error);
-// });
 
 
 

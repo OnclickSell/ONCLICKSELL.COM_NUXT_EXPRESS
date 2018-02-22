@@ -61,7 +61,6 @@ import { mapGetters } from 'vuex'
 import axios from 'axios'
 
 export default {
-  middleware: ['checkAuth', 'getAuth'],
   fetch({store}) {
     store.dispatch('authentication/fetchAuthUser')
   },
