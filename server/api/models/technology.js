@@ -70,11 +70,23 @@ exports.get_technologies = (req) => {
         .then(F_framework => {
             technologies.frontend.framework = F_framework
 
-            db('backend_framework_list')
+            db('frontend_plateform_list')
             .select('*')
-            .then(B_framework => {
-                technologies.backend.framework = B_framework
-                resolve(technologies)
+            .then(F_plateform => {
+                technologies.frontend.plateforms = F_plateform
+                db('backend_framework_list')
+                .select('*')
+                .then(B_framework => {
+                    technologies.backend.framework = B_framework
+                    db('backend_Plateform_list')
+                    .select('*')
+                    .then(B_plateform => {
+                        technologies.backend.plateforms = B_plateform
+                        resolve(technologies)
+                    })
+                    .catch(err => reject(err))
+                })
+                .catch(err => reject(err))
             })
             .catch(err => reject(err))
         })

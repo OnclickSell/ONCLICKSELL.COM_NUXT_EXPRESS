@@ -9,39 +9,38 @@
             </div>
             <div class='backend__item fluid backend__item--top-margin'><os-input-help/></div>
             <div class='backend__item'>
-                <os-input--drop-down placeholder="plateform" :items="['PHP', 'ASP.NET', 'Node.js']"/>
+                <os-input--drop-down item="name" v-if="added_technologies.plateform !== 'false'" :placeholder="backend_tehnologies.plateform.name" v-model="setPlateform" :items="technologies.backend.plateform"/>
             </div>
 
             <div class='backend__item'>
-                <os-input--drop-down placeholder="plateform" :items="['PHP', 'ASP.NET', 'Node.js']"/>
+                <os-input--drop-down item="version" v-if="added_technologies.plateform !== 'false'" :placeholder="backend_tehnologies.plateform.version" v-model="set_plateform_version" :items="get_plateform_version"/>
             </div>
 
-            <div class='backend__item fluid'><os-input-help/></div>
-            <div class='backend__item fluid'>
-                <os-input--checkbox title='Have you used any framework?' :options="['Yes', 'No']"/>
+             <div class='backend__item fluid'>
+                <os-input--checkbox v-model="added_technologies.framework" title='Have you used any framework?' :options="[{title: 'Yes', value: true}, {title: 'No', value: false}]"/>
             </div>
 
                     
             <div class='backend__item'>
-                <os-input--drop-down placeholder="plateform" :items="['PHP', 'ASP.NET', 'Node.js']"/>
+                <os-input--drop-down v-if="added_technologies.framework !== 'false'" item="name" :placeholder="backend_tehnologies.framework.name" v-model="setFramework" :items="technologies.backend.framework"/>
             </div>
 
             <div class='backend__item'>
-                <os-input--drop-down placeholder="plateform" :items="['PHP', 'ASP.NET', 'Node.js']"/>
+                <os-input--drop-down v-if="added_technologies.framework !== 'false'" item="version" :placeholder="backend_tehnologies.framework.version" v-model="set_framework_version" :items="get_framework_version"/>
             </div>
 
-            <div class='backend__item fluid'>
-                <os-input--drop-down placeholder="plateform" :items="['PHP', 'ASP.NET', 'Node.js']"/>
-            </div>
+
 
             <div class='backend__item fluid'>
-                <os-button title='NEXT'/>
+                <os-input--checkbox v-model="added_technologies.libraries" title='Have you used any third-party libraries?' :options="[{title: 'Yes', value: true}, {title: 'No', value: false}]"/>
             </div>
 
-            <div class='backend__item fluid'>
-                <os-explainer title='Basic Info' class='basic__info--explainer'>
-                    <p slot='content'>A project description is the information clients expect to know when purchasing your project.</p>
-                </os-explainer>
+            <div class='backend__item'>
+                <os-input--drop-down v-if="added_technologies.libraries !== 'false'" item="name" :placeholder="backend_tehnologies.libraries.name" v-model="setLibraries" :items="technologies.backend.framework"/>
+            </div>
+
+            <div class='backend__item'>
+                <os-input--drop-down v-if="added_technologies.libraries !== 'false'" item="version" :placeholder="backend_tehnologies.libraries.version" v-model="set_libraries_version" :items="get_libraries_version"/>
             </div>
 
         </div>
@@ -60,12 +59,128 @@ import InputHelp from '@/components/sell/input--help.vue'
 import Plan from '@/components/sell/plan.vue'
 import DropDown from '@/components/sell/input--drop-down.vue'
 import InputCheckbox from '@/components/sell/input--checkbox.vue'
+import { mapGetters } from 'vuex'
 
 export default {
+  layout: 'main--layout',
+  fetch({store}) {
+    return store.dispatch('listings/fetchTechnologies')
+  },
   data () {
     return {
       features: ['$0.00 flat rate', '15% referral fee per successful sale', '$30 monthly subsription fee'],
-      description: 'Suitable for small scaled projects that do not exceed 10GB in size'
+      description: 'Suitable for small scaled projects that do not exceed 10GB in size',
+      added_technologies: {
+          plateform: true,
+          framework: true,
+          libraries: true
+      },
+      backend_tehnologies: {
+        framework: {
+            version: "Select Version",
+            name: "Framework"
+        },
+        plateform: {
+            name: "Select Framework",
+            version: "Version"
+        },
+        libraries: {
+            name: "Third-party Library",
+            version: "Version"
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapGetters({
+      technologies: 'listings/getTechnologies'
+    }),
+    get_framework_version: {
+      get: function() {
+        let selectedVersions = []
+        this.technologies.backend.framework.map((value) => {
+            if(this.backend_tehnologies.framework.name === value.name) {
+              selectedVersions.push({version: value.version})
+            }
+        })
+        return selectedVersions
+      }
+    },
+    setFramework: {
+      get: function() {
+        return this.backend_tehnologies
+      },
+      set: function (value) {
+        this.backend_tehnologies.framework = value
+      }
+    },
+    set_framework_version: {
+      get: function() {
+        return this.backend_tehnologies
+      },
+      set: function (value) {
+        let new_value = {...this.backend_tehnologies.framework}
+        new_value.version = value.version
+        this.backend_tehnologies.framework = new_value
+      }
+    },
+    setPlateform: {
+      get: function() {
+        return this.backend_tehnologies.plateform
+    },
+      set: function (value) {
+        this.backend_tehnologies.plateform = value
+      }
+    },
+    set_plateform_version: {
+      get: function() {
+        return this.backend_tehnologies
+      },
+      set: function (value) {
+        let new_value = {...this.backend_tehnologies.plateform}
+        new_value.version = value.version
+        this.backend_tehnologies.plateform = new_value
+      }
+    },
+     get_plateform_version: {
+      get: function() {
+        let selectedVersions = []
+        this.technologies.backend.plateform.map((value) => {
+            if(this.backend_tehnologies.plateform.name === value.name) {
+              selectedVersions.push({version: value.version})
+            }
+        })
+        return selectedVersions
+      }
+    },
+    setLibraries: {
+      get: function() {
+        return this.backend_tehnologies.libraries
+    },
+      set: function (value) {
+        this.backend_tehnologies.libraries = value
+      }
+    },
+    set_libraries_version: {
+      get: function() {
+        return this.backend_tehnologies
+      },
+      set: function (value) {
+        let new_value = {...this.backend_tehnologies.libraries}
+        new_value.version = value.version
+        this.backend_tehnologies.libraries = new_value
+      }
+    },
+     get_libraries_version: {
+      get: function() {
+        let selectedVersions = []
+        this.technologies.backend.framework.map((value) => {
+            if(this.backend_tehnologies.libraries.name === value.name) {
+              selectedVersions.push({version: value.version})
+            }
+        })
+        return selectedVersions
+      }
     }
   },
   components: {

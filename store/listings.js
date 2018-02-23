@@ -3,7 +3,16 @@ import axios from 'axios'
 export const state = () => ({
   listings: [],
   SingleListing: {},
-  frontendTechnologies: {},
+  technologies: {
+    frontend: {
+      framework: '',
+      plateform: ''
+    },
+    backend: {
+      framework: '',
+      plateform: ''
+    }
+  },
   listingsDetails: {
     title: '',
     summary: ''
@@ -22,8 +31,10 @@ export const mutations = {
     state.SingleListing = payload.context[0]
   },
   setTechnologies (state, payload) {
-    state.frontendTechnologies.plateform = payload.frontend_plateform
-    state.frontendTechnologies.framework = payload.frontend_framework
+    state.technologies.frontend.framework = payload.frontend.framework
+    state.technologies.frontend.plateform = payload.frontend.plateforms
+    state.technologies.backend.framework = payload.backend.framework
+    state.technologies.backend.plateform = payload.backend.plateforms
   }
 }
 export const actions = {
@@ -37,9 +48,9 @@ export const actions = {
         })
     },
     fetchTechnologies ({state, commit}, payload) {
-      axios.get('http://localhost:5000/api/v1/listings/technologies/fetch')
+      return axios.get('http://localhost:3000/api/v1/technologies')
         .then(function (response) {
-          commit('setTechnologies', response.data.technologies)
+          commit('setTechnologies', response.data.Context)
         })
         .catch(function (error) {
           console.log(error)
@@ -63,7 +74,7 @@ export const getters = {
   GetSingleListing (state, rootState) {
     return state.SingleListing
   },
-  getFrontendTechnologies (state, rootState) {
-    return state.frontendTechnologies
+  getTechnologies (state, rootState) {
+    return state.technologies
   }
 }

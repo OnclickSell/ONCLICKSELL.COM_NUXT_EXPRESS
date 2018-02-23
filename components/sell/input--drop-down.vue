@@ -1,10 +1,10 @@
 <template>
-        <div class='l-dropdown'>
+        <div class='l-dropdown' @click="toggle">
             <span class='dropdown__placeholder'>{{ placeholder }}</span>
             <span class='dropdown__icon'>cl</span>
             <div class='dropdown'>
-                <ul class='dropdown__list'>
-                    <li class='dropdown__list--item' v-for="item in items.plateform" :key="item">{{ item.name }}</li>
+                <ul class='dropdown__list' v-if="open">
+                    <li class='dropdown__list--item' @click="select(key)" v-for="key in items" :key="key.id">{{ key[item] }}</li>
                 </ul>
             </div>
         </div>
@@ -13,7 +13,20 @@
 <script>
 import InputHelp from './input--help.vue'
 export default {
-  props: ['placeholder', 'items'],
+  props: ['placeholder', 'items', 'item'],
+  data() {
+    return {
+      open: false
+    }
+  },
+  methods: {
+    toggle() {
+      this.open = !this.open
+    },
+    select (value) {
+      this.$emit('input', value )
+    }
+  },
   components: {
     'os-input-help': InputHelp
   }
@@ -57,7 +70,6 @@ export default {
     -webkit-box-shadow: 0px 0px 8px 0px rgba(102,102,102,1);
     -moz-box-shadow: 0px 0px 8px 0px rgba(102,102,102,1);
     box-shadow: 0px 0px 8px 0px rgba(102,102,102,1);
-    // display: none;
 }
 
 .dropdown__list {

@@ -1,8 +1,8 @@
 <template>
          <div class='l-radio'>
             <h1 class='radio__title'>{{ title }}</h1>
-            <label class='radio__button' v-for='option in options' :key='option'>{{ option }}
-            <input type="radio" :name="title" class='frontend__radio-input'>
+            <label class='radio__button' v-for='option in options' :key='option.title'>{{ option.title }}
+            <input @click="select" type="radio" :value="option.value" :name="title" class='frontend__radio-input'>
             <span class="radio__checkmark"></span>
             </label>
         </div>
@@ -12,6 +12,11 @@
 export default {
   props: ['title', 'options', 'default'],
   components: {
+  },
+  methods: {
+    select (event) {
+      this.$emit('input', event.target.value)
+    }
   }
 }
 </script>

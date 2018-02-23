@@ -4,6 +4,7 @@ const auth = require('../../packages/auth');
 const response = require('../../packages/response');
 const wrapAsync = require('../../packages/wrapAsync')
 let validator = require('../../packages/validator');
+const responser = require('../../packages/responser')
 validator = new validator()
 
 
@@ -21,8 +22,9 @@ validator = new validator()
 
 exports.get_technologies = wrapAsync( async (req, res, next) => {
  
-     const result = await technologyModel.get_technologies(req)
-     res.status(200).json(result)
+     const technologies = await technologyModel.get_technologies(req)
+     console.log(technologies)
+     responser.send(res, 200, "Success", technologies)
  })
 
 /*
