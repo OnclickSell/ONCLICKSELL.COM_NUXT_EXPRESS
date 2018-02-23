@@ -9,38 +9,43 @@
             </div>
             <div class='backend__item fluid backend__item--top-margin'><os-input-help/></div>
             <div class='backend__item'>
-                <os-input--drop-down item="name" v-if="added_technologies.plateform !== 'false'" :placeholder="backend_tehnologies.plateform.name" v-model="setPlateform" :items="technologies.backend.plateform"/>
+                <os-input--drop-down item="name" v-if="added_technologies.plateform !== 'No'" :placeholder="backend_tehnologies.plateform.name" v-model="setPlateform" :items="technologies.backend.plateform"/>
             </div>
 
             <div class='backend__item'>
-                <os-input--drop-down item="version" v-if="added_technologies.plateform !== 'false'" :placeholder="backend_tehnologies.plateform.version" v-model="set_plateform_version" :items="get_plateform_version"/>
+                <os-input--drop-down item="version" v-if="added_technologies.plateform !== 'No'" :placeholder="backend_tehnologies.plateform.version" v-model="set_plateform_version" :items="get_plateform_version"/>
             </div>
 
              <div class='backend__item fluid'>
-                <os-input--checkbox v-model="added_technologies.framework" title='Have you used any framework?' :options="[{title: 'Yes', value: true}, {title: 'No', value: false}]"/>
+                <os-input--checkbox v-model="added_technologies.framework" title='Have you used any framework?' :options="['Yes','No']"/>
             </div>
 
                     
             <div class='backend__item'>
-                <os-input--drop-down v-if="added_technologies.framework !== 'false'" item="name" :placeholder="backend_tehnologies.framework.name" v-model="setFramework" :items="technologies.backend.framework"/>
+                <os-input--drop-down v-if="added_technologies.framework !== 'No'" item="name" :placeholder="backend_tehnologies.framework.name" v-model="setFramework" :items="technologies.backend.framework"/>
             </div>
 
             <div class='backend__item'>
-                <os-input--drop-down v-if="added_technologies.framework !== 'false'" item="version" :placeholder="backend_tehnologies.framework.version" v-model="set_framework_version" :items="get_framework_version"/>
+                <os-input--drop-down v-if="added_technologies.framework !== 'No'" item="version" :placeholder="backend_tehnologies.framework.version" v-model="set_framework_version" :items="get_framework_version"/>
             </div>
 
 
 
             <div class='backend__item fluid'>
-                <os-input--checkbox v-model="added_technologies.libraries" title='Have you used any third-party libraries?' :options="[{title: 'Yes', value: true}, {title: 'No', value: false}]"/>
+                <os-input--checkbox v-model="added_technologies.libraries" title='Have you used any third-party libraries?' :options="['Yes','No']"/>
             </div>
 
             <div class='backend__item'>
-                <os-input--drop-down v-if="added_technologies.libraries !== 'false'" item="name" :placeholder="backend_tehnologies.libraries.name" v-model="setLibraries" :items="technologies.backend.framework"/>
+                <os-input--drop-down v-if="added_technologies.libraries !== 'No'" item="name" :placeholder="backend_tehnologies.libraries.name" v-model="setLibraries" :items="technologies.backend.libraries"/>
             </div>
 
             <div class='backend__item'>
-                <os-input--drop-down v-if="added_technologies.libraries !== 'false'" item="version" :placeholder="backend_tehnologies.libraries.version" v-model="set_libraries_version" :items="get_libraries_version"/>
+                <os-input--drop-down v-if="added_technologies.libraries !== 'No'" item="version" :placeholder="backend_tehnologies.libraries.version" v-model="set_libraries_version" :items="get_libraries_version"/>
+            </div>
+
+             <div class='backend__item fluid'>
+                <button type="button" @click="next_page">Next</button>
+                <os-button @click="next_page" title='NEXT'/>
             </div>
 
         </div>
@@ -89,6 +94,12 @@ export default {
             version: "Version"
         }
       }
+    }
+  },
+  methods: {
+    next_page() {
+      this.$store.commit('listings/set_backend_technologies', {...this.backend_tehnologies})
+      this.$router.push('/sell/price')
     }
   },
   computed: {

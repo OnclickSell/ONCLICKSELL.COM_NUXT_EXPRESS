@@ -19,7 +19,7 @@
 
             <div class='set-price__item set-price__input'>
                 <os-input-help/>
-               <os-input :fill='false' placeholder='$ How much your website worth?'/>
+               <os-input :fill='false' v-model="price" placeholder='$ How much your website worth?'/>
             </div>
 
             <div class='set-price__item'>
@@ -59,6 +59,7 @@
             </div>
 
             <div class='set-price__item set-price__button'>
+                <button @click="next_page">Next</button>
                 <os-button title='NEXT'/>
             </div>
         </div>
@@ -83,12 +84,17 @@ export default {
   data () {
     return {
       features: ['$0.00 flat rate', '15% referral fee per successful sale', '$30 monthly subsription fee'],
-      description: 'Suitable for small scaled projects that do not exceed 10GB in size'
+      description: 'Suitable for small scaled projects that do not exceed 10GB in size',
+      price: 0
+    }
+  },
+  methods: {
+    next_page() {
+      this.$store.commit('listings/set_price', this.price)
+      this.$router.push('/sell/code_sample')
     }
   },
   components: {
-    Logo,
-    'os-footer': OSFooter,
     'os-progress-bar': PrograssBar,
     'os-input': Input,
     'os-textarea': Textarea,

@@ -1,4 +1,3 @@
-
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 const auth = require('../../packages/auth');
@@ -57,7 +56,10 @@ exports.get_technologies = (req) => {
     let technologies = {
         frontend: {
             framework: '',
-            plateforms: ''
+            plateforms: '',
+            libraries: '',
+            html: '',
+            css: ''
         },
         backend: {
             framework: '',
@@ -74,25 +76,53 @@ exports.get_technologies = (req) => {
             .select('*')
             .then(F_plateform => {
                 technologies.frontend.plateforms = F_plateform
-                db('backend_framework_list')
+                db('frontend_libraries_list')
                 .select('*')
-                .then(B_framework => {
-                    technologies.backend.framework = B_framework
-                    db('backend_Plateform_list')
+                .then(F_libraries => {
+                    technologies.frontend.libraries = F_libraries
+                    db('technology_html')
                     .select('*')
-                    .then(B_plateform => {
-                        technologies.backend.plateforms = B_plateform
-                        resolve(technologies)
+                    .then(F_html => {
+                        technologies.frontend.html = F_html
+                        db('technology_css')
+                        .select('*')
+                        .then(F_css => {
+                            technologies.frontend.css = F_css
+
+                            db('backend_framework_list')
+                            .select('*')
+                            .then(B_framework => {
+                                technologies.backend.framework = B_framework
+                                db('backend_Plateform_list')
+                                .select('*')
+                                .then(B_plateform => {
+                                    technologies.backend.plateforms = B_plateform
+                                    db('backend_libraries_list')
+                                    .select('*')
+                                    .then(B_libraries => {
+                                        technologies.backend.libraries = B_libraries
+                                        resolve(technologies)
+                                    })
+                                    .catch(err => reject(err))
+                                })
+                                .catch(err => reject(err))
+                            })
+                            .catch(err => reject(err))
+
+                        })
+                        .catch(err => reject(err))
                     })
                     .catch(err => reject(err))
                 })
                 .catch(err => reject(err))
+               
             })
             .catch(err => reject(err))
         })
         .catch(err => reject(err))
     })     
 }
+
 
 /*
 |--------------------------------------------------------------------------

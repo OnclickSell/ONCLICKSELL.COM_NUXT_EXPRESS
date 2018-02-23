@@ -93,6 +93,7 @@ import { mapGetters } from 'vuex'
 import axios from 'axios'
 
 export default {
+  layout: 'main--layout',
   fetch({store}) {
     return store.dispatch('listings/fetchTechnologies')
   },
@@ -125,7 +126,6 @@ export default {
   },
   methods: {
     next_page() {
-      this.$store.commit('listings/set_frontend_technologies', {...this.frontend_tehnologies})
       this.$router.push('/sell/back-end')
     }
   },

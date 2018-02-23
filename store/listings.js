@@ -6,21 +6,29 @@ export const state = () => ({
   technologies: {
     frontend: {
       framework: '',
-      plateform: ''
+      plateform: '',
+      libraries: '',
+      html: '',
+      css: ''
     },
     backend: {
       framework: '',
-      plateform: ''
+      plateform: '',
+      libraries: ''
     }
   },
   listingsDetails: {
     title: '',
-    summary: ''
+    summary: '',
+    price: ''
+  },
+  project_technologies: {
+    frontend: '',
+    backend: ''
   }
 })
 export const mutations = {
   setBasicInfo (state, payload) {
-    console.log(payload)
     state.listingsDetails.title = payload.title
     state.listingsDetails.summary = payload.summary
   },
@@ -33,8 +41,24 @@ export const mutations = {
   setTechnologies (state, payload) {
     state.technologies.frontend.framework = payload.frontend.framework
     state.technologies.frontend.plateform = payload.frontend.plateforms
+    state.technologies.frontend.libraries = payload.frontend.libraries
+    state.technologies.frontend.html = payload.frontend.html
+    state.technologies.frontend.css = payload.frontend.css
     state.technologies.backend.framework = payload.backend.framework
     state.technologies.backend.plateform = payload.backend.plateforms
+    state.technologies.backend.libraries = payload.backend.libraries
+  },
+  set_frontend_technologies (state, payload) {
+    state.project_technologies.frontend = payload
+  },
+  set_backend_technologies (state, payload) {
+    state.project_technologies.backend = payload
+  },
+  set_price (state, payload) {
+    state.listingsDetails.price = payload
+  },
+  set_screenshots (state, payload) {
+    console.log('uploading')
   }
 }
 export const actions = {
