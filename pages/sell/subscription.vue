@@ -2,9 +2,67 @@
     <div>
             
         <div class='set-price'>
-           <h1>Upload a few of your code screenshots</h1>
-            <input type="file" ref="fileInput" style="display:none" @change="on_file_selected" multiple />
-            <button type="button" @click="$refs.fileInput.click()">Upload</button>
+            <div class='frontend__item fluid'>
+                <os-progress-bar step='1'>
+                    <h1 slot='title'>Bassic informatin about your listing</h1>
+                    <p slot='description'>A good title and description can give a transparent picture of your project and helps clients find the right project they need.</p>
+                </os-progress-bar>
+            </div>
+
+
+            <div class='set-price__item'>
+                <div class='set-price__alert-box'>
+                    <h1 class='set-price__alert-box--title'>Consider referral fee in your price</h1>
+                    <p class='set-price__alert-box--content'>OnclickSell.com will charge you a referral fee plus a flat rate per successfull sale, and deposites the remain amount to your account,  these values could change, depending on the plan you choose. </p>
+                </div>
+            </div>
+
+            <div class='set-price__item set-price__input'>
+                <os-input-help/>
+               <os-input :fill='false' v-model="price" placeholder='$ How much your website worth?'/>
+            </div>
+
+            <div class='set-price__item'>
+                <div v-for="plan in plans" :key="plan.id" class='plan-container'>
+                    <h1 class="plane__title">{{plan.plan_name}}</h1>
+                    <div class="plan__features">
+                        <ul class='plan__features--list'>
+                            <li class='plan__features--item'>{{plan.flate_rate}}</li>
+                            <li class='plan__features--item'>${{plan.price}} monthly subscription fee</li>
+                            <li class='plan__features--item'>15% Referral fee per successful sale</li>
+                        </ul>
+                    </div>
+                    <p class="plan__description">{{plan.summary}}</p>
+                    <button @click="select_plan(plan)">Go with {{plan.colour_code}}</button>
+                </div>
+
+
+                <div class='set-price__table'>
+                    <ul class='set-price__list'>
+                        <li class='set-price__list--title'>Initial price</li>
+                        <li class='set-price__list--title'>Flate rate</li>
+                        <li class='set-price__list--title'>Referral fee</li>
+                        <li class='set-price__list--title'>Referral fee</li>
+                        <li class='set-price__list--item'>$400</li>
+                        <li class='set-price__list--item'>$0</li>
+                        <li class='set-price__list--item'>15%</li>
+                        <li class='set-price__list--item'>$390</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class='set-price__item'>
+                <div class="set-price__info-panel">
+                    <h1 class="set-price__info-panel--title">How does it work?</h1>
+                    <p class="set-price__info-panel--content">The price that you set for your application is the price that will display on your listed items. After the buyer purchased your item the fees will subtract from the actual price and the Deposit amount will be Deposit to your account based on the plane you choose.</p>
+                </div>
+            </div>
+
+            <div class='set-price__item set-price__button'>
+                <button @click="next_page">Next</button>
+                <os-button title='NEXT'/>
+            </div>
         </div>
     
        
@@ -21,33 +79,24 @@ import InputHelp from '@/components/sell/input--help.vue'
 import Plan from '@/components/sell/plan.vue'
 import DropDown from '@/components/sell/input--drop-down.vue'
 import InputCheckbox from '@/components/sell/input--checkbox.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   layout: 'main--layout',
+  fetch({store}) {
+    return store.dispatch('payments/fetchPlans')
+  },
   data () {
     return {
       features: ['$0.00 flat rate', '15% referral fee per successful sale', '$30 monthly subsription fee'],
       description: 'Suitable for small scaled projects that do not exceed 10GB in size',
-      screenshots: []
+      price: 0
     }
   },
   methods: {
-    on_file_selected(event) {
-      this.screenshots = event.target.files
-      const fd = new FormData()
-      fd.append('screenshots', this.screenshots, this.screenshots.name)
-      this.screenshots = fd
-      console.log(this.screenshots)
-    },
-    on_upload() {
-
-    },
-    next_page() {
-      this.$store.commit('listings/set_price', this.price)
-      this.$router.push('/sell/subscription')
-    },
-    set_screenshots() {
-      this.$store.commit('listings/set_screenshots')
+    select_plan(plan) {
+      this.$store.commit('listings/set_plan', plan)
+      this.$router.push('/sell/pricing')
     }
   },
   components: {
@@ -60,6 +109,11 @@ export default {
     'os-plan': Plan,
     'os-input--drop-down': DropDown,
     'os-input--checkbox': InputCheckbox
+  },
+  computed: {
+    ...mapGetters({
+      plans: 'payments/getPlans'
+    })
   }
 }
 </script>

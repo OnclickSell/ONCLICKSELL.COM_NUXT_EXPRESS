@@ -99,7 +99,7 @@ export default {
   methods: {
     next_page() {
       this.$store.commit('listings/set_backend_technologies', {...this.backend_tehnologies})
-      this.$router.push('/sell/price')
+      this.$router.push('/sell/code_sample')
     }
   },
   computed: {

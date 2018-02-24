@@ -20,7 +20,8 @@ export const state = () => ({
   listingsDetails: {
     title: '',
     summary: '',
-    price: ''
+    price: '',
+    plan: ''
   },
   project_technologies: {
     frontend: '',
@@ -59,6 +60,9 @@ export const mutations = {
   },
   set_screenshots (state, payload) {
     console.log('uploading')
+  },
+  set_plan (state, payload) {
+    state.listingsDetails.plan = payload
   }
 }
 export const actions = {
@@ -84,6 +88,19 @@ export const actions = {
       return axios.get('http://localhost:3000/api/v1/listings/' + payload.id + '/' + payload.title)
         .then(response => {
           vuexContext.commit('setSingleListing', response.data)
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
+    },
+    submitListings(vuexContext, payload) {
+      let newListing = {
+        technologies: vuexContext.state.technologies,
+        details: vuexContext.state.listingsDetails
+      }
+      return axios.put('http://localhost:3000/api/v1/listings/')
+        .then(response => {
+          console.log(response.data)
         })
         .catch(error => {
           console.log(error.response)

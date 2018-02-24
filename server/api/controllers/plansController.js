@@ -1,5 +1,5 @@
 
-const listingsModel = require('../models/listings');
+const plansModel = require('../models/plans');
 const responser = require('../../packages/responser')
 const wrapAsync = require('../../packages/wrapAsync')
 let validator = require('../../packages/validator');
@@ -16,47 +16,22 @@ validator = new validator()
 |
 */
 
-exports.create_listing = wrapAsync( async (req, res, next) => {
-
-    try {
-        await validator.validate({
-            title: ['required'],
-            summary: ['required'],
-            description: ['required'],
-            price: ['required'],
-            plan_id: ['required'],
-            F_framework_id: ['required'],
-            F_plateform_id: ['required'],
-            F_libraries_id: ['required'],
-            B_framework_id: ['required'],
-            B_plateform_id: ['required'],
-            B_libraries_id: ['required']
-          }, {
-              title: req.body.newListing.title,
-              summary: req.body.newListing.summary,
-              description: req.body.newListing.description,
-              price: req.body.newListing.price,
-              plan_id: req.body.newListing.plan.id,
-              F_framework_id: req.body.newListing.technologies.frontend.framework.id,
-              F_plateform_id: req.body.newListing.technologies.frontend.plateform.id,
-              F_libraries_id: req.body.newListing.technologies.frontend.libraries.id,
-              B_framework_id: req.body.newListing.technologies.backend.framework.id,
-              B_plateform_id: req.body.newListing.technologies.backend.plateform.id,
-              B_libraries_id: req.body.newListing.technologies.backend.libraries.id,
-          })
-
-    } catch (err) {
-        throw { type: "BadRequest", message: err }
+exports.create_single_listings = (req, res, next) => {
+  
+    this.callback = function callback(err) {
+        if(err) {
+            res.status(409).json({
+                messgage: err
+            })
+        }else {
+            res.status(200).json({
+                messgage: 'You signed up successfully'
+            })
+        }
     }
 
-    try{
-        
-        const plans = await listingsModel.create_listing()
-        responser.send(res, 200, "Success", plans)
-    }catch(err) {
-        throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
-    }
-})
+    return listingsModel.create_single_listings(req, this.callback);
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -69,30 +44,14 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
 |
 */
 
-exports.get_all_listings = (req, res, next) => {
-    function callback(err, listings) {
-        if(err) {
-            res.status(409).json({
-                status: "Failed",
-                code: 409,
-                messgage: "Something is wrong with your request",
-                result: {
-                    error: err
-                }
-            })
-        }else {
-            res.status(200).json({
-                status: "OK",
-                code: 200,
-                messgage: 'All the listings are listed below',
-                result: {
-                    listings: listings
-                }
-            })
-        }
+exports.get_plans = wrapAsync( async (req, res, next) => {
+    try{
+      const plans = await plansModel.get_plans()
+      responser.send(res, 200, "Success", plans)
+    }catch(err) {
+        throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
     }
-    return listingsModel.get_all_listings(req.query.offset, req.query.limit, req.query.order, callback);
-}
+})
 
 
 /*

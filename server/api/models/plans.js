@@ -14,27 +14,33 @@ const bcrypt = require('bcrypt');
 |
 */
 
-exports.get_all_listings = (offset, limit, order, callback) => {
+exports.get_plans = () => {
+    return new Promise((resolve, reject) => {
+        db('plan')
+        .select('*')
+        .then(value => resolve(value))
+        .catch(err => reject(err))   
+    })
     // return new Promise((resolve, reject) => {
         
     // })
-    if (limit > 50) {
-        limit = 50
-    }
-    db('listings')
-    // .orderBy(order, 'asc')
-    .limit(+limit)
-    .offset(+offset)
-    .leftJoin('review', 'listings.id', '=', 'review.listing_id')
-    .join('users', 'listings.id', '=', 'listings.user_id')
-    .select([
-        'listings.id',
-        'title',
-        'users.sex',
-        'users.id'
-    ])
-    .then(value => callback('', value))
-    .catch(err => callback(err, ''))   
+    // if (limit > 50) {
+    //     limit = 50
+    // }
+    // db('listings')
+    // // .orderBy(order, 'asc')
+    // .limit(+limit)
+    // .offset(+offset)
+    // .leftJoin('review', 'listings.id', '=', 'review.listing_id')
+    // .join('users', 'listings.id', '=', 'listings.user_id')
+    // .select([
+    //     'listings.id',
+    //     'title',
+    //     'users.sex',
+    //     'users.id'
+    // ])
+    // .then(value => callback('', value))
+    // .catch(err => callback(err, ''))   
 }
 
 /*
@@ -73,24 +79,17 @@ exports.get_single_listing = (payload, callback) => {
 |
 */
 
-exports.create_listing = (req) => {
-
-    const upload = () => {
-        db('listings')
-        .select('*')
-        .then(result => resolve(result))
-        .catch(err => reject(err))
-    }
+exports.create_single_listings = (req, callback) => {
         
-    return new Promise( async(resolve, reject) => {
-        try {
-            const plans = await db('listings')
-            .select('*')
-            resolve(plans)
-        }catch(err) {
-            reject(err)
-        }
-    })
+    db('listings').insert({
+
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        profile_picture: 'fafsafsf',
+        password: req.body.password
+
+    }).asCallback((err) => callback(err));
         
 }
 
