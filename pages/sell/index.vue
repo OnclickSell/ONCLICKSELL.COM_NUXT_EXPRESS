@@ -22,7 +22,7 @@
 
             <div class='basic-info__item'>
                 <button @click="next">safjsakf</button>
-                <os-button title='NEXT' @click="next"/>
+                <os-button title='NEXT' v-on:clicked="next"/>
             </div>
 
             <div class='basic-info__item basic-info__input--top-margin'>
