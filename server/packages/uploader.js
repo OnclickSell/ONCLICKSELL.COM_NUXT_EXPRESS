@@ -7,17 +7,27 @@ cloudinary.config({
 })
 const fs = require('fs');
 
-module.exports = function(folder, fieldName, limit) {
+
+
+
+
+const options = {
+    field: '',
+    folder: 'OnclickSell.com/',
+}
+
+
+module.exports = function(folder) {
     let that = this
-    let fields = fieldName
-    let filesLimit = limit
+    let fields = [{name: "avatar"}]
+    let field = 'avatar'
     let files = []
     this.CloudinaryConfig = {
         folder: folder,
         use_filename: true
     },
-    // this.singular_upload = multer({ dest: './server/uploads' }).single(fields),
-    this.multiple_upload = multer({ dest: './server/uploads' }).array(fields, filesLimit),
+    // this.singular_upload = multer({ dest: './server/uploads' }).single(field),
+    this.multiple_upload = multer({ dest: './server/uploads' }).fields(fields),
     this.upload_to_cloudinary = (files) => {
         return new Promise( async (resolve, reject) => {
             let results = []
@@ -44,8 +54,7 @@ module.exports = function(folder, fieldName, limit) {
 
     this.upload = (req, configs) => {
         return new Promise( async (resolve, reject) => {
-            // fields = configs.fields
-
+            fields = configs.fields
 
             //Check where multiple field exists
             // if(configs.fields.constructor === Array) {                 
@@ -55,10 +64,9 @@ module.exports = function(folder, fieldName, limit) {
                       reject(err)
                     
                     }
-
                     // Store the files in files array
-                    for(var i = 0; i < req.files.length; i++) {
-                      files.push(req.files[i].path)
+                    for(var i = 0; i < req.files.avatar.length; i++) {
+                      files.push(req.files.avatar[i].path)
                       console.log(i)
                     }
 
@@ -69,22 +77,22 @@ module.exports = function(folder, fieldName, limit) {
                         reject(err)
                     }
                 })
-            // } else {
-            //     this.singular_upload(req, 'TEST', async (err) => {
-            //         if(err) {
-            //           reject(err)
-            //         }
+            } else {
+                this.singular_upload(req, 'TEST', async (err) => {
+                    if(err) {
+                      reject(err)
+                    }
 
-            //         files.push(req.file.path)
+                    files.push(req.file.path)
 
-            //        try {
-            //            result = await that.upload_to_cloudinary(files)
-            //            resolve(result)
-            //        }catch(err) {
-            //            reject(err)
-            //        }
-            //     })
-            // }
+                   try {
+                       result = await that.upload_to_cloudinary(files)
+                       resolve(result)
+                   }catch(err) {
+                       reject(err)
+                   }
+                })
+            }
 
             
         })
