@@ -26,7 +26,7 @@ module.exports = function(folder) {
         folder: folder,
         use_filename: true
     },
-    this.singular_upload = multer({ dest: './server/uploads' }).single(field),
+    // this.singular_upload = multer({ dest: './server/uploads' }).single(field),
     this.multiple_upload = multer({ dest: './server/uploads' }).fields(fields),
     this.upload_to_cloudinary = (files) => {
         return new Promise( async (resolve, reject) => {
