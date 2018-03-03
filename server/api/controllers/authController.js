@@ -96,9 +96,9 @@ exports.signUp = wrapAsync( async (req, res, next) => {
         //Add the user to Database
         const user = await authModel.signUp(req, next)
         //Issue Token
-        const token = await tokener.issueToken(user[0].id)
+        const token = await tokener.issueToken(user.id)
         //Send the user details
-        response.E200(req, res, {user: user[0], token: token})
+        response.E200(req, res, {user: user, token: token})
     } catch(err) {
         throw { type: "InternalServerError", message: "Something went wrong with the server. Please try again" }
     }
