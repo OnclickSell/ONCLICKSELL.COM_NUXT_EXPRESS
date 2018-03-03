@@ -6,6 +6,9 @@
             <input type="file" ref="fileInput" style="display:none" @change="on_file_selected" multiple />
             <button type="button" @click="$refs.fileInput.click()">Upload</button>
         </div>
+        <div class='set-price'>
+            <button type="button" @click="next_page">Next</button>
+        </div>
     
        
     </div>
@@ -37,13 +40,12 @@ export default {
       const fd = new FormData()
       fd.append('screenshots', this.screenshots, this.screenshots.name)
       this.screenshots = fd
-      console.log(this.screenshots)
     },
     on_upload() {
 
     },
     next_page() {
-      this.$store.commit('listings/set_price', this.price)
+      this.$store.commit('listings/set_screenshots', this.screenshots)
       this.$router.push('/sell/subscription')
     },
     set_screenshots() {

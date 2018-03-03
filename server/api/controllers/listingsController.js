@@ -2,8 +2,11 @@
 const listingsModel = require('../models/listings');
 const responser = require('../../packages/responser')
 const wrapAsync = require('../../packages/wrapAsync')
+let uploader = require('../../packages/uploader')
+uploader = new uploader()
 let validator = require('../../packages/validator');
 validator = new validator()
+const mailer = require('../../packages/mailer')
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +22,24 @@ validator = new validator()
 exports.create_listing = wrapAsync( async (req, res, next) => {
 
     try {
+        // const screenshots = await uploader.upload_screenshots(req, {folder: 'ffsf'})
+        // req.body.newListing['screenshots'] = screenshots
+        
+        //  res.json(req.body.newListing.plan.id)
+        let mailOptions = {
+            from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            to: 'aliakbar.su@hotmail.com', // list of receivers
+            subject: 'Hello ✔', // Subject line
+            text: 'Hello world?', // plain text body
+            html: '<b>Hello world?</b>' // html body
+        };
+        // mailer.send(mailOptions)
+    }catch(err) {
+        throw { type: "BadRequest", message: err.message }
+    }
+
+    try {
+
         await validator.validate({
             title: ['required'],
             summary: ['required'],
@@ -36,13 +57,13 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
               summary: req.body.newListing.summary,
               description: req.body.newListing.description,
               price: req.body.newListing.price,
-              plan_id: req.body.newListing.plan.id,
-              F_framework_id: req.body.newListing.technologies.frontend.framework.id,
-              F_plateform_id: req.body.newListing.technologies.frontend.plateform.id,
-              F_libraries_id: req.body.newListing.technologies.frontend.libraries.id,
-              B_framework_id: req.body.newListing.technologies.backend.framework.id,
-              B_plateform_id: req.body.newListing.technologies.backend.plateform.id,
-              B_libraries_id: req.body.newListing.technologies.backend.libraries.id,
+              plan_id: req.body.newListing.plan.id.toString(),
+              F_framework_id: req.body.newListing.technologies.frontend.framework.id.toString(),
+              F_plateform_id: req.body.newListing.technologies.frontend.plateform.id.toString(),
+              F_libraries_id: req.body.newListing.technologies.frontend.libraries.id.toString(),
+              B_framework_id: req.body.newListing.technologies.backend.framework.id.toString(),
+              B_plateform_id: req.body.newListing.technologies.backend.plateform.id.toString(),
+              B_libraries_id: req.body.newListing.technologies.backend.libraries.id.toString(),
           })
 
     } catch (err) {
@@ -51,7 +72,7 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
 
     try{
         
-        const plans = await listingsModel.create_listing()
+        const plans = await listingsModel.create_listing({...req.body.newListing})
         responser.send(res, 200, "Success", plans)
     }catch(err) {
         throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}

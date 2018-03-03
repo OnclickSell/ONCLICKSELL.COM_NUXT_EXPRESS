@@ -60,6 +60,7 @@
 
             <div class='set-price__item set-price__button'>
                 <button @click="next_page">Next</button>
+                <button @click="submit">Submit</button>
                 <os-button title='NEXT'/>
             </div>
         </div>
@@ -92,6 +93,9 @@ export default {
     next_page() {
       this.$store.commit('listings/set_price', this.price)
       this.$router.push('/sell/code_sample')
+    },
+    submit() {
+        this.$store.dispatch('listings/submitListings')
     }
   },
   components: {

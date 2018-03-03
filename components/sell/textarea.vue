@@ -5,7 +5,7 @@
             <span slot='title'>Title is too long!</span>
             <span slot='description'>Just for testing!</span>
         </os-input--tooltip>
-        <textarea type='text' rows="10" class='basic-info__input__input basic-info__textarea--stop-v-resize xs-p-a-2'></textarea>
+        <textarea @input="change" type='text' rows="10" class='basic-info__input__input basic-info__textarea--stop-v-resize xs-p-a-2'></textarea>
     </form>
 </template>
 
@@ -13,6 +13,11 @@
 import InputTooltip from '@/components/others/input--tooltip.vue'
 export default {
   props: ['placeholder', 'title'],
+  methods: {
+    change (event) {
+      this.$emit('input', event.target.value )
+    }
+  },
   components: {
     'os-input--tooltip': InputTooltip
   }

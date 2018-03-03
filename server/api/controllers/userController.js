@@ -189,7 +189,7 @@ exports.update_user_details = wrapAsync( async function(req, res, next) {
 
 exports.update_user_avatar = wrapAsync( async function(req, res, next) {
     try {
-        const avatar_link = await uploader.upload(req, res)
+        const avatar_link = await uploader.upload_avatar(req, {folder: 'profile_pictures', field: 'profile_picture'})
         const result = await userModel.update_user_avatar(req, avatar_link.secure_url)
         response.E200(req, res, result)
     } catch(err) {

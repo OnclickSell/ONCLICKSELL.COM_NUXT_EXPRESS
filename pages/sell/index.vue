@@ -17,7 +17,7 @@
 
             <div class='basic-info__item basic-info__textarea'>
                 <os-input-help/>
-                <os-textarea title='Application  Description'/>
+                <os-textarea v-model="basicInfo.summary" title='Application  Description'/>
             </div>
 
             <div class='basic-info__item'>

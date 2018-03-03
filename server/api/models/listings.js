@@ -73,22 +73,80 @@ exports.get_single_listing = (payload, callback) => {
 |
 */
 
-exports.create_listing = (req) => {
+exports.create_listing = (data) => {
 
-    const upload = () => {
-        db('listings')
-        .select('*')
-        .then(result => resolve(result))
-        .catch(err => reject(err))
-    }
-        
+    const dateNow =  new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDay() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()
     return new Promise( async(resolve, reject) => {
         try {
-            const plans = await db('listings')
-            .select('*')
-            resolve(plans)
+            await db('frontend_framework_list').where('id', data.technologies.frontend.framework.id).select('*')
+            await db('frontend_plateform_list').where('id', data.technologies.frontend.plateform.id).select('*')
+            // await db('frontend_libraries_list').where('id', data.technologies.frontend.libraries.id).select('*')
+            await db('backend_framework_list').where('id', data.technologies.backend.framework.id).select('*')
+            await db('backend_plateform_list').where('id', data.technologies.backend.plateform.id).select('*')
+            // await db('backend_libraries_list').where('id', data.technologies.backend.libraries.id).select('*')
         }catch(err) {
-            reject(err)
+            reject('Your request contains invalid data')
+        }
+
+        try {
+
+            const listing = await db('listings')
+            .insert({
+                title: data.title,
+                summary: data.summary,
+                description: data.description,
+                plan_id: data.plan.id,
+                completed: 1,
+                user_id: 1,
+                thumbnail: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1515050579/OnclickSell.com/Photos/home-office-2452806_960_720.jpg',
+                created_at: dateNow,
+                updated_at: dateNow
+            })
+
+            const technologies = await db('technology')
+            .insert({
+                listing_id: listing[0],
+                html: 'HTML 5.0',
+                css: 'CSS 3.0',
+                created_at: dateNow,
+                updated_at: dateNow
+            })
+
+            await db('frontend_framework')
+            .insert({
+                frontend_framework_id: data.technologies.frontend.framework.id,
+                technology_id: technologies[0],
+                created_at: dateNow,
+                updated_at: dateNow
+            })
+
+            await db('frontend_plateform')
+            .insert({
+                frontend_plateform_id: data.technologies.frontend.plateform.id,
+                technology_id: technologies[0],
+                created_at: dateNow,
+                updated_at: dateNow
+            })
+
+            await db('backend_framework')
+            .insert({
+                backend_framework_id: data.technologies.backend.framework.id,
+                technology_id: technologies[0],
+                created_at: dateNow,
+                updated_at: dateNow
+            })
+
+            await db('backend_plateform')
+            .insert({
+                backend_plateform_id: data.technologies.backend.plateform.id,
+                technology_id: technologies[0],
+                created_at: dateNow,
+                updated_at: dateNow
+            })
+
+            resolve('Success')
+        }catch(err) {
+            reject('Your request contains invalid data')
         }
     })
         

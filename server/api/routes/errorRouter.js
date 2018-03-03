@@ -10,7 +10,7 @@ const auth = require('../../packages/auth');
 let validator = require('../../packages/validator');
 validator = new validator()
 let uploader = require('../../packages/uploader')
-uploader = new uploader()
+uploader = new uploader('OnclickSell.com/')
 
 let sender = require('../../packages/sender')
 
@@ -48,7 +48,7 @@ router.post('/validate', (req, res, next) => {
 router.post('/upload', wrapAsync( async (req, res, next) => {
 
  try {
-  const result = await uploader.upload(req, res)
+  const result = await uploader.upload(req, {fields: [{name: 'avatar'}], folder: 'OnclickSell.com/'})
   console.log(result)
  } catch(err) {
    console.log(err)

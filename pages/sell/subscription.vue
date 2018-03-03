@@ -60,7 +60,7 @@
             </div>
 
             <div class='set-price__item set-price__button'>
-                <button @click="next_page">Next</button>
+                <!-- <button @click="next_page">Next</button> -->
                 <os-button title='NEXT'/>
             </div>
         </div>

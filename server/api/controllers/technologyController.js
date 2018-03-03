@@ -23,7 +23,6 @@ validator = new validator()
 exports.get_technologies = wrapAsync( async (req, res, next) => {
  
      const technologies = await technologyModel.get_technologies(req)
-     console.log(technologies)
      responser.send(res, 200, "Success", technologies)
  })
 

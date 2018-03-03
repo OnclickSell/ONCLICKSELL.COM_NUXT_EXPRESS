@@ -20,8 +20,10 @@ export const state = () => ({
   listingsDetails: {
     title: '',
     summary: '',
-    price: '',
-    plan: ''
+    price: '4242',
+    plan: {id: 2},
+    description: 'fasfsafasf',
+    screenshots: ''
   },
   project_technologies: {
     frontend: '',
@@ -59,7 +61,7 @@ export const mutations = {
     state.listingsDetails.price = payload
   },
   set_screenshots (state, payload) {
-    console.log('uploading')
+    state.listingsDetails.screenshots = payload
   },
   set_plan (state, payload) {
     state.listingsDetails.plan = payload
@@ -95,10 +97,10 @@ export const actions = {
     },
     submitListings(vuexContext, payload) {
       let newListing = {
-        technologies: vuexContext.state.technologies,
-        details: vuexContext.state.listingsDetails
+        ...vuexContext.state.listingsDetails,
+        technologies: vuexContext.state.project_technologies
       }
-      return axios.put('http://localhost:3000/api/v1/listings/')
+      return axios.post('http://localhost:3000/api/v1/listings/', { newListing: newListing })
         .then(response => {
           console.log(response.data)
         })
