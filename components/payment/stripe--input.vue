@@ -104,6 +104,7 @@ export default {
       let that = this
       stripe.createToken(cardNumber).then(function(result) {
           if(!result.error) {
+            alert('asfasfsf')
               that.$emit('createToken', result.token)
           }
       })

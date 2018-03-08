@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/authMiddleware')
 //     return listingsController.test(req, res, next);
 // });
 
-router.get('/', listingsController.get_all_listings);
+router.get('/', listingsController.get_listings);
 router.get('/:id/:title', listingsController.get_single_listing);
 router.post('/', listingsController.create_listing);
 router.put('/:id', authMiddleware, listingsController.update_single_listings);

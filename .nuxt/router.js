@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const _bfa868fc = () => import('..\\pages\\tickets\\index.vue' /* webpackChunkName: "pages_tickets_index" */).then(m => m.default || m)
+<<<<<<< HEAD
 const _2baa8d00 = () => import('..\\pages\\login\\index.vue' /* webpackChunkName: "pages_login_index" */).then(m => m.default || m)
 const _958a49a4 = () => import('..\\pages\\subscription\\index.vue' /* webpackChunkName: "pages_subscription_index" */).then(m => m.default || m)
 const _1295814a = () => import('..\\pages\\purchase\\index.vue' /* webpackChunkName: "pages_purchase_index" */).then(m => m.default || m)
@@ -24,6 +25,21 @@ const _7ccc6603 = () => import('..\\pages\\sell\\code_sample.vue' /* webpackChun
 const _8ceeae46 = () => import('..\\pages\\listings\\_id\\_title.vue' /* webpackChunkName: "pages_listings__id__title" */).then(m => m.default || m)
 const _14547e5b = () => import('..\\pages\\about_us\\index.vue' /* webpackChunkName: "pages_about_us_index" */).then(m => m.default || m)
 const _13f27ba5 = () => import('..\\pages\\select_plan.vue' /* webpackChunkName: "pages_select_plan" */).then(m => m.default || m)
+=======
+const _45db6900 = () => import('..\\pages\\profile\\index.vue' /* webpackChunkName: "pages_profile_index" */).then(m => m.default || m)
+const _958a49a4 = () => import('..\\pages\\subscription\\index.vue' /* webpackChunkName: "pages_subscription_index" */).then(m => m.default || m)
+const _a87a1a4e = () => import('..\\pages\\sell\\index.vue' /* webpackChunkName: "pages_sell_index" */).then(m => m.default || m)
+const _1295814a = () => import('..\\pages\\purchase\\index.vue' /* webpackChunkName: "pages_purchase_index" */).then(m => m.default || m)
+const _2baa8d00 = () => import('..\\pages\\login\\index.vue' /* webpackChunkName: "pages_login_index" */).then(m => m.default || m)
+const _2fa95e68 = () => import('..\\pages\\register\\index.vue' /* webpackChunkName: "pages_register_index" */).then(m => m.default || m)
+const _e694b244 = () => import('..\\pages\\register\\preview.vue' /* webpackChunkName: "pages_register_preview" */).then(m => m.default || m)
+const _717c84a6 = () => import('..\\pages\\test\\cookie.vue' /* webpackChunkName: "pages_test_cookie" */).then(m => m.default || m)
+const _041e34f3 = () => import('..\\pages\\sell\\technologies.vue' /* webpackChunkName: "pages_sell_technologies" */).then(m => m.default || m)
+const _158e5e42 = () => import('..\\pages\\subscription\\success.vue' /* webpackChunkName: "pages_subscription_success" */).then(m => m.default || m)
+const _8ceeae46 = () => import('..\\pages\\listings\\_id\\_title.vue' /* webpackChunkName: "pages_listings__id__title" */).then(m => m.default || m)
+const _13f27ba5 = () => import('..\\pages\\select_plan.vue' /* webpackChunkName: "pages_select_plan" */).then(m => m.default || m)
+const _14547e5b = () => import('..\\pages\\about_us\\index.vue' /* webpackChunkName: "pages_about_us_index" */).then(m => m.default || m)
+>>>>>>> devlop
 const _34e70caa = () => import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */).then(m => m.default || m)
 
 
@@ -79,9 +95,15 @@ export function createRouter () {
 			name: "tickets"
 		},
 		{
+<<<<<<< HEAD
 			path: "/login",
 			component: _2baa8d00,
 			name: "login"
+=======
+			path: "/profile",
+			component: _45db6900,
+			name: "profile"
+>>>>>>> devlop
 		},
 		{
 			path: "/subscription",
@@ -89,14 +111,28 @@ export function createRouter () {
 			name: "subscription"
 		},
 		{
+<<<<<<< HEAD
+=======
+			path: "/sell",
+			component: _a87a1a4e,
+			name: "sell"
+		},
+		{
+>>>>>>> devlop
 			path: "/purchase",
 			component: _1295814a,
 			name: "purchase"
 		},
 		{
+<<<<<<< HEAD
 			path: "/profile",
 			component: _45db6900,
 			name: "profile"
+=======
+			path: "/login",
+			component: _2baa8d00,
+			name: "login"
+>>>>>>> devlop
 		},
 		{
 			path: "/register",
@@ -104,6 +140,7 @@ export function createRouter () {
 			name: "register"
 		},
 		{
+<<<<<<< HEAD
 			path: "/sell",
 			component: _a87a1a4e,
 			name: "sell"
@@ -129,14 +166,22 @@ export function createRouter () {
 			name: "test-cookie"
 		},
 		{
+=======
+>>>>>>> devlop
 			path: "/register/preview",
 			component: _e694b244,
 			name: "register-preview"
 		},
 		{
+<<<<<<< HEAD
 			path: "/sell/back-end",
 			component: _99e7e784,
 			name: "sell-back-end"
+=======
+			path: "/test/cookie",
+			component: _717c84a6,
+			name: "test-cookie"
+>>>>>>> devlop
 		},
 		{
 			path: "/sell/technologies",
@@ -144,6 +189,7 @@ export function createRouter () {
 			name: "sell-technologies"
 		},
 		{
+<<<<<<< HEAD
 			path: "/sell/subscription",
 			component: _d2984c34,
 			name: "sell-subscription"
@@ -162,6 +208,11 @@ export function createRouter () {
 			path: "/sell/code:sample",
 			component: _7ccc6603,
 			name: "sell-codesample"
+=======
+			path: "/subscription/success",
+			component: _158e5e42,
+			name: "subscription-success"
+>>>>>>> devlop
 		},
 		{
 			path: "/listings/:id?/:title?",
@@ -169,16 +220,27 @@ export function createRouter () {
 			name: "listings-id-title"
 		},
 		{
+<<<<<<< HEAD
 			path: "/about:us",
 			component: _14547e5b,
 			name: "aboutus"
 		},
 		{
+=======
+>>>>>>> devlop
 			path: "/select:plan",
 			component: _13f27ba5,
 			name: "selectplan"
 		},
 		{
+<<<<<<< HEAD
+=======
+			path: "/about:us",
+			component: _14547e5b,
+			name: "aboutus"
+		},
+		{
+>>>>>>> devlop
 			path: "/",
 			component: _34e70caa,
 			name: "index"

@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import Cards from '@/components/card/Cards.vue'
+import Cards from '@/components/cards/Cards.vue'
 import Filter from '@/components/others/Filter.vue'
 import NewLetter from '@/components/others/NewLetter.vue'
 import { mapGetters } from 'vuex'

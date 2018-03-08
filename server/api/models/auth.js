@@ -15,6 +15,56 @@ const wrapAsync = require('../../packages/wrapAsync')
 |
 */
 
+export class auth {
+    constructor () {
+    }
+
+    GetAuthUserFieldValue (field, value) {
+        try {
+                return db("users").where(field, value)
+                .select(
+                    ['id',
+                    'full_name',
+                    'email',
+                    'age',
+                    'description',
+                    'sex', 
+                    'password', 
+                    'profile_picture'
+                ]).first()
+        } catch(err) {
+            throw { type: "BadRequest", message: err.message }
+        }
+        
+    }
+
+    GetAuthById (id) {
+      return this.GetAuthUserFieldValue('id', id)
+    }
+
+    GetAuthByName (name) {
+        return this.GetAuthUserFieldValue('name', name)
+    }
+
+    GetAuthByEmail (email) {
+        return this.GetAuthUserFieldValue('email', email)
+    }
+
+    
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
 exports.signIn = (req) => {
     return new Promise((resolve, reject) => {
 

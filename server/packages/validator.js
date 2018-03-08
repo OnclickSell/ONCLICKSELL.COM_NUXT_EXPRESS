@@ -83,7 +83,7 @@ module.exports =  function() {
                 }
             }
             // reject if any error message exists
-            newErrors = Object.keys(that.errors)
+            const newErrors = Object.keys(that.errors)
             if(!newErrors.length > 0) {
                 resolve()
             } else { reject(that.errors) }

@@ -22,7 +22,7 @@ export const state = () => ({
     summary: '',
     price: '4242',
     plan: {id: 2},
-    description: 'fasfsafasf',
+    description: '',
     screenshots: ''
   },
   project_technologies: {
@@ -31,12 +31,8 @@ export const state = () => ({
   }
 })
 export const mutations = {
-  setBasicInfo (state, payload) {
-    state.listingsDetails.title = payload.title
-    state.listingsDetails.summary = payload.summary
-  },
   setListings (state, payload) {
-    state.listings = payload.data.result.listings
+    state.listings = payload
   },
   setSingleListing (state, payload) {
     state.SingleListing = payload.context[0]
@@ -50,28 +46,13 @@ export const mutations = {
     state.technologies.backend.framework = payload.backend.framework
     state.technologies.backend.plateform = payload.backend.plateforms
     state.technologies.backend.libraries = payload.backend.libraries
-  },
-  set_frontend_technologies (state, payload) {
-    state.project_technologies.frontend = payload
-  },
-  set_backend_technologies (state, payload) {
-    state.project_technologies.backend = payload
-  },
-  set_price (state, payload) {
-    state.listingsDetails.price = payload
-  },
-  set_screenshots (state, payload) {
-    state.listingsDetails.screenshots = payload
-  },
-  set_plan (state, payload) {
-    state.listingsDetails.plan = payload
   }
 }
 export const actions = {
     fetchListings ({state, commit}, payload) {
       return axios.get('http://localhost:3000/api/v1/listings?limit=' + payload.limit + '&offset=' + payload.offset + '&order=' + payload.order + '')
         .then(function (response) {
-          commit('setListings', response)
+          commit('setListings', response.data.Context)
         })
         .catch(function (error) {
           console.log(error)
@@ -95,12 +76,8 @@ export const actions = {
           console.log(error.response)
         })
     },
-    submitListings(vuexContext, payload) {
-      let newListing = {
-        ...vuexContext.state.listingsDetails,
-        technologies: vuexContext.state.project_technologies
-      }
-      return axios.post('http://localhost:3000/api/v1/listings/', { newListing: newListing })
+    submit(vuexContext, payload) {
+      return axios.post('http://localhost:3000/api/v1/listings/', { context: payload })
         .then(response => {
           console.log(response.data)
         })
