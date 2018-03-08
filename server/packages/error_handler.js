@@ -1,18 +1,18 @@
-InternalServerError = (error, res) => {
+const InternalServerError = (error, res) => {
     res.status(500).json({
         Status: "Error",
         Context: error.message
     })
 }
 
-BadRequest = (error, res) => {
+const BadRequest = (error, res) => {
     res.status(400).json({
         Status: "Error",
         Context: error.message
     })
 }
 
-Unauthorized = (error, res) => {
+const Unauthorized = (error, res) => {
     res.status(401).json({
         Status: "Error",
         Context: error.message

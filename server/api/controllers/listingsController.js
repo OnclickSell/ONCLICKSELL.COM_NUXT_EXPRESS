@@ -3,10 +3,11 @@ const listingsModel = require('../models/listings');
 const responser = require('../../packages/responser')
 const wrapAsync = require('../../packages/wrapAsync')
 let uploader = require('../../packages/uploader')
-uploader = new uploader()
+uploader = new uploader('OnclickSell.com/', 'screenshots', 2)
 let validator = require('../../packages/validator');
 validator = new validator()
 const mailer = require('../../packages/mailer')
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +38,9 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
     }catch(err) {
         throw { type: "BadRequest", message: err.message }
     }
-
+    console.log(req.body)
     try {
+        
 
         await validator.validate({
             title: ['required'],
@@ -53,28 +55,34 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
             B_plateform_id: ['required'],
             B_libraries_id: ['required']
           }, {
-              title: req.body.newListing.title,
-              summary: req.body.newListing.summary,
-              description: req.body.newListing.description,
-              price: req.body.newListing.price,
-              plan_id: req.body.newListing.plan.id.toString(),
-              F_framework_id: req.body.newListing.technologies.frontend.framework.id.toString(),
-              F_plateform_id: req.body.newListing.technologies.frontend.plateform.id.toString(),
-              F_libraries_id: req.body.newListing.technologies.frontend.libraries.id.toString(),
-              B_framework_id: req.body.newListing.technologies.backend.framework.id.toString(),
-              B_plateform_id: req.body.newListing.technologies.backend.plateform.id.toString(),
-              B_libraries_id: req.body.newListing.technologies.backend.libraries.id.toString(),
+              title: req.body.context.title,
+              summary: req.body.context.summary,
+              description: req.body.context.description,
+              price: req.body.context.price,
+              plan_id: req.body.context.plan.id.toString(),
+              F_framework_id: req.body.context.frontend.framework.id.toString(),
+              F_plateform_id: req.body.context.frontend.plateform.id.toString(),
+              F_libraries_id: req.body.context.frontend.libraries.id.toString(),
+              B_framework_id: req.body.context.backend.framework.id.toString(),
+              B_plateform_id: req.body.context.backend.plateform.id.toString(),
+              B_libraries_id: req.body.context.backend.libraries.id.toString(),
           })
 
+
+            // const screenshots = await uploader.uploadWithCloudinary(req.body.context.screenshot)
+            // req.body.context.screenshot = screenshots
+        
+
     } catch (err) {
-        throw { type: "BadRequest", message: err }
+        throw { type: "BadRequest", message: err.message }
     }
 
     try{
-        
-        const plans = await listingsModel.create_listing({...req.body.newListing})
-        responser.send(res, 200, "Success", plans)
+      
+        const created_listing = await listingsModel.create_listing({...req.body.context})
+        responser.send(res, 200, "Success", created_listing)
     }catch(err) {
+        console.log(err)
         throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
     }
 })
@@ -90,30 +98,21 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
 |
 */
 
-exports.get_all_listings = (req, res, next) => {
-    function callback(err, listings) {
-        if(err) {
-            res.status(409).json({
-                status: "Failed",
-                code: 409,
-                messgage: "Something is wrong with your request",
-                result: {
-                    error: err
-                }
-            })
-        }else {
-            res.status(200).json({
-                status: "OK",
-                code: 200,
-                messgage: 'All the listings are listed below',
-                result: {
-                    listings: listings
-                }
-            })
+exports.get_listings = wrapAsync( async(req, res, next) => {
+  
+    try {
+        const filters = {
+            offset: req.query.offset,
+            limit: req.query.limit,
+            order: req.query.order
         }
+        console.log(filters)
+        const listings = await listingsModel.get_listings(filters)
+        responser.send(res, 200, "Success", listings)
+    }catch (err) { 
+        throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
     }
-    return listingsModel.get_all_listings(req.query.offset, req.query.limit, req.query.order, callback);
-}
+})
 
 
 /*

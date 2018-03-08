@@ -14,27 +14,29 @@ const bcrypt = require('bcrypt');
 |
 */
 
-exports.get_all_listings = (offset, limit, order, callback) => {
-    // return new Promise((resolve, reject) => {
+exports.get_listings = (filters) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const listings = await db('listings')
+            // .orderBy(order, 'asc')
+            .limit(+filters.limit)
+            .offset(+filters.offset)
+            .leftJoin('review', 'listings.id', '=', 'review.listing_id')
+            .join('users', 'listings.id', '=', 'listings.user_id')
+            .select([
+                'listings.id',
+                'title',
+                'thumbnail',
+                'users.sex',
+                'users.id'
+            ])
+            resolve(listings)
+        }catch(err) {
+            console.log(err)
+            reject(err)
+        }
         
-    // })
-    if (limit > 50) {
-        limit = 50
-    }
-    db('listings')
-    // .orderBy(order, 'asc')
-    .limit(+limit)
-    .offset(+offset)
-    .leftJoin('review', 'listings.id', '=', 'review.listing_id')
-    .join('users', 'listings.id', '=', 'listings.user_id')
-    .select([
-        'listings.id',
-        'title',
-        'users.sex',
-        'users.id'
-    ])
-    .then(value => callback('', value))
-    .catch(err => callback(err, ''))   
+    }) 
 }
 
 /*
@@ -78,11 +80,11 @@ exports.create_listing = (data) => {
     const dateNow =  new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDay() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()
     return new Promise( async(resolve, reject) => {
         try {
-            await db('frontend_framework_list').where('id', data.technologies.frontend.framework.id).select('*')
-            await db('frontend_plateform_list').where('id', data.technologies.frontend.plateform.id).select('*')
+            await db('frontend_framework_list').where('id', data.frontend.framework.id).select('*')
+            await db('frontend_plateform_list').where('id', data.frontend.plateform.id).select('*')
             // await db('frontend_libraries_list').where('id', data.technologies.frontend.libraries.id).select('*')
-            await db('backend_framework_list').where('id', data.technologies.backend.framework.id).select('*')
-            await db('backend_plateform_list').where('id', data.technologies.backend.plateform.id).select('*')
+            await db('backend_framework_list').where('id', data.backend.framework.id).select('*')
+            await db('backend_plateform_list').where('id', data.backend.plateform.id).select('*')
             // await db('backend_libraries_list').where('id', data.technologies.backend.libraries.id).select('*')
         }catch(err) {
             reject('Your request contains invalid data')
@@ -114,7 +116,7 @@ exports.create_listing = (data) => {
 
             await db('frontend_framework')
             .insert({
-                frontend_framework_id: data.technologies.frontend.framework.id,
+                frontend_framework_id: data.frontend.framework.id,
                 technology_id: technologies[0],
                 created_at: dateNow,
                 updated_at: dateNow
@@ -122,7 +124,7 @@ exports.create_listing = (data) => {
 
             await db('frontend_plateform')
             .insert({
-                frontend_plateform_id: data.technologies.frontend.plateform.id,
+                frontend_plateform_id: data.frontend.plateform.id,
                 technology_id: technologies[0],
                 created_at: dateNow,
                 updated_at: dateNow
@@ -130,7 +132,7 @@ exports.create_listing = (data) => {
 
             await db('backend_framework')
             .insert({
-                backend_framework_id: data.technologies.backend.framework.id,
+                backend_framework_id: data.backend.framework.id,
                 technology_id: technologies[0],
                 created_at: dateNow,
                 updated_at: dateNow
@@ -138,7 +140,7 @@ exports.create_listing = (data) => {
 
             await db('backend_plateform')
             .insert({
-                backend_plateform_id: data.technologies.backend.plateform.id,
+                backend_plateform_id: data.backend.plateform.id,
                 technology_id: technologies[0],
                 created_at: dateNow,
                 updated_at: dateNow

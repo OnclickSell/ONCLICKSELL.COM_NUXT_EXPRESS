@@ -1,10 +1,15 @@
 <template>
-    <div class='basic-info__button--container'><button class='basic-info__button'>{{ title }}</button></div>
+    <div class='basic-info__button--container'><button @click="clicked" class='basic-info__button'>{{ title }}</button></div>
 </template>
 
 <script>
 export default {
   props: ['title'],
+  methods: {
+    clicked () {
+        this.$emit('clicked')
+    }
+  },
   components: {
   }
 }
