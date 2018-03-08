@@ -7,11 +7,9 @@ export default {
   props: ['title'],
   methods: {
     clicked () {
-<<<<<<< HEAD
+
       this.$emit('clicked')
-=======
-        this.$emit('clicked')
->>>>>>> devlop
+
     }
   },
   components: {
