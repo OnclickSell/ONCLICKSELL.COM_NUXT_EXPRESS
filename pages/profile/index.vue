@@ -79,6 +79,7 @@ import Payments from '@/components/user/payments.vue'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
+  layout: 'main--layout',
   middleware: 'auth',
   data () {
     return {

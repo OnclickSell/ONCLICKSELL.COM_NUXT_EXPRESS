@@ -10,5 +10,9 @@
 */
 
 export default class Controller {
-    
+    constructor (request, response, next) {
+        this.request = request
+        this.response = response
+        this.next = next
+    }
 }

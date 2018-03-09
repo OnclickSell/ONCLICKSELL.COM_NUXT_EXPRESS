@@ -61,6 +61,25 @@ export default class Model {
       
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Update record in the database based on id passed as parameter
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    async GetAll(limit, offset, order) {
+        try {
+            return await db(this.table)
+            .orderBy(order, 'asc')
+            .limit(+limit)
+            .offset(+offset)
+            .select(this.fields)
+        }catch(err) {
+            return false
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------

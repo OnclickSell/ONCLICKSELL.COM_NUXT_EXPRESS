@@ -46,6 +46,7 @@ export default {
   },
   methods: {
     showListing(list) {
+      alert(list.id)
         this.$router.push('/listings/' + list.id + '/' + list.title)
     }
   },
