@@ -19,7 +19,7 @@
                             <li class='profile__option' @click="openPanel('os-listings')">Listings</li>
                             <li class='profile__option'>Sells</li>
                             <li class='profile__option profile__option--active' @click="openPanel('os-questions')">Messages</li>
-                            <li class='profile__option profile__option--md-hide' @click="ShowMoreOptions">More <i class='profile__option--icon'><os-filter width="10px" height="10px"></os-filter></i></li>
+                            <li class='profile__option profile__option--md-hide' @click="ShowMoreOptions">More <i class='profile__option--icon'>Icon</i></li>
                             <li v-if="moreOptions">
                                 <ul class='profile__more--options'>
                                     <li class='profile__option' @click="openPanel('os-payments')">Payments</li>
