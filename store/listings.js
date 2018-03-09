@@ -35,7 +35,7 @@ export const mutations = {
     state.listings = payload
   },
   setSingleListing (state, payload) {
-    state.SingleListing = payload.context[0]
+    state.SingleListing = payload
   },
   setTechnologies (state, payload) {
     state.technologies.frontend.framework = payload.frontend.framework
@@ -70,7 +70,7 @@ export const actions = {
     fetchSingleListing (vuexContext, payload) {
       return axios.get('http://localhost:3000/api/v1/listings/' + payload.id + '/' + payload.title)
         .then(response => {
-          vuexContext.commit('setSingleListing', response.data)
+          vuexContext.commit('setSingleListing', response.data.Context)
         })
         .catch(error => {
           console.log(error.response)

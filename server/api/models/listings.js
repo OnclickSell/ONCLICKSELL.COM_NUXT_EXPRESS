@@ -1,5 +1,5 @@
 
-
+import Model from './model'
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 
@@ -13,6 +13,19 @@ const bcrypt = require('bcrypt');
 | any other location as required by the application or its packages.
 |
 */
+
+
+export default class listingModel extends Model {
+    constructor (fields) {
+        super()
+        this.table = 'listings'
+        this.fields = fields || '*'
+    }
+
+}
+
+
+
 
 exports.get_listings = (filters) => {
     return new Promise( async (resolve, reject) => {

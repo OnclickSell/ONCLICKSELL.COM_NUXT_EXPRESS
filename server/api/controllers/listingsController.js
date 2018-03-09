@@ -1,5 +1,5 @@
 
-const listingsModel = require('../models/listings');
+import listingsModel from '../models/listings'
 const responser = require('../../packages/responser')
 const wrapAsync = require('../../packages/wrapAsync')
 let uploader = require('../../packages/uploader')
@@ -7,6 +7,7 @@ uploader = new uploader('OnclickSell.com/', 'screenshots', 2)
 let validator = require('../../packages/validator');
 validator = new validator()
 const mailer = require('../../packages/mailer')
+import Controller from './controller'
 
 
 /*
@@ -19,6 +20,35 @@ const mailer = require('../../packages/mailer')
 | any other location as required by the application or its packages.
 |
 */
+
+export default class listingController extends Controller {
+
+
+    async GetListings() {
+        try {
+            const Filter = {
+                limit: this.request.query.limit,
+                offset: this.request.query.offset,
+                order: this.request.query.order
+            }
+            const ListingModel = new listingsModel()
+            const result = await ListingModel.GetAll(Filter.limit, Filter.offset, Filter.order)
+            responser.send(this.response, 200, "Success", result)
+        }catch(err) {
+            responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
+        }
+    }
+
+    async FindById() {
+        try {
+            const ListingModel = new listingsModel()
+            const result = await ListingModel.FindBy('id', this.request.params.id)
+            responser.send(this.response, 200, "Success", result)
+        }catch(err) {
+            responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
+        }
+    }
+}
 
 exports.create_listing = wrapAsync( async (req, res, next) => {
 

@@ -8,6 +8,7 @@ const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 import auth from '../../packages/auth'
 import userModel from '../models/user'
+import listingModel from '../models/listings';
 let validator = require('../../packages/validator');
 validator = new validator()
 
@@ -84,6 +85,11 @@ router.get('/createuser', async (req, res, next) => {
     console.log(err)
   }
   
+})
+
+router.get('/getlisting', async (req, res, next) => {
+  const test2 = new listingModel()
+  console.log(await test2.FindBy('id', 2))
 })
 
 

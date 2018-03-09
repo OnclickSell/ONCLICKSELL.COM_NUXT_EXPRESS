@@ -22,7 +22,7 @@ export default {
     await vuexContext.store.dispatch('listings/fetchSingleListing', { id: vuexContext.route.params.id, title: vuexContext.route.params.title})
   },
   layout: 'main--layout',
-  middleware: 'validate_listing_id_title',
+  // middleware: 'validate_listing_id_title',
   data () {
     return {
       isUpdateOn: false

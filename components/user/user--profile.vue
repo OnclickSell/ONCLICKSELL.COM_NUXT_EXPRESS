@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     checkDescription () {
-      return this.description.length != 0 ? this.description : 'Add a description' 
+      return this.description || 'Add a description' 
     }
   }
 }
