@@ -104,11 +104,12 @@ let token = null
 let tokenExpiration = null
 
 export const actions = {
-  logIn ({commit, dispatch, state}, credentials) {
+  logIn ({commit, dispatch, state}, data) {
+    data = {credentials: {...data}}
     return new Promise((resolve, reject) => {
-      axios.post('http://localhost:3000/api/v1/auth/signIn', credentials)
+      axios.post('http://localhost:3000/api/v1/auth/signIn', data)
       .then(response => {
-        commit('setAuthUser', response.data.Context.user)
+        commit('setAuthUser', response.data.Context)
         commit('setToken', response.data.Context.token)
         commit('setTokenExpiration')
         resolve()
@@ -119,7 +120,7 @@ export const actions = {
   signUp ({commit, state}, data) {
     axios.post('http://localhost:3000/api/v1/auth/signUp', data)
       .then(response => {
-        commit('setAuthUser', response.data.Context.user)
+        commit('setAuthUser', response.data.Context)
         commit('setToken', response.data.Context.token)
         commit('setTokenExpiration')
         this.$router.push('/register/preview')

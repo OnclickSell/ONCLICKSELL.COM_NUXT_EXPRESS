@@ -13,7 +13,7 @@ let layouts = {
 let resolvedLayouts = {}
 
 export default {
-  head: {"title":"OnclickSell.com","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"My perfect Nuxt.js project"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"script":[{"src":"https:\u002F\u002Fjs.stripe.com\u002Fv3\u002F"}],"style":[]},
+  head: {"title":"OnclickSell.com","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"My perfect Nuxt.js project"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
   render(h, props) {
     const loadingEl = h('nuxt-loading', { ref: 'loading' })
     const layoutEl = h(this.layout || 'nuxt')

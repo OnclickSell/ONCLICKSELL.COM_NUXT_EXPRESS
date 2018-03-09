@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const plansController = require('../controllers/plansController');
-const authMiddleware = require('../middlewares/authMiddleware')
+import authMiddleware from '../middlewares/authMiddleware'
 
 
 // router.post('/', (req, res, next) => {

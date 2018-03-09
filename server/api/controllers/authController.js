@@ -1,14 +1,17 @@
 
 
 const authModel = require('../models/auth');
+import auth from '../../packages/auth'
+import userController from './userController'
+import userModel from '../models/user'
 // const validator = require('../../validators/check');
 const tokener = require('../../packages/token');
 const response = require('../../packages/response');
+const responser = require('../../packages/responser')
 const bcrypt = require('bcrypt');
 const wrapAsync = require('../../packages/wrapAsync')
 const validators = require('../../packages/validator')
 let InternalServerError = require('../../packages/customError')
-const responser = require('../../packages/responser')
 // Errorer = new Errorer()
 let validator = require('../../packages/validator');
 validator = new validator()
@@ -25,6 +28,43 @@ validator = new validator()
 | any other location as required by the application or its packages.
 |
 */
+
+export default class authController {
+    constructor (request, response, next) {
+        this.request = request
+        this.response = response
+        this.next = next
+    }
+
+    async Authenticate() {
+        const Auth = new auth(this.request)
+        try {
+            let result = await Auth.Authenticate(this.request.body.credentials)
+            responser.send(this.response, 200, "Success", {...result})
+        }catch(err) {
+            switch(err.type) {
+                case 'BadRequest':
+                responser.send(this.response, 400, "Failed", err.message )
+            }
+            
+            console.log(err)
+        }
+        
+    }
+
+    async SignUp() {
+        try {
+            const Auth = new auth()
+            const UserModel = new userModel()
+            const UserController = new userController(this.request, this.response, this.next)
+            const result = await UserController.CreateUser()
+            const AuthUser = await Auth.Authenticate({email: result.email, password: this.request.body.password})
+            responser.send(this.response, 200, "Success", {...AuthUser})
+        }catch(err) {
+            console.log(err)
+        }
+    }
+}
 
 exports.signIn = wrapAsync(async function(req, res, next) {
     try {

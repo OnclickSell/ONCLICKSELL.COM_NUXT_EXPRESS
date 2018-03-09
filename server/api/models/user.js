@@ -2,6 +2,7 @@
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 const auth = require('../../packages/auth');
+import Model from './model'
 
 /*
 |--------------------------------------------------------------------------
@@ -14,104 +15,14 @@ const auth = require('../../packages/auth');
 |
 */
 
-export default class userModel {
+export default class userModel extends Model {
     constructor (fields) {
+        super()
         this.table = 'users'
         this.fields = fields || '*'
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Create a new user in the Database. Details are passed in the args
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    async CreateUser (userDetails) {
-        try {
-            const createdUser = await db(this.table).insert(userDetails)
-            console.log(createdUser)
-            return this.GetUserById(createdUser)
-        } catch(err) {
-            throw { type: "BadRequest", message: err.message }
-        }
-        
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Get users in the Database based on the indentifier passed as args
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    GetUserFieldValue (field, value) {
-        try {
-                return db(this.table).where(field, value)
-                .select(this.fields).first()
-        } catch(err) {
-            throw { type: "BadRequest", message: err.message }
-        }
-        
-    }
-
-    GetUserById (id) {
-      return this.GetUserFieldValue('id', id)
-    }
-
-    GetUserByName (name) {
-        return this.GetUserFieldValue('name', name)
-    }
-
-    GetUserByEmail (email) {
-        return this.GetUserFieldValue('email', email)
-    }
-
-    GetUsers () {
-        try {
-            return db.select(this.fields)
-            .from(this.table)
-        }catch (err) {
-            throw { type: "BadRequest", message: err.message }
-        }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update users in the Database based on their id passed as parameter
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    async UpdateUser (id, newDetails) {
-       try {
-         const updatedUser = await db(this.table).where('id', +id).first().update(newDetails)
-         return this.GetUserById(id)
-       } catch(err) {
-          throw { type: "BadRequest", message: err.message }
-       }
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update users in the Database based on their id passed as parameter
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    async DeleteUser (id) {
-        try {
-          await db(this.table).del().where('id', +id )
-          return true
-        } catch(err) {
-           throw { type: "BadRequest", message: err.message }
-        }
-    }
-
-
 }
-
+   
 /*
 |--------------------------------------------------------------------------
 | Application Name

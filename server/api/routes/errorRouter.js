@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const authMiddleware = require('../middlewares/authMiddleware');
+import authMiddleware from '../middlewares/authMiddleware'
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const wrapAsync = require('../../packages/wrapAsync')
 const db = require('../../database/config');
@@ -60,23 +60,28 @@ router.get('/getuser', async (req, res, next) => {
   'password', 
   'profile_picture'
 ])
-  console.log(await test2.GetUserById(2))
+  console.log(await test2.FindBy('email', 'aliakbar.su@hotmail.com'))
 })
 
 router.get('/updateuser', async (req, res, next) => {
   const test2 = new userModel()
-  console.log(await test2.UpdateUser(2, {email: 'updated@hotmail.com'}))
+  console.log(await test2.Update(2, {email: 'newsupdated@hotmail.com'}))
 })
 
 router.get('/createuser', async (req, res, next) => {
   const test2 = new userModel()
   const hash = await bcrypt.hash('Ar_newPassword', 10)
-  console.log(await test2.CreateUser({
-    full_name: 'aliakbar Sultani',
-    email: 'newCreatedUser@hotmail.com',
-    sex: 'male',
-    profile_picture: 'fsfsafsaf',
-    password: hash}))
+  try {
+    console.log(await test2.Create({
+      full_name: 'aliakbar Sultani',
+      email: 'newCreatedUsferw@hotmail.com',
+      sex: 'male',
+      profile_picture: 'fsfsafsaf',
+      password: hash}))
+  }catch (err) {
+    console.log(err)
+  }
+  
 })
 
 
