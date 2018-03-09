@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
-const authMiddleware = require('../middlewares/authMiddleware');
+import userController from '../controllers/userController'
+import authMiddleware from '../middlewares/authMiddleware'
 const adminMiddleware = require('../middlewares/adminMiddleware');
+import auth from '../../packages/auth'
 // const upload  = require('../../packages/multer');
 
 const multer  = require('multer')
@@ -34,11 +35,16 @@ var upload = multer({ storage: storage })
 //     return userController.test(req, res, next);
 // });
 
-router.get('/', authMiddleware, userController.get_auth_user);
-router.get('/:id', userController.get_single_user);
-router.put('/', userController.update_user_details);
-router.put('/avatar', userController.update_user_avatar);
-router.put('/password', authMiddleware, userController.update_user_password);
-router.delete('/:id', authMiddleware, userController.delete_single_user);
-router.post('/', authMiddleware, userController.add_user_profile);
+router.get('/', async (req, res, next) => {
+    
+    const UserController = new userController(req, res, next)
+    return await UserController.GetAuth()
+    
+});
+// router.get('/:id', userController.get_single_user);
+// router.put('/', userController.update_user_details);
+// router.put('/avatar', userController.update_user_avatar);
+// router.put('/password', authMiddleware, userController.update_user_password);
+// router.delete('/:id', authMiddleware, userController.delete_single_user);
+// router.post('/', authMiddleware, userController.add_user_profile);
 module.exports = router;

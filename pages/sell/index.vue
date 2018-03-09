@@ -42,6 +42,11 @@ import { mapGetters } from 'vuex'
 
 export default {
   layout: 'main--layout',
+  head: {
+    script: [
+      { src: 'https://js.stripe.com/v3/'}
+    ]
+  },
   fetch({store}) {
     return store.dispatch('listings/fetchTechnologies')
   },

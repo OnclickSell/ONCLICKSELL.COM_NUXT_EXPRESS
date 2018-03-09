@@ -3,6 +3,7 @@ const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 const gender_detect = require('../../packages/detect_profile');
 const wrapAsync = require('../../packages/wrapAsync')
+import Model from './model'
 
 /*
 |--------------------------------------------------------------------------
@@ -15,42 +16,12 @@ const wrapAsync = require('../../packages/wrapAsync')
 |
 */
 
-export class auth {
-    constructor () {
+export class auth extends Model {
+    constructor (fields) {
+        super()
+        this.table = 'users'
+        this.fields = fields || '*'
     }
-
-    GetAuthUserFieldValue (field, value) {
-        try {
-                return db("users").where(field, value)
-                .select(
-                    ['id',
-                    'full_name',
-                    'email',
-                    'age',
-                    'description',
-                    'sex', 
-                    'password', 
-                    'profile_picture'
-                ]).first()
-        } catch(err) {
-            throw { type: "BadRequest", message: err.message }
-        }
-        
-    }
-
-    GetAuthById (id) {
-      return this.GetAuthUserFieldValue('id', id)
-    }
-
-    GetAuthByName (name) {
-        return this.GetAuthUserFieldValue('name', name)
-    }
-
-    GetAuthByEmail (email) {
-        return this.GetAuthUserFieldValue('email', email)
-    }
-
-    
 }
 
 

@@ -1,14 +1,18 @@
 
-const userModel = require('../models/user');
+import userModel from '../models/user'
 const validator = require('../../validators/input_validator');
-const auth = require('../../packages/auth');
+import auth from '../../packages/auth'
 const response = require('../../packages/response');
+const responser = require('../../packages/responser')
 const wrapAsync = require('../../packages/wrapAsync')
 const url = require('url');  
+const bcrypt = require('bcrypt');
 const querystring = require('querystring');
 const fs = require('fs');
 let uploader = require('../../packages/uploader')
 uploader = new uploader()
+
+// import userModel from '../models/user'
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +96,59 @@ exports.get_single_user = (req, res, next) => {
 | any other location as required by the application or its packages.
 |
 */
+
+export default class userController {
+    constructor (request, response, next) {
+      this.request = request
+      this.response = response
+      this.next = next
+    }
+
+    async GetAuth() {
+      try {
+        const Auth = new auth(this.request)
+        let result = await Auth.GetAuth()
+        responser.send(this.response, 200, "Success", result)
+      }catch(err) {
+        switch(err.message) {
+            case 'Expired Token':
+            responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
+        }
+      }
+        
+    }
+
+    async CreateUser() {
+      const UserModel = new userModel()
+      const result = await UserModel.Create({
+        full_name: this.request.body.full_name,
+        email: this.request.body.email,
+        sex: this.request.body.sex,
+        profile_picture: 'fsfsafsaf',
+        password: await this.HashPassword(this.request.body.password)})
+      return result
+    }
+
+    async HashPassword(password) {
+        const Hash = await bcrypt.hash(password, 10)
+        return Hash
+        
+    }
+
+    async DoesEmailExists(email) {
+        try {
+            const UserModel = new userModel()
+            const result = await UserModel.FindBy('email', this.request.body.email)
+            console.log(result)
+            if(!result) 
+                responser.send(this.response, 200, "Success", 'The email is valid')
+            else
+                responser.send(this.response, 400, "Failed", 'The email is already taken')
+        }catch(err) {
+            throw { type: "BadRequest", message: err }
+        }
+    }
+}
 
 exports.get_auth_user = wrapAsync( async (req, res, next) => {
 

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const reviewsController = require('../controllers/reviewsController')
-const authMiddleware = require('../middlewares/authMiddleware')
+import authMiddleware from '../middlewares/authMiddleware'
   
 
 /*

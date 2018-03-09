@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ticketController = require('../controllers/ticketController');
-const authMiddleware = require('../middlewares/authMiddleware');
+import authMiddleware from '../middlewares/authMiddleware'
 const adminMiddleware = require('../middlewares/adminMiddleware');
 
 

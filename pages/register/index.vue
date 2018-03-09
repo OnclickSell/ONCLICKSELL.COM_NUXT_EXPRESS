@@ -1,7 +1,7 @@
 <template>
     <div>
 
-         <div class='l-register'>
+         <div class='l-register' v-if="!isAuth">
             <div class='register'>
                 <div class='l-register__header'>
                     <p class='register__heading'>Sell your first<br/> project today!</p>
@@ -83,7 +83,10 @@
                 </div>
 
             </div>
-        </div>            
+        </div>   
+
+
+        <os-preview v-if="isAuth" :data="Auth" v-on:skip="skip" v-on:update="update"/>         
 
     </div>         
 </template>
@@ -92,6 +95,7 @@ import { mapGetters, mapActions } from 'vuex'
 import Hamburger from '@/assets/icons/hamburger.vue'
 import FromInput from '@/components/form/input.vue'
 import FromRadio from '@/components/form/radio.vue'
+import Preview from '@/components/register/preview'
 import { instance as axios } from '@/plugins/axios'
 import { Validator } from 'vee-validate'
 
@@ -140,11 +144,14 @@ export default {
   components: {
     'os-input': FromInput,
     'os-radio': FromRadio,
-    'os-hamburger': Hamburger
+    'os-hamburger': Hamburger,
+    'os-preview': Preview
   },
   computed: {
     ...mapGetters({
-      loading: 'loader/login'
+      loading: 'loader/login',
+      isAuth: 'authentication/isAuth',
+      Auth: 'authentication/GetAuthUser'
     })
   },
   methods: {
@@ -156,6 +163,13 @@ export default {
             this.$store.dispatch('authentication/signUp', this.details)
         }
       })
+    },
+    skip() {
+        this.$router.push('/')
+    },
+    update(details) {
+      console.log('working')
+      this.$store.dispatch('authentication/updateUser', details)
     },
     isEmailUnique () {
     }
