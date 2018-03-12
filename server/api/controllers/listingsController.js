@@ -48,6 +48,20 @@ export default class listingController extends Controller {
             responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
         }
     }
+
+
+    async CreateListing() {
+        try {
+
+            const ListingModel = new listingsModel()
+            const result = await ListingModel.CreateListing(this.request.body)
+            responser.send(this.response, 200, "Success", result)
+
+        }catch(err) {
+            console.log(err)
+            responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
+        }
+    }
 }
 
 exports.create_listing = wrapAsync( async (req, res, next) => {
@@ -112,7 +126,7 @@ exports.create_listing = wrapAsync( async (req, res, next) => {
         const created_listing = await listingsModel.create_listing({...req.body.context})
         responser.send(res, 200, "Success", created_listing)
     }catch(err) {
-        console.log(err)
+        console.log(err.message)
         throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
     }
 })

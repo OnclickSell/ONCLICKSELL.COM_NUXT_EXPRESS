@@ -54,16 +54,14 @@ router.post('/authcheck', async (req, res, next) => {
 })
 
 router.get('/getuser', async (req, res, next) => {
-  const test2 = new userModel(['id',
-  'full_name',
-  'email',
-  'age',
-  'description',
-  'sex', 
-  'password', 
-  'profile_picture'
-])
-  console.log(await test2.FindBy('email', 'aliakbar.su@hotmail.com'))
+  try {
+    const test2 = new userModel()
+    // const user = await test2.FindBy('id', 2)
+    console.log(await test2.Listings(await test2.FindBy('id', 2)))
+      }catch(err) {
+        console.log(err)
+      }
+  
 })
 
 router.get('/updateuser', async (req, res, next) => {
