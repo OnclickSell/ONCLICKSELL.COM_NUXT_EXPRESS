@@ -12,10 +12,55 @@ const db = require('../../database/config');
 */
 
 export default class Model {
+    table = ''
+    timestamp = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDay() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()
     constructor (fields) {
-        this.table = ''
         this.fields = fields || '*'
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get the related recoreds from the database
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    async HasOne(table, key, userId) {
+        try {
+            key = key || '' + table + '_id'
+            const operator = userId.id ? '=' : '!='
+            userId = userId.id || ''
+            return await db(this.table).select(this.fields)
+            .innerJoin(table, this.table + '.id' , table + '.' + key)
+            .first()
+            .where(this.table + '.id', operator, userId)
+            .first()
+        } catch(err) {
+            throw { type: "BadRequest", message: err.message }
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get the related recoreds from the database
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    async HasMany(table, key, userId) {
+        try {
+            key = key || '' + table + '_id'
+            const operator = userId.id ? '=' : '!='
+            userId = userId.id || ''
+            return await db(this.table).select(this.fields)
+            .innerJoin(table, this.table + '.id' , table + '.' + key)
+            .where(this.table + '.id', operator, userId)
+            
+        } catch(err) {
+            throw { type: "BadRequest", message: err.message }
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +90,8 @@ export default class Model {
     GetFieldValue (field, value) {
         try {
                 return db(this.table).where(field, value)
-                .select(this.fields).first()
+                .select(this.fields)
+                .first()
         } catch(err) {
             throw { type: "BadRequest", message: err.message }
         }

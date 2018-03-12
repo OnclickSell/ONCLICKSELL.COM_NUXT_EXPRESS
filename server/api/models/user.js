@@ -21,6 +21,12 @@ export default class userModel extends Model {
         this.table = 'users'
         this.fields = fields || '*'
     }
+
+    async Listings(user) {
+        return await this.HasMany('listings', 'user_id', user)
+    }
+
+    
 }
    
 /*

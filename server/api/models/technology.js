@@ -1,6 +1,7 @@
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 const auth = require('../../packages/auth');
+import Model from './model'
 
 
 /*
@@ -13,6 +14,74 @@ const auth = require('../../packages/auth');
 | any other location as required by the application or its packages.
 |
 */
+
+export default class technologyModel extends Model {
+    constructor (fields) {
+        super()
+        this.table = 'technology'
+        this.fields = fields || '*'
+    }
+
+    async CreateTechnology(data) {
+        console.log(data)
+        const CreatedTechnology = await this.Create({
+            listing_id: data.id,
+            html: data.frontend.html,
+            css: data.frontend.css,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+
+        await db('frontend_plateform').insert({
+            frontend_plateform_id: data.frontend.plateform.id,
+            technology_id: CreatedTechnology.id,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+
+        await db('frontend_framework').insert({
+            frontend_framework_id: data.frontend.framework.id,
+            technology_id: CreatedTechnology.id,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+
+        await db('frontend_libraries').insert({
+            technology_id: CreatedTechnology.id,
+            name: data.frontend.libraries.name,
+            version: data.frontend.libraries.version,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+
+
+
+        await db('backend_plateform').insert({
+            backend_plateform_id: data.backend.plateform.id,
+            technology_id: CreatedTechnology.id,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+
+        await db('backend_framework').insert({
+            backend_framework_id: data.backend.framework.id,
+            technology_id: CreatedTechnology.id,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+
+        await db('backend_libraries').insert({
+            technology_id: CreatedTechnology.id,
+            name: data.backend.libraries.name,
+            version: data.backend.libraries.version,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
+        
+        
+    }
+
+}
 
 exports.add_technologies = (req, technology_details) => {
     const type = technology_details.technology

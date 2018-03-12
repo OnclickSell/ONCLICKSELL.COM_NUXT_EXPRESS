@@ -28,7 +28,15 @@ router.get('/', async (req, res, next) => {
     }
     
 })
-// router.put('/:id', authMiddleware, listingsController.update_single_listings);
+router.post('/', async (req, res, next) => {
+    try {
+        const ListingsController = new listingsController(req, res, next)
+        return await ListingsController.CreateListing()
+    }catch(err) {
+        console.log(err)
+    }
+    
+})
 // router.delete('/:id', authMiddleware, listingsController.delete_single_listings);
 // router.get('/technologies/fetch', listingsController.fetch_technologies);
 

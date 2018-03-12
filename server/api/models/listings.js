@@ -2,6 +2,8 @@
 import Model from './model'
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
+import TechnologyModel from './technology'
+import Subscription from './subscription'
 
 /*
 |--------------------------------------------------------------------------
@@ -22,60 +24,43 @@ export default class listingModel extends Model {
         this.fields = fields || '*'
     }
 
-}
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
 
+    async CreateListing(data) {
+        const technology = new TechnologyModel()
+        const subscription = new Subscription()
+        // console.log(data)
+        const CreatedListing = await this.Create({
+            title: data.title,
+            summary: data.summary,
+            description: data.description,
+            plan_id: data.plan.id,
+            user_id: 1,
+            thumbnail: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1515050579/OnclickSell.com/Photos/home-office-2452806_960_720.jpg',
+            completed: 1,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
 
+        await technology.CreateTechnology({...data, ...CreatedListing})
+        await subscription.CreateSubscription({...data, ...CreatedListing})
 
-
-exports.get_listings = (filters) => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            const listings = await db('listings')
-            // .orderBy(order, 'asc')
-            .limit(+filters.limit)
-            .offset(+filters.offset)
-            .leftJoin('review', 'listings.id', '=', 'review.listing_id')
-            .join('users', 'listings.id', '=', 'listings.user_id')
-            .select([
-                'listings.id',
-                'title',
-                'thumbnail',
-                'users.sex',
-                'users.id'
-            ])
-            resolve(listings)
-        }catch(err) {
-            console.log(err)
-            reject(err)
-        }
         
-    }) 
+    }
+
 }
 
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
 
-exports.get_single_listing = (payload, callback) => {
-    return new Promise((resolve, reject) => {
-        db.select([
-            'id',
-            'title',
-            'description',
-            'summary'
-        ]).from('listings').where({ id: payload.id, title: payload.title })
-        .then(result => resolve(result))
-        .catch(err => reject(err))
-    })
-           
-}
+
 
 /*
 |--------------------------------------------------------------------------
