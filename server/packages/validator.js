@@ -92,4 +92,6 @@ module.exports =  function() {
 }
 
 
+
+
 // let ExtractedRules = [...rules.split('|')];

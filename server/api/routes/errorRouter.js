@@ -9,8 +9,9 @@ const bcrypt = require('bcrypt');
 import auth from '../../packages/auth'
 import userModel from '../models/user'
 import listingModel from '../models/listings';
-let validator = require('../../packages/validator');
-validator = new validator()
+import Validator from '../../packages/validator/validator'
+// let validator = require('../../packages/validator');
+// validator = new validator()
 let uploader = require('../../packages/uploader')
 uploader = new uploader('OnclickSell.com/', 'avatar', 2)
 
@@ -83,11 +84,40 @@ router.get('/createuser', async (req, res, next) => {
   
 })
 
-router.get('/getlisting', async (req, res, next) => {
-  const test2 = new listingModel()
-  console.log(await test2.FindBy('id', 2))
+router.post('/validator', async (req, res, next) => {
+  try{
+    const validator = new Validator()
+    const rules = {
+      name: 'required|min:10',
+      email: 'required|email',
+      password: 'required|password',
+      address: {
+        street: 'required|min:50|max:60',
+        test1: {
+          working: 'required'
+        }
+      }
+    }
+    const result = validator.validate(rules, req.body)
+
+    if(!result.status) {
+      res.status(400).json(result.errors)
+    }else { res.json('success') }
+    
+
+  }catch(err) {
+    console.log(err)
+  }
+  
 })
 
+
+
+
+// router.get('/validator', async (req, res, next) => {
+//   const test2 = new listingModel()
+//   console.log(await test2.FindBy('id', 2))
+// })
 
 
 
