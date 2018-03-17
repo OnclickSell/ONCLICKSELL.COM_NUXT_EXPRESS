@@ -76,7 +76,6 @@ export default class Model {
         } catch(err) {
             throw { type: "BadRequest", message: err.message }
         }
-        
     }
 
 

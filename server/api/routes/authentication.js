@@ -17,24 +17,120 @@ var bruteforce = new ExpressBrute(store, {
 	lifetime: 24*60*60, // 1 day (seconds not milliseconds)
 });
 
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
 
 router.post('/signIn', async (req, res, next) => {
 	try {
 		const AuthController = new authController(req, res, next)
 		return await AuthController.Authenticate()
 	}catch(err) {
+		next(err)
 		console.log(err)
 	}
 })
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
 
 router.post('/signUp', async (req, res, next) => {
 	try {
 		const Auth = new authController(req, res, next)
 		return await Auth.SignUp()
 	}catch(err) {
+		next(err)
 		console.log(err)
 	}
 })
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
+router.post('/reset-password', async (req, res, next) => {
+	try {
+		const AuthController = new authController(req, res, next)
+		return await AuthController.ResetPassword()
+	}catch(err) {
+	  console.log(err)
+	}
+})
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
+// router.get('/reset-password', async (req, res, next) => {
+// 	try {
+// 		const AuthController = new authController(req, res, next)
+// 		return await AuthController.ValidatePasswordResetToken()
+// 	}catch(err) {
+// 	  console.log(err)
+// 	}
+// })
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+
+router.post('/set-new-password', async (req, res, next) => {
+	try {
+		const AuthController = new authController(req, res, next)
+		return await AuthController.SetNewPassword()
+	}catch(err) {
+	throw { type: "BadRequest", message: err.message }
+	  console.log(err)
+	}
+})
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
 
 router.post('/signUp/email_check', async (req, res, next) => {
 	try {

@@ -81,6 +81,19 @@ export default class technologyModel extends Model {
         
     }
 
+    async GetTechnologies() {
+        return Promise.all([
+            db('frontend_framework_list').select('*'),
+            db('frontend_plateform_list').select('*'),
+            db('frontend_libraries_list').select('*'),
+            db('technology_html').select('*'),
+            db('technology_css').select('*'),
+            db('backend_framework_list').select('*'),
+            db('backend_Plateform_list').select('*'),
+            db('backend_libraries_list').select('*')
+        ])
+    }
+
 }
 
 exports.add_technologies = (req, technology_details) => {

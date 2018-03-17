@@ -1,5 +1,5 @@
 
-import userModel from '../models/user'
+import UserModel from '../models/user'
 const validator = require('../../validators/input_validator');
 import auth from '../../packages/auth'
 const response = require('../../packages/response');
@@ -119,14 +119,30 @@ export default class userController {
     }
 
     async CreateUser() {
-      const UserModel = new userModel()
-      const result = await UserModel.Create({
+      const userModel = new UserModel()
+      const result = await userModel.Create({
         full_name: this.request.body.full_name,
         email: this.request.body.email,
         sex: this.request.body.sex,
-        profile_picture: 'fsfsafsaf',
+        profile_picture: this.SetProfilePicture(this.request.body.sex),
         password: await this.HashPassword(this.request.body.password)})
       return result
+    }
+
+    async UpdateUser() {
+      try{
+        const Auth = new auth(this.request)
+        const userModel = new UserModel()
+        const result = await Auth.GetAuth()
+        let updatedUser = await userModel.Update(result.id, {
+            description: this.request.body.description,
+            age: this.request.body.age
+        })
+        updatedUser = {...updatedUser, token: this.request.query.token}
+        responser.send(this.response, 200, "Success", updatedUser)
+      }catch(err) {
+        throw { type: "BadRequest", message: err }
+      }
     }
 
     async HashPassword(password) {
@@ -135,10 +151,19 @@ export default class userController {
         
     }
 
+    SetProfilePicture(sex) {
+        switch(sex.toUpperCase()) {
+            case 'MALE':
+            return 'http://res.cloudinary.com/onclicksell-com/image/upload/v1513504833/OnclickSell.com/Icons/Conceptional-Avatar-Male-Final-Design.png'
+            case 'FEMALE':
+            return 'http://res.cloudinary.com/onclicksell-com/image/upload/v1513504833/OnclickSell.com/Icons/Conceptional-Avatar-Female-Final-Design.png'
+        }
+    }
+
     async DoesEmailExists(email) {
         try {
-            const UserModel = new userModel()
-            const result = await UserModel.FindBy('email', this.request.body.email)
+            const userModel = new UserModel()
+            const result = await userModel.FindBy('email', this.request.body.email)
             console.log(result)
             if(!result) 
                 responser.send(this.response, 200, "Success", 'The email is valid')

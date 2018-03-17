@@ -3,7 +3,7 @@ const db = require('../database/config');
 const bcrypt = require('bcrypt');
 const tokener = require('../packages/token');
 
-import {auth as authModel} from '../api/models/auth' 
+import authModel from '../api/models/auth' 
 
 /*
 |--------------------------------------------------------------------------
