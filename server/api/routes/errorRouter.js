@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 import authMiddleware from '../middlewares/authMiddleware'
+import AuthController from '../controllers/authController'
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const wrapAsync = require('../../packages/wrapAsync')
 const db = require('../../database/config');
@@ -10,6 +11,8 @@ import auth from '../../packages/auth'
 import userModel from '../models/user'
 import listingModel from '../models/listings';
 import Validator from '../../packages/validator/validator'
+import PasswordReset from '../../packages/passwordReset/passwordReset'
+import Mailer from '../../packages/mailer/mailer'
 // let validator = require('../../packages/validator');
 // validator = new validator()
 let uploader = require('../../packages/uploader')
@@ -22,20 +25,13 @@ let sender = require('../../packages/sender')
 
 // var formidable = require('formidable');
 
-router.post('/', async function(req, res, next) {
-//   class auth1 {
-//     constructor () {
-//     }
-
-//      test () {
-//         // const auth = new authModel()
-//         return 2
-//     }
-// }
-    
-
-const test2 = new auth(req)
-console.log(await test2.GetAuth())
+router.post('/resetPassword', async function(req, res, next) {
+  try {
+      const authController = new AuthController(req, res, next)
+      return await authController.ResetPassword()
+  }catch(err) {
+    console.log(err)
+  }
 })
 
 
@@ -57,6 +53,18 @@ router.get('/getuser', async (req, res, next) => {
     const test2 = new userModel()
     // const user = await test2.FindBy('id', 2)
     console.log(await test2.Listings(await test2.FindBy('id', 2)))
+      }catch(err) {
+        console.log(err)
+      }
+  
+})
+
+
+router.post('/sendmail', async (req, res, next) => {
+  try {
+      const mailer = new Mailer()
+      const result = await mailer.Send({text: 'fasfsafasfasf', to: 'aliakbar.su@hotmail.com'})
+      console.log(result)
       }catch(err) {
         console.log(err)
       }

@@ -16,7 +16,7 @@ import Model from './model'
 |
 */
 
-export class auth extends Model {
+export default class auth extends Model {
     constructor (fields) {
         super()
         this.table = 'users'

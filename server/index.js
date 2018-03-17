@@ -61,6 +61,7 @@ app.use('/api/v1/plans', planRoutes);
 
 // handles all global errors
 app.use(function(error, req, res, next) {
+  console.log('I got it')
   return error_handler.catch_error(error, res)
 })
 

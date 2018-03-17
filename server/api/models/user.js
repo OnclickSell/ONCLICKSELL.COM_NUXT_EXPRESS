@@ -26,6 +26,11 @@ export default class userModel extends Model {
         return await this.HasMany('listings', 'user_id', user)
     }
 
+    async SetNewPassword(UserData) {
+        const EncryptedPassword = await bcrypt.hash(UserData.password, 10)
+        return await db(this.table).where('id', +UserData.id).first().update('password', EncryptedPassword)
+    }
+
     
 }
    

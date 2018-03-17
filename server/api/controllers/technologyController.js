@@ -6,8 +6,44 @@ const wrapAsync = require('../../packages/wrapAsync')
 let validator = require('../../packages/validator');
 const responser = require('../../packages/responser')
 validator = new validator()
+import Controller from './controller'
+import TechnologyModel from '../models/technology'
 
 
+
+
+
+export default class TechnologyController extends Controller {
+    async GetTechnology () {
+        let technologies = {
+            frontend: {
+                framework: '',
+                plateforms: '',
+                libraries: '',
+                html: '',
+                css: ''
+            },
+            backend: {
+                framework: '',
+                plateforms: ''
+            }
+        }
+        try {
+            const technologyModel = new TechnologyModel()
+            const response = await technologyModel.GetTechnologies()
+            technologies.frontend.framework = response[0]
+            technologies.frontend.plateforms = response[1]
+            technologies.frontend.libraries = response[2]
+            technologies.frontend.html = response[3]
+            technologies.frontend.css = response[4]
+            technologies.backend.framework = response[5]
+            technologies.backend.plateforms = response[6]
+            responser.send(this.response, 200, "Success", technologies)
+        }catch(err) {
+            console.log(err)
+        }
+    }
+}
 
 /*
 |--------------------------------------------------------------------------

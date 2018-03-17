@@ -4,6 +4,11 @@ const authModel = require('../models/auth');
 import auth from '../../packages/auth'
 import userController from './userController'
 import userModel from '../models/user'
+import PasswordReset from '../../packages/passwordReset/passwordReset'
+import Mailer from '../../packages/mailer/mailer'
+import Controller from './controller'
+import ResetPasswordModel from '../models/ResetPassword'
+const jwt = require('jsonwebtoken');
 // const validator = require('../../validators/check');
 const tokener = require('../../packages/token');
 const response = require('../../packages/response');
@@ -29,28 +34,33 @@ validator = new validator()
 |
 */
 
-export default class authController {
-    constructor (request, response, next) {
-        this.request = request
-        this.response = response
-        this.next = next
-    }
+export default class authController extends Controller {
 
     async Authenticate() {
         const Auth = new auth(this.request)
         try {
-            let result = await Auth.Authenticate(this.request.body.credentials)
+            let result = await Auth.Authenticate(this.request.body)
             responser.send(this.response, 200, "Success", {...result})
         }catch(err) {
-            switch(err.type) {
-                case 'BadRequest':
-                responser.send(this.response, 400, "Failed", err.message )
-            }
-            
-            console.log(err)
+            throw { type: "BadRequest", message: err.message }
+            // switch(err.type) {
+            //     case 'BadRequest':
+            //     responser.send(this.response, 400, "Failed", err.message )
+            // }
         }
         
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
 
     async SignUp() {
         try {
@@ -61,8 +71,92 @@ export default class authController {
             const AuthUser = await Auth.Authenticate({email: result.email, password: this.request.body.password})
             responser.send(this.response, 200, "Success", {...AuthUser})
         }catch(err) {
+            throw { type: "BadRequest", message: err.message }
             console.log(err)
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+    async ResetPassword() {
+        const resetPasswordModel = new ResetPasswordModel()
+        const mailer = new Mailer()
+        const passwordReset = new PasswordReset()
+        const ResetToken = await passwordReset.GenerateToken({name: 'aliabkarSultani'})
+        await resetPasswordModel.AddResetToken(this.request.body.email, ResetToken)
+        await mailer.Send({
+            text: 'http://127.0.0.1:3000/login/reset-password?resetToken=' + ResetToken,
+            to: this.request.body.email
+        })
+        responser.send(this.response, 200, "Success", 'Your reset link has been sent to your email. Check your inbox!')
+    }
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    async ValidatePasswordResetToken () {
+        const ResetToken = this.request.query.ResetToken
+        const resetPasswordModel = new ResetPasswordModel()
+        const result = resetPasswordModel.FindBy('reset_token', ResetToken)
+        if(result) {
+            if(await this.VerifyResetToken(result.reset_token)) {
+                responser.send(this.response, 200, "Success", 'true')
+            }
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    async SetNewPassword () {
+        const ResetToken = this.request.body.reset_token
+        const NewPassword = this.request.body.new_password
+        const resetPasswordModel = new ResetPasswordModel()
+        const UserResetToken = await resetPasswordModel.FindBy('reset_token', ResetToken)
+        console.log(UserResetToken)
+        // Note: check for expiration date
+        try {
+            if(UserResetToken && await jwt.verify(ResetToken, 'secret')) {
+                const UserModel = new userModel()
+                await UserModel.SetNewPassword({
+                    password: NewPassword, 
+                    id: UserResetToken.user_id
+                })
+    
+                responser.send(this.response, 200, "Success", 'Youre password reseted successfully')
+            }
+        }catch(err) {
+            console.log(err)
+            throw { type: "BadRequest", message: err.message }
+        }
+        
+    }
+
+    async VerifyResetToken (ResetToken) {
+        return await jwt.verify(ResetToken, 'secret')
     }
 }
 
