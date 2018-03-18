@@ -13,9 +13,27 @@ const db = require('../../database/config');
 
 export default class Model {
     table = ''
-    timestamp = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDay() + ' ' + new Date().getHours() + ':' + new Date().getMinutes() + ':' + new Date().getSeconds()
+    timestamp = this.timestamp()
     constructor (fields) {
         this.fields = fields || '*'
+    }
+
+
+    timestamp () {
+        var date = new Date()
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+    
+        month = (month < 10 ? "0" : "") + month;
+        day = (day < 10 ? "0" : "") + day;
+        hour = (hour < 10 ? "0" : "") + hour;
+        min = (min < 10 ? "0" : "") + min;
+        sec = (sec < 10 ? "0" : "") + sec;
+        const FullDate = date.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec
+        return FullDate
     }
 
     /*
@@ -113,7 +131,7 @@ export default class Model {
     |
     */
 
-    async GetAll(limit, offset, order) {
+    async GetAll(limit = 10, offset = 0, order = 'id') {
         try {
             return await db(this.table)
             .orderBy(order, 'asc')

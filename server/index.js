@@ -36,6 +36,8 @@ const technologyRoutes = require('./api/routes/technology')
 
 const planRoutes = require('./api/routes/plan')
 
+import collectionRoutes from './api/routes/collection'
+
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -58,6 +60,7 @@ app.use('/api/v1/reviews', reviewsRoutes);
 app.use('/api/v1/tickets', ticketRoutes);
 app.use('/api/v1/technologies', technologyRoutes);
 app.use('/api/v1/plans', planRoutes);
+app.use('/api/v1/collections', collectionRoutes);
 
 // handles all global errors
 app.use(function(error, req, res, next) {

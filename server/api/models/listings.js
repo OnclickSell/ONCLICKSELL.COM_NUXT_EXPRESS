@@ -50,11 +50,10 @@ export default class listingModel extends Model {
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
-
-        await technology.CreateTechnology({...data, ...CreatedListing})
-        await subscription.CreateSubscription({...data, ...CreatedListing})
-
-        
+        await Promise.all([
+            technology.CreateTechnology({...data, ...CreatedListing}),
+            subscription.CreateSubscription({...data, ...CreatedListing})
+        ])    
     }
 
 }

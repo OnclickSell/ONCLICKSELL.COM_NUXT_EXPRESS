@@ -104,6 +104,49 @@ export default class userController {
       this.next = next
     }
 
+    async GetUserDetails() {
+        try {
+            const requestedDetails = this.request.query.key
+            const userModel = new UserModel()
+            const Auth = new auth()
+            const user = await Auth.GetAuth()
+            switch(requestedDetails.toUpperCase()) {
+                case 'LISTINGS':
+                this.GetUserListings(user.id)
+                break
+                case 'PROFILE':
+                this.GetUserListings(user.id)
+                break
+                case 'PAYMENTS':
+                this.GetUserPayments(user.id)
+                break
+                case 'OTHERS':
+                this.GetUserPayments(user.id)
+                break
+            }
+        }catch(err) {
+          switch(err.message) {
+              case 'Expired Token':
+              responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
+          }
+        }
+          
+      }
+
+      async GetUserListings(userId) {
+        try {
+          const userModel = new UserModel()
+          const result = await userModel.FindBy('id', userId)
+          responser.send(this.response, 200, "Success", result)
+        }catch(err) {
+          switch(err.message) {
+              case 'Expired Token':
+              responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
+          }
+        }
+          
+    }
+
     async GetAuth() {
       try {
         const Auth = new auth(this.request)
