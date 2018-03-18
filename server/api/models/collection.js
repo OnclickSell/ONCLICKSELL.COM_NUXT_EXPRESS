@@ -13,10 +13,19 @@ import Model from './model'
 |
 */
 
-export default class PlansModel extends Model {
+export default class CollectionModel extends Model {
     constructor () {
         super()
-        this.table = 'plan'
+        this.table = 'collection'
+    }
+
+    async AddToCollection(config) {
+        return this.Create({
+            user_id: config.user_id,
+            listing_id: config.listing_id,
+            created_at: this.timestamp,
+            updated_at: this.timestamp
+        })
     }
 }
 

@@ -39,7 +39,15 @@ router.get('/', async (req, res, next) => {
     const userController = new UserController(req, res, next)
     return await userController.GetAuth()
     
-});
+})
+
+
+router.get('/details', AuthMiddleware, async (req, res, next) => {
+  
+  const userController = new UserController(req, res, next)
+  return await userController.GetUserDetails()
+  
+})
 // router.get('/:id', userController.get_single_user);
 router.post('/', AuthMiddleware, async (req, res, next) => {
   

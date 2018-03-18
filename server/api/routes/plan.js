@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const plansController = require('../controllers/plansController');
 import authMiddleware from '../middlewares/authMiddleware'
+import PlansController from '../controllers/plansController'
 
 
 // router.post('/', (req, res, next) => {
 //     return listingsController.test(req, res, next);
 // });
 
-router.get('/', plansController.get_plans);
+router.get('/', async (req, res, next) => {
+    const plansController = new PlansController(req, res, next)
+    return await plansController.GetPlans()
+})
 // router.get('/:id/:title', listingsController.get_single_listing);
 // router.post('/', authMiddleware, listingsController.create_single_listings);
 // router.put('/:id', authMiddleware, listingsController.update_single_listings);

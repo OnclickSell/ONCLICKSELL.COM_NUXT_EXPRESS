@@ -26,21 +26,21 @@ export default class technologyModel extends Model {
         console.log(data)
         const CreatedTechnology = await this.Create({
             listing_id: data.id,
-            html: data.frontend.html,
-            css: data.frontend.css,
+            html: data.frontend.html.title,
+            css: data.frontend.css.title,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('frontend_plateform').insert({
-            frontend_plateform_id: data.frontend.plateform.id,
+            frontend_plateform_id: data.frontend.plateform.value,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('frontend_framework').insert({
-            frontend_framework_id: data.frontend.framework.id,
+            frontend_framework_id: data.frontend.framework.value,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
@@ -48,7 +48,7 @@ export default class technologyModel extends Model {
 
         await db('frontend_libraries').insert({
             technology_id: CreatedTechnology.id,
-            name: data.frontend.libraries.name,
+            name: data.frontend.libraries.title,
             version: data.frontend.libraries.version,
             created_at: this.timestamp,
             updated_at: this.timestamp
@@ -57,22 +57,22 @@ export default class technologyModel extends Model {
 
 
         await db('backend_plateform').insert({
-            backend_plateform_id: data.backend.plateform.id,
+            backend_plateform_id: data.backend.plateform.value,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('backend_framework').insert({
-            backend_framework_id: data.backend.framework.id,
+            backend_framework_id: data.backend.framework.value,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('backend_libraries').insert({
-            technology_id: CreatedTechnology.id,
-            name: data.backend.libraries.name,
+            technology_id: CreatedTechnology.value,
+            name: data.backend.libraries.title,
             version: data.backend.libraries.version,
             created_at: this.timestamp,
             updated_at: this.timestamp
@@ -96,114 +96,7 @@ export default class technologyModel extends Model {
 
 }
 
-exports.add_technologies = (req, technology_details) => {
-    const type = technology_details.technology
-    technology_details = {
-        name: technology_details.name,
-        version: technology_details.version,
-        created_at: technology_details.created_at,
-        updated_at: technology_details.updated_at
-    }
-    return new Promise((resolve, reject) => {
-        switch(type) {
-            case "F_framework":
-            db('frontend_framework_list')
-            .insert(technology_details)
-            .then(result => { 
-                resolve(result)})
-            .catch(err => reject(err))
-            break
-            case "B_framework":
-            db('backend_framework_list')
-            .insert(technology_details)
-            .then(result => resolve(result))
-            .catch(err => reject(err))
-            break
-        }
-    })     
-}
 
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.get_technologies = (req) => {
-    let technologies = {
-        frontend: {
-            framework: '',
-            plateforms: '',
-            libraries: '',
-            html: '',
-            css: ''
-        },
-        backend: {
-            framework: '',
-            plateforms: ''
-        }
-    }
-    return new Promise((resolve, reject) => {
-        db('frontend_framework_list')
-        .select('*')
-        .then(F_framework => {
-            technologies.frontend.framework = F_framework
-
-            db('frontend_plateform_list')
-            .select('*')
-            .then(F_plateform => {
-                technologies.frontend.plateforms = F_plateform
-                db('frontend_libraries_list')
-                .select('*')
-                .then(F_libraries => {
-                    technologies.frontend.libraries = F_libraries
-                    db('technology_html')
-                    .select('*')
-                    .then(F_html => {
-                        technologies.frontend.html = F_html
-                        db('technology_css')
-                        .select('*')
-                        .then(F_css => {
-                            technologies.frontend.css = F_css
-
-                            db('backend_framework_list')
-                            .select('*')
-                            .then(B_framework => {
-                                technologies.backend.framework = B_framework
-                                db('backend_Plateform_list')
-                                .select('*')
-                                .then(B_plateform => {
-                                    technologies.backend.plateforms = B_plateform
-                                    db('backend_libraries_list')
-                                    .select('*')
-                                    .then(B_libraries => {
-                                        technologies.backend.libraries = B_libraries
-                                        resolve(technologies)
-                                    })
-                                    .catch(err => reject(err))
-                                })
-                                .catch(err => reject(err))
-                            })
-                            .catch(err => reject(err))
-
-                        })
-                        .catch(err => reject(err))
-                    })
-                    .catch(err => reject(err))
-                })
-                .catch(err => reject(err))
-               
-            })
-            .catch(err => reject(err))
-        })
-        .catch(err => reject(err))
-    })     
-}
 
 
 /*
