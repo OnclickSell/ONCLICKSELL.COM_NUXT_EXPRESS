@@ -12,6 +12,9 @@ const fs = require('fs');
 let uploader = require('../../packages/uploader')
 uploader = new uploader()
 
+import CollectionModel from '../models/collection'
+import ListingModel from '../models/listings'
+
 // import userModel from '../models/user'
 
 /*
@@ -108,7 +111,7 @@ export default class userController {
         try {
             const requestedDetails = this.request.query.key
             const userModel = new UserModel()
-            const Auth = new auth()
+            const Auth = new auth(this.request)
             const user = await Auth.GetAuth()
             switch(requestedDetails.toUpperCase()) {
                 case 'LISTINGS':
@@ -216,6 +219,7 @@ export default class userController {
             throw { type: "BadRequest", message: err }
         }
     }
+
 }
 
 exports.get_auth_user = wrapAsync( async (req, res, next) => {

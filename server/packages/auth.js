@@ -3,7 +3,9 @@ const db = require('../database/config');
 const bcrypt = require('bcrypt');
 const tokener = require('../packages/token');
 
-import authModel from '../api/models/auth' 
+import authModel from '../api/models/auth'
+import UserModel from '../api/models/user'
+import UserController from '../api/controllers/userController'
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +30,12 @@ export default class auth {
     async GetAuth () {
         
         try {
+            const userModel = new UserModel()
             this.token = this.request.query.token
             this.decodedToken = await jwt.verify(this.token, 'secret')
-            return this.authModel.FindBy('id', this.decodedToken.identifier)
+            return await userModel.GetUser(this.decodedToken.identifier)
         }catch(err) {
+            console.log(err)
             throw { type: "BadRequest", message: 'Expired Token' }
         }
     }
@@ -42,13 +46,14 @@ export default class auth {
          this.auth = await this.authModel.FindBy('email', credentials.email)
          //Check for credentials
          const check = await bcrypt.compare(credentials.password, this.auth.password)
-         console.log(check)
          if (!check) {
              throw {type: "BadRequest", message: "Invalid Creadentials"}
          }
          //Issue Token
+        const userModel = new UserModel()
+        this.auth = await userModel.GetUser(this.auth.id)
         this.token = await jwt.sign({
-            identifier: this.auth.id
+            identifier: this.auth.user.id
          }, "secret", {expiresIn: '1h'});
 
         this.auth['token'] = this.token

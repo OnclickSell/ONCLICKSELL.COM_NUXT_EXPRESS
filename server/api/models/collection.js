@@ -27,6 +27,16 @@ export default class CollectionModel extends Model {
             updated_at: this.timestamp
         })
     }
+
+    async RemoveFromCollection(condition) {
+        return await db(this.table).del().where(condition)
+    }
+
+    async GetUserCollections(userId) {
+        return await db(this.table)
+                    .select(this.fields)
+                    .where('user_id', userId)
+    }
 }
 
 
