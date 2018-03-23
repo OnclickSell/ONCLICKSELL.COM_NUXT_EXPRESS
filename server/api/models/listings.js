@@ -24,6 +24,12 @@ export default class listingModel extends Model {
         this.fields = fields || '*'
     }
 
+    async GetUserListings(userId) {
+        return await db(this.table)
+                .select(this.fields)
+                .where('user_id', userId)
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

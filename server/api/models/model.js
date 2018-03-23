@@ -176,5 +176,14 @@ export default class Model {
         }
     }
 
+    async Exists(condition) {
+        try {
+            const result = await db(this.table).select("*").where(condition)
+            return result.length > 0
+        }catch (err) {
+            throw { type: "BadRequest", message: err.message }
+        }
+    }
+
 
 }

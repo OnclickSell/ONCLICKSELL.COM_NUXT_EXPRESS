@@ -3,6 +3,8 @@ const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 const auth = require('../../packages/auth');
 import Model from './model'
+import CollectionModel from './collection'
+import ListingModel from './listings'
 
 /*
 |--------------------------------------------------------------------------
@@ -22,15 +24,57 @@ export default class userModel extends Model {
         this.fields = fields || '*'
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
     async Listings(user) {
         return await this.HasMany('listings', 'user_id', user)
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
 
     async SetNewPassword(UserData) {
         const EncryptedPassword = await bcrypt.hash(UserData.password, 10)
         return await db(this.table).where('id', +UserData.id).first().update('password', EncryptedPassword)
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    async GetUser(id) {
+        let user = {}
+        const collection = new CollectionModel()
+        const listings = new ListingModel()
+        user['collection'] = await collection.GetUserCollections(id)
+        user['listings'] = await listings.GetUserListings(id)
+        user['user'] = await this.FindBy('id', id)
+        return user
+    }
     
 }
    
@@ -44,10 +88,6 @@ export default class userModel extends Model {
 | any other location as required by the application or its packages.
 |
 */
-
-exports.get_all_users = (callback) => {
-    db.select("*").from("users").asCallback((err, value) => callback(err, value));       
-}
 
 /*
 |--------------------------------------------------------------------------

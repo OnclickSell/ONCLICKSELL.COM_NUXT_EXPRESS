@@ -21,7 +21,16 @@ import Controller from './controller'
 
 export default class listingController extends Controller {
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
     async AddToCollection() {
         try {
             const AuthToken = this.request.query.token
@@ -33,8 +42,14 @@ export default class listingController extends Controller {
             const Listing = await listingsModel.FindBy('id', ListingId)
             
             const collectionModel = new CollectionModel()
-            await collectionModel.AddToCollection({user_id: User.id, listing_id: Listing.id})
-            responser.send(this.response, 200, "Success")
+            console.log(await collectionModel.Exists({listing_id: Listing.id}))
+            if(!await collectionModel.Exists({listing_id: Listing.id})) {
+                await collectionModel.AddToCollection({user_id: User.user.id, listing_id: Listing.id})
+                responser.send(this.response, 200, "Success")
+            } else {
+                await collectionModel.RemoveFromCollection({listing_id: Listing.id})
+                responser.send(this.response, 200, "Success")
+            }
         }catch(err) {
             console.log(err)
             responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
