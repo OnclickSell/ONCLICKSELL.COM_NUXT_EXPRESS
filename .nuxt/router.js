@@ -4,18 +4,18 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const _bfa868fc = () => import('..\\pages\\tickets\\index.vue' /* webpackChunkName: "pages_tickets_index" */).then(m => m.default || m)
-const _45db6900 = () => import('..\\pages\\profile\\index.vue' /* webpackChunkName: "pages_profile_index" */).then(m => m.default || m)
 const _958a49a4 = () => import('..\\pages\\subscription\\index.vue' /* webpackChunkName: "pages_subscription_index" */).then(m => m.default || m)
-const _a87a1a4e = () => import('..\\pages\\sell\\index.vue' /* webpackChunkName: "pages_sell_index" */).then(m => m.default || m)
 const _1295814a = () => import('..\\pages\\purchase\\index.vue' /* webpackChunkName: "pages_purchase_index" */).then(m => m.default || m)
-const _2baa8d00 = () => import('..\\pages\\login\\index.vue' /* webpackChunkName: "pages_login_index" */).then(m => m.default || m)
 const _2fa95e68 = () => import('..\\pages\\register\\index.vue' /* webpackChunkName: "pages_register_index" */).then(m => m.default || m)
-const _e694b244 = () => import('..\\pages\\register\\preview.vue' /* webpackChunkName: "pages_register_preview" */).then(m => m.default || m)
+const _64f89a7a = () => import('..\\pages\\auth\\index.vue' /* webpackChunkName: "pages_auth_index" */).then(m => m.default || m)
+const _2baa8d00 = () => import('..\\pages\\login\\index.vue' /* webpackChunkName: "pages_login_index" */).then(m => m.default || m)
+const _a87a1a4e = () => import('..\\pages\\sell\\index.vue' /* webpackChunkName: "pages_sell_index" */).then(m => m.default || m)
+const _45db6900 = () => import('..\\pages\\profile\\index.vue' /* webpackChunkName: "pages_profile_index" */).then(m => m.default || m)
 const _717c84a6 = () => import('..\\pages\\test\\cookie.vue' /* webpackChunkName: "pages_test_cookie" */).then(m => m.default || m)
-const _041e34f3 = () => import('..\\pages\\sell\\technologies.vue' /* webpackChunkName: "pages_sell_technologies" */).then(m => m.default || m)
+const _19a2091b = () => import('..\\pages\\login\\reset-password.vue' /* webpackChunkName: "pages_login_reset-password" */).then(m => m.default || m)
 const _158e5e42 = () => import('..\\pages\\subscription\\success.vue' /* webpackChunkName: "pages_subscription_success" */).then(m => m.default || m)
 const _8ceeae46 = () => import('..\\pages\\listings\\_id\\_title.vue' /* webpackChunkName: "pages_listings__id__title" */).then(m => m.default || m)
-const _13f27ba5 = () => import('..\\pages\\select_plan.vue' /* webpackChunkName: "pages_select_plan" */).then(m => m.default || m)
+const _8ee61082 = () => import('..\\pages\\project\\_title\\_id.vue' /* webpackChunkName: "pages_project__title__id" */).then(m => m.default || m)
 const _14547e5b = () => import('..\\pages\\about_us\\index.vue' /* webpackChunkName: "pages_about_us_index" */).then(m => m.default || m)
 const _34e70caa = () => import('..\\pages\\index.vue' /* webpackChunkName: "pages_index" */).then(m => m.default || m)
 
@@ -72,19 +72,9 @@ export function createRouter () {
 			name: "tickets"
 		},
 		{
-			path: "/profile",
-			component: _45db6900,
-			name: "profile"
-		},
-		{
 			path: "/subscription",
 			component: _958a49a4,
 			name: "subscription"
-		},
-		{
-			path: "/sell",
-			component: _a87a1a4e,
-			name: "sell"
 		},
 		{
 			path: "/purchase",
@@ -92,19 +82,29 @@ export function createRouter () {
 			name: "purchase"
 		},
 		{
-			path: "/login",
-			component: _2baa8d00,
-			name: "login"
-		},
-		{
 			path: "/register",
 			component: _2fa95e68,
 			name: "register"
 		},
 		{
-			path: "/register/preview",
-			component: _e694b244,
-			name: "register-preview"
+			path: "/auth",
+			component: _64f89a7a,
+			name: "auth"
+		},
+		{
+			path: "/login",
+			component: _2baa8d00,
+			name: "login"
+		},
+		{
+			path: "/sell",
+			component: _a87a1a4e,
+			name: "sell"
+		},
+		{
+			path: "/profile",
+			component: _45db6900,
+			name: "profile"
 		},
 		{
 			path: "/test/cookie",
@@ -112,9 +112,9 @@ export function createRouter () {
 			name: "test-cookie"
 		},
 		{
-			path: "/sell/technologies",
-			component: _041e34f3,
-			name: "sell-technologies"
+			path: "/login/reset-password",
+			component: _19a2091b,
+			name: "login-reset-password"
 		},
 		{
 			path: "/subscription/success",
@@ -127,9 +127,9 @@ export function createRouter () {
 			name: "listings-id-title"
 		},
 		{
-			path: "/select:plan",
-			component: _13f27ba5,
-			name: "selectplan"
+			path: "/project/:title?/:id?",
+			component: _8ee61082,
+			name: "project-title-id"
 		},
 		{
 			path: "/about:us",

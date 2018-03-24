@@ -1,58 +1,69 @@
 <template>
   
-<div>
 
-    <div class='card' v-if="card">      
-        <div v-for="list in listings" :key="list.id" class='l-card' v-on:click="showListing(list)">
-            <div class='card__title'>{{ list.title }}</div>
-            <os-card--thumbnail :src="list.thumbnail" :alt="list.title" />
+    <div class='card'>      
+        <div  :key="listing.id" class='l-card' v-on:click="cardClicked">
+            <div class='card__title'>{{ listing.title }}</div>
+            <os-card--thumbnail :src="listing.thumbnail" :alt="listing.title" />
             <div class='card__details'>
-                <os-buttons/>
+                <!-- <os-add v-on:clicked="addToCollection"/> -->
+                <span v-on:click="addToCollection">{{collectionBtnText}}</span>
             </div>
             <div class='card__footer'>
                 <span class='card__footer--text'>Sells: 45</span>
-                <span class='card__footer--text card__footer--text-green'>$ {{ list.price }}</span>
+                <span class='card__footer--text card__footer--text-green'>$ {{ listing.price }}</span>
             </div>
         </div>
     </div>
 
-    <div class='l-list' v-for="list in listings" :key="list.id" v-if="!card">
-        <div class='list list--active'>
-            <div class='list__title'>{{ list.title }}</div>
-            <div class='list__icon'>
-                <i></i>
-            </div>
-            <div class='list__sells'>
-                <span>Sells: 45</span>
-            </div>
-            <div class='list__price'>
-                <span>$ {{ list.price }}</span>
-            </div>
-        </div>
-
-    </div>
-
-</div>
 </template>
 
 <script>
-import Buttons from './buttons/buttons'
-import Thumbnail from './thumbnail/thumbnail'
+// import Buttons from './buttons/buttons'
+import CardThumbnail from '../card_controllers/thumbnail/CardThumbnail'
+import AddButton from '../card_controllers/AddToCollection/AddToCollection'
 export default {
-  props: ['card', 'listings'],
+  props: {
+    listing: {
+      type: Object,
+      required: true
+    },
+    collection: {
+      type: Array,
+      required: true,
+      default: []
+    }
+  },
   data () {
     return {
+      collectionIds: []
     }
   },
   methods: {
-    showListing(list) {
-      alert(list.id)
-        this.$router.push('/listings/' + list.id + '/' + list.title)
+    // showListing(list) {
+    //   alert(list.id)
+    //     this.$router.push('/listings/' + list.id + '/' + list.title)
+    // },
+    cardClicked() {
+      this.$emit('clicked', this.listing.id)
+    },
+    addToCollection() {
+      alert('Added to collection')
+      this.$store.dispatch('user/addToCollection', this.listing.id)
     }
   },
   components: {
-    'os-buttons': Buttons,
-    'os-card--thumbnail': Thumbnail
+    // 'os-buttons': Buttons,
+    'os-card--thumbnail': CardThumbnail,
+    'os-add': AddButton
+  },
+  computed: {
+    collectionBtnText() {
+      return this.collectionIds.indexOf(this.listing.id) !== -1 ? 'Remove' : 'Add'
+    }
+  },
+  created() {
+    this.collectionIds = this.collection.map(each => each.listing_id) || []
   }
 }
 </script>
@@ -71,7 +82,7 @@ export default {
 
 .l-card {
     @include layout--item;
-    width: layout--item--width(2, 6, false);
+    width: 320px;
     height: 300px;
     border-radius: 3px;
     background-color: #FFFFFF;
@@ -79,7 +90,7 @@ export default {
     margin-bottom: 10px;
     margin-top: 10px;
     
-    @media all  and (min-width : 599px) {
+    /*@media all  and (min-width : 599px) {
       width: layout--item--width(3, 4, false); 
     }
 
@@ -89,7 +100,7 @@ export default {
 
     @media all  and (min-width : 1200px) {
       width: layout--item--width(4, 3, false); 
-    }
+    }*/
 }
 
 .card__title {

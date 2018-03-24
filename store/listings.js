@@ -17,6 +17,7 @@ export const state = () => ({
       libraries: ''
     }
   },
+  plans: [],
   listingsDetails: {
     title: '',
     summary: '',
@@ -46,11 +47,14 @@ export const mutations = {
     state.technologies.backend.framework = payload.backend.framework
     state.technologies.backend.plateform = payload.backend.plateforms
     state.technologies.backend.libraries = payload.backend.libraries
+  },
+  SetPlans (state, payload) {
+    state.plans = payload
   }
 }
 export const actions = {
     fetchListings ({state, commit}, payload) {
-      return axios.get('http://localhost:3000/api/v1/listings?limit=' + payload.limit + '&offset=' + payload.offset + '&order=' + payload.order + '')
+      return axios.get('http://localhost:4000/api/v1/listings?limit=' + payload.limit + '&offset=' + payload.offset + '&order=' + payload.order + '')
         .then(function (response) {
           commit('setListings', response.data.Context)
         })
@@ -59,7 +63,7 @@ export const actions = {
         })
     },
     fetchTechnologies ({state, commit}, payload) {
-      return axios.get('http://localhost:3000/api/v1/technologies')
+      return axios.get('http://localhost:4000/api/v1/technologies')
         .then(function (response) {
           commit('setTechnologies', response.data.Context)
         })
@@ -67,8 +71,17 @@ export const actions = {
           console.log(error)
         })
     },
+    FetchCreateListing ({state, commit}, payload) {
+      return Promise.all([
+        axios.get('http://localhost:4000/api/v1/technologies'),
+        axios.get('http://localhost:4000/api/v1/plans?limit=10&offset=0&order=id')
+      ]).then(response => {
+        commit('setTechnologies', response[0].data.Context)
+        commit('SetPlans', response[1].data.Context)
+      })
+    },
     fetchSingleListing (vuexContext, payload) {
-      return axios.get('http://localhost:3000/api/v1/listings/' + payload.id + '/' + payload.title)
+      return axios.get('http://localhost:4000/api/v1/listings/' + payload.id + '/' + payload.title)
         .then(response => {
           vuexContext.commit('setSingleListing', response.data.Context)
         })
@@ -77,7 +90,7 @@ export const actions = {
         })
     },
     submit(vuexContext, payload) {
-      return axios.post('http://localhost:3000/api/v1/listings/', { context: payload })
+      return axios.post('http://localhost:4000/api/v1/listings/', payload)
         .then(response => {
           console.log(response.data)
         })
@@ -96,5 +109,8 @@ export const getters = {
   },
   getTechnologies (state, rootState) {
     return state.technologies
+  },
+  GetPlans(state, rootState) {
+    return state.plans
   }
 }

@@ -4,7 +4,9 @@
             <div class='profile'>
                 
                 <div class='profile__item'>
-                    <os-user--profile :name="user.full_name" :description="user.description" :profilePicture="user.profile_picture"></os-user--profile>
+                    <os-description 
+                        v-on:descriptionUpdated="updateDescription"
+                        :description="user.description"/>
                 </div>
 
 
@@ -23,8 +25,9 @@
                             <li v-if="moreOptions">
                                 <ul class='profile__more--options'>
                                     <li class='profile__option' @click="openPanel('os-payments')">Payments</li>
-                                    <li class='profile__option' @click="openPanel('os-contact--details')">Details</li>
+                                    <li class='profile__option' @click="openPanel('os-personal--details')">Details</li>
                                     <li class='profile__option' @click="openPanel('os-tickets')">Tickets</li>  
+                                    <li class='profile__option' @click="openPanel('os-listings')">Listings</li> 
                                 </ul>
                             </li>
                         </ul>
@@ -69,13 +72,13 @@
 
 <script>
 import Modal from '@/components/modal/modal.vue'
-import UserProfile from '@/components/user/user--profile.vue'
-import ContactDetails from '@/components/user/contact--details.vue'
-import Listings from '@/components/user/projects.vue'
+import PersonalDetails from '@/components/user/profile_container/personal_details/index'
+import Listings from '@/components/user/listings/listings.vue'
 import Tickets from '@/components/user/tickets.vue'
 import PaymentPlan from '@/components/user/payment--plan.vue'
 import Questions from '@/components/user/questions.vue'
 import Payments from '@/components/user/payments.vue'
+import Description from '@/components/user/profile_container/description/description'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -90,13 +93,13 @@ export default {
   },
   components: {
     'os-modal': Modal,
-    'os-user--profile': UserProfile,
-    'os-contact--details': ContactDetails,
+    'os-personal--details': PersonalDetails,
     'os-listings': Listings,
     'os-tickets': Tickets,
     'os-payment--plan': PaymentPlan,
     'os-questions': Questions,
-    'os-payments': Payments
+    'os-payments': Payments,
+    'os-description': Description
   },
   methods: {
     ...mapActions({
@@ -109,6 +112,9 @@ export default {
     },
     openPanel (panel) {
       this.currentPanel = panel
+    },
+    updateDescription(data) {
+        this.$store.dispatch('user/UpdateDescription', data)
     }
   },
   computed: {
@@ -117,7 +123,7 @@ export default {
       isAuth: 'authentication/isAuth'
     }),
     details () {
-      if (this.currentPanel === 'os-contact--details') {
+      if (this.currentPanel === 'os-personal--details') {
         return this.user
       }
     }

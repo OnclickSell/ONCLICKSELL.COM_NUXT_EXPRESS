@@ -1,6 +1,6 @@
 <template>
     <div>
-           <div class='purchase'>
+ <!--           <div class='purchase'>
 
                <div class='purchase__item purchase__project__details'>
                    <h1 class='purchase__item--title'>Plan Name: <span>Secondary</span></h1>
@@ -32,14 +32,14 @@
                </div>
 
 
-    </div>
+    </div> -->
     
        
 </div>
 </template>
 
 <script>
-import Input from '@/components/sell/input.vue'
+// import Input from '@/components/sell/input.vue'
 
 export default {
   layout: 'main--layout',
@@ -50,7 +50,7 @@ export default {
     }
   },
   components: {
-    'os-input': Input
+    // 'os-input': Input
   }
 }
 </script>

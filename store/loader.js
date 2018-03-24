@@ -1,8 +1,31 @@
 export const state = () => ({
-  login: false
+ 	loading: false
 })
-export const getters = {
-  login (state, rootState) {
-    return state.login
+
+export const mutations = {
+	startLoading(state, payload) {
+		state.loading = true
+	},
+	stopLoading(state) {
+		state.loading = false
+	}
+}
+
+export const actions = {
+  startLoading ({commit, dispatch, state}) {
+   	commit('startLoading')
+  },
+  stopLoading ({commit, dispatch, state}) {
+   	commit('stopLoading')
   }
 }
+
+export const getters = {
+  isLoading(state, getters, rootState) {
+    return state.loading
+  },
+  isloading(state, getters, rootState) {
+    return state.loading
+  }
+}
+

@@ -6,12 +6,6 @@
             <h1 slot='title'>Bassic informatin about your listing</h1>
             <p slot='description'>A good title and description can give a transparent picture of your project and helps clients find the right project they need.</p>
         </os-progress-bar> -->
-
-       <!--  <os-basic-details/>
-        <os-frontend :context="technologies"/>
-        <os-backend/>
-        <os-screenshot/> -->
-
         
        
         <keep-alive>
@@ -23,32 +17,30 @@
             />
         </keep-alive>
 
-        <!-- <input type="text" v-model="test1" name="fsafs"/> -->
-        <button @click="switch_page">Test switch</button>
-
     </div>
 </template>
 
 <script>
 import PrograssBar from '@/components/sell/Progress--bar.vue'
-import BasicDetails from '@/components/sell/pages/basic_details'
-import Frontend from '@/components/sell/pages/frontend'
-import Backend from '@/components/sell/pages/backend'
-import Screenshot from '@/components/sell/pages/screenshot'
-import Pricing from '@/components/sell/pages/pricing'
-import Subscription from '@/components/sell/pages/subscription'
-import Payment from '@/components/sell/pages/payment'
+import BasicDetails from '@/components/sell/pages/basic/basic_details'
+import Frontend from '@/components/sell/pages/frontend/frontend'
+import Backend from '@/components/sell/pages/backend/backend'
+import Screenshot from '@/components/sell/pages/screenshot/screenshot'
+import Pricing from '@/components/sell/pages/pricing/pricing'
+import Subscription from '@/components/sell/pages/subscription/subscription'
+import Payment from '@/components/sell/pages/payment/payment'
 import { mapGetters } from 'vuex'
+import swal from 'sweetalert'
 
 export default {
   layout: 'main--layout',
   head: {
-    script: [
-      { src: 'https://js.stripe.com/v3/'}
-    ]
+    // script: [
+    //   { src: 'https://js.stripe.com/v3/'}
+    // ]
   },
   fetch({store}) {
-    return store.dispatch('listings/fetchTechnologies')
+    return store.dispatch('listings/FetchCreateListing')
   },
   data() {
       return {
@@ -57,7 +49,8 @@ export default {
             'os-basic-details',
             'os-frontend',
             'os-backend',
-            'os-screenshot'
+            'os-screenshot',
+            'os-pricing'
         ],
         current_page: 'os-basic-details'
       }
@@ -80,8 +73,25 @@ export default {
     },
     submit(value) {
       this.listing_details = {...this.listing_details, ...value.context}
-      this.$store.dispatch('listings/submit', this.listing_details.screenshot)
+      this.$store.dispatch('listings/submit', this.listing_details)
     }
+  },
+  beforeRouteLeave (to, from, next) {
+     swal("By navigating away from this page all the data might be lost!", {
+        buttons: {
+          continue: "Continue Anyway",
+          stay: "Stay"
+        },
+      })
+      .then((value) => {
+        switch (value) {
+          case "continue":
+            next()
+            break
+          case "stay":
+            break
+        }
+      })
   },
   computed: {
     ...mapGetters({

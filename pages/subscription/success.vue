@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class='l-subscription__success'>
+<!--         <div class='l-subscription__success'>
            <div class='subscription__success'>
 
                <div class='subscription__success--item'>
@@ -26,7 +26,7 @@
 
            </div>
 
-        </div>
+        </div> -->
     
        
       <!-- <os-footer/> -->
@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import Input from '@/components/sell/input.vue'
-import Button from '@/components/sell/button.vue'
+// import Input from '@/components/sell/input.vue'
+// import Button from '@/components/sell/button.vue'
 
 export default {
   layout: 'main--layout',
@@ -46,8 +46,8 @@ export default {
     }
   },
   components: {
-    'os-input': Input,
-    'os-button': Button
+    // 'os-input': Input,
+    // 'os-button': Button
   }
 }
 </script>

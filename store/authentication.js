@@ -32,6 +32,8 @@ const getExpirationDate = (expiresIn) => {
 */
 export const state = () => ({
   user: {},
+  collection: {},
+  listings: {},
   token: null,
   tokenExpiration: null
 })
@@ -87,6 +89,12 @@ export const mutations = {
   },
   clearAuthUser(state) {
     state.user = null
+  },
+  SetAuthCollection (state, payload) {
+    state.collection = payload
+  },
+  SetAuthListings (state, payload) {
+    state.listings = payload
   }
 }
 
@@ -104,39 +112,42 @@ let token = null
 let tokenExpiration = null
 
 export const actions = {
-  logIn ({commit, dispatch, state}, data) {
-    data = {credentials: {...data}}
+  authentication ({commit, dispatch, state}, credentials) {
     return new Promise((resolve, reject) => {
-      axios.post('http://localhost:3000/api/v1/auth/signIn', data)
+      axios.post('http://localhost:4000/api/v1/auth/' + credentials.url, credentials.values)
       .then(response => {
-        commit('setAuthUser', response.data.Context)
+        commit('setAuthUser', response.data.Context.user)
         commit('setToken', response.data.Context.token)
         commit('setTokenExpiration')
+        commit('SetAuthListings', response.data.Context.listings)
+        commit('SetAuthCollection', response.data.Context.collection)
         resolve()
       })
       .catch(err => reject(err.response.data))
     })  
   },
-  signUp ({commit, state}, data) {
-    axios.post('http://localhost:3000/api/v1/auth/signUp', data)
-      .then(response => {
+  updateUser ({commit, state}, data) {
+    return new Promise( async(resolve, reject) => {
+      try {
+        const response = await axios.post('http://localhost:4000/api/v1/users?token=' + state.user.token , data)
         commit('setAuthUser', response.data.Context)
-        commit('setToken', response.data.Context.token)
-        commit('setTokenExpiration')
-        this.$router.push('/register/preview')
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        resolve()
+      }catch(err) {
+        console.log(err)
+        reject(err)
+      }
+    })
   },
   logOut ({commit, state}, vuexContext) {
     commit('clearToken')
     commit('clearAuthUser')
   },
-  fetchAuthUser (vuexContext) {
-      return axios.get('http://localhost:3000/api/v1/users?token=' + vuexContext.state.token)
+  fetchAuthUser ({commit, state}) {
+      return axios.get('http://localhost:4000/api/v1/users?token=' + state.token)
       .then(response => {
-        vuexContext.commit('setAuthUser', response.data.Context)
+        commit('setAuthUser', response.data.Context.user)
+        commit('SetAuthListings', response.data.Context.listings)
+        commit('SetAuthCollection', response.data.Context.collection)
       })
       .catch(error => {
         console.log(error)
@@ -165,16 +176,17 @@ export const actions = {
     vuexContext.state.tokenExpiration = tokenExpiration
     return vuexContext.dispatch('fetchAuthUser')
   },
-  updateUser ({commit, state}, data) {
-    axios.put('/users', data)
+  resetPassword({commit, state}, data) {
+    axios.post('http://localhost:4000/api/v1/auth/set-new-password', data)
       .then(response => {
-        commit('setAuthUser', response.data)
-        this.$router.push('/')
+        console.log(response)
+        // commit('setAuthUser', response.data)
+        // this.$router.push('/')
       })
       .then(error => {
         console.log(error)
       })
-  },
+  }
 }
 
 
@@ -196,5 +208,11 @@ export const getters = {
   },
   getToken (state, getters, rootState) {
     return state.token
+  },
+  GetAuthCollection(state, getters, rootState) {
+    return state.collection
+  },
+  GetAuthListings(state, getters, rootState) {
+    return state.listings
   }
 }

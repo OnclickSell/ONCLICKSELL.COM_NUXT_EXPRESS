@@ -1,4 +1,4 @@
-import { instance as axios } from '@/plugins/axios'
+import axios from 'axios'
 
 
 /*
@@ -10,7 +10,9 @@ import { instance as axios } from '@/plugins/axios'
 |
 */
 export const state = () => ({
-  user: {}
+  user: {},
+  collection: {},
+  listings: {}
 })
 
 /*
@@ -39,8 +41,13 @@ export const plugins = [
 
 export const mutations = {
   setUser (state, payload) {
-    // console.log(payload)
     state.user = payload
+  },
+  SetUserCollection (state, payload) {
+    state.collection = payload
+  },
+  SetUserListings (state, payload) {
+    state.listings = payload
   }
 }
 
@@ -56,14 +63,42 @@ export const mutations = {
 
 
 export const actions = {
-   changePassword (vuexContext, payload) {
-       return axios.put('/users/password', payload)
-            .then(response => {
-               vuexContext.commit('setUser', response.data)
-            })
-            .catch(error => {
-                console.log(error)
-            })
+  async ResetPassword (context, payload) {
+      try {
+        const AuthToken = context.rootState.authentication.token
+        const result = await axios.post('http://localhost:4000/api/v1/users?token=' + AuthToken, payload)
+      // context.commit('SetUserListings', payload)
+      }catch(err) {
+        console.log(err)
+      }
+   },
+   addToCollection(context, id) {
+    const AuthToken = context.rootState.authentication.token
+    return axios.post('http://localhost:4000/api/v1/collections/' + id + '?token=' + AuthToken)
+      .then(function (response) {
+        // commit('setListings', response.data.Context)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+   },
+   SetUserCollection (context, payload) {
+    context.commit('SetUserCollection', payload)
+   },
+   SetUserListings (context, payload) {
+    context.commit('SetUserListings', payload)
+   },
+   async UpdateDescription (context, payload) {
+    try {
+      const AuthToken = context.rootState.authentication.token
+      const result = await axios.post('http://localhost:4000/api/v1/users?token=' + AuthToken, payload)
+      // context.commit('SetUserListings', payload)
+    }catch(err) {
+      console.log(err)
+    }
+    
+     
+    
    }
 }
 
