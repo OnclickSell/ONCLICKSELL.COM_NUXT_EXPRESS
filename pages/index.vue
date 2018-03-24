@@ -47,15 +47,14 @@
                         <p class='home__intro--description'>Create an account on onclickSell.com</p>
                     </div>
             </div>
-            <!-- <os-filter/> -->
-            <os-cards :listings="listings"/>
+
+            <os-cards v-on:displayListing="displayListing" :listings="listings"/>
             <os-new-letter/>
     </div>
 </template>
 
 <script>
 import Cards from '@/components/cards/Cards.vue'
-import Filter from '@/components/others/Filter.vue'
 import NewLetter from '@/components/others/NewLetter.vue'
 import { mapGetters } from 'vuex'
 import axios from 'axios'
@@ -67,7 +66,6 @@ export default {
   layout: 'main--layout',
   components: {
     'os-cards': Cards,
-    'os-filter': Filter,
     'os-new-letter': NewLetter
   },
   computed: {
@@ -75,6 +73,12 @@ export default {
       listings: 'listings/getListings'
     })
   },
+  methods: {
+    displayListing(id) {
+      const project = this.listings.find(listing => listing.id == id)
+      this.$router.push('/project/' + project.title + '/' + project.id )
+    }
+  }
 }
 </script>
 

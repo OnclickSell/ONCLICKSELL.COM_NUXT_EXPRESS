@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class='l-subscription'>
+   <!--      <div class='l-subscription'>
            <div class='subscription'>
 
             <div class='subscription__md--float'>
@@ -54,7 +54,7 @@
            
         </div>
 
-    </div>
+    </div> -->
     
        
       <!-- <os-footer/> -->
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import Input from '@/components/sell/input.vue'
+// import Input from '@/components/sell/input.vue'
 
 export default {
   layout: 'main--layout',
@@ -73,7 +73,7 @@ export default {
     }
   },
   components: {
-    'os-input': Input
+    // 'os-input': Input
   }
 }
 </script>

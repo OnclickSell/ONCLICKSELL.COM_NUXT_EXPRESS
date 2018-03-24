@@ -149,7 +149,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loading: 'loader/login',
+      loading: 'loader/isLoading',
       isAuth: 'authentication/isAuth',
       Auth: 'authentication/GetAuthUser'
     })

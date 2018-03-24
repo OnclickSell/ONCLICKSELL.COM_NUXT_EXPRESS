@@ -1,35 +1,35 @@
 <template>
     <div class='profile__item'>
-            <div class='l-profile__image'>
-                <img class='profile__image' src='http://res.cloudinary.com/onclicksell-com/image/upload/v1513505162/OnclickSell.com/Icons/Onclicksell.com-avatar-male-64px.svg' alt='Aliakbar"s photo'>
-                <div class='profile__name'>{{ name }}</div>
-            </div>
-    
             <div class='l-profile__description'>
                 <p class='profile__description'>{{ checkDescription }}</p>
                 <div class='profile__join'>Joined since: 20/10/2017</div>
+                <input v-show="show" v-model="data" type="text" name="description">
+                <button @click="show = true"></button>
             </div>
     </div>
 </template>
 <script>
 export default {
   props: {
-      name: {
-          type: String,
-          required: true
-      },
       description: {
-          type: String,
-          required: false
-      },
-      profilePicture: {
-          type: String,
-          required: true
+        type: String,
+        required: true
       }
+  },
+  data() {
+    return {
+      show: false,
+      data: this.description
+    }
   },
   computed: {
     checkDescription () {
       return this.description || 'Add a description' 
+    }
+  },
+  methods: {
+    descriptionUpdated() {
+      this.$emit('descriptionUpdated', this.data)
     }
   }
 }

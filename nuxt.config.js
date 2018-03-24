@@ -16,6 +16,9 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+    ],
+    script: [
+      { src: 'https://js.stripe.com/v3/'}
     ]
   },
   /*
@@ -41,6 +44,7 @@ module.exports = {
   */
   modules: [
     // '@nuxtjs/axios'
+    // '~/modules/dis/sweetalert.min.js'
   ],
   /*
   ** Nuxt.js routes

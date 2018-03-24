@@ -1,29 +1,21 @@
 <template>
 <div class='cards'>
 
-    <div class='cards__title'>
-        <h2 class='cards__title--text'>Project Listigs</h2>
-        <p class='cards__title--results'>284 results</p>
-        <div class='cards__title--icons'>
-            <i class='cards__title--icon' @click="switchCardMode"><os-filter height='20px' width='20px'/></i>
-            <i class='cards__title--icon' @click="switchListMode"><os-filter height='20px' width='20px'/></i>
-        </div>
+  <os-card-filter style="{width: 100%}" v-on:SwitchDisplayMode="switchDisplayMode"/>
 
-        <div class='l-cards__search-box'>
-            <i class='cards__title--icon cards__search-box--icon'><os-filter height='20px' width='20px'/></i>
-            <input class='cards__search-box' type='text' name='search-box'>
-        </div>
+  <os-card 
+    class="cards__item"
+    v-show="DisplayMode == 'card'" 
+    v-for="listing in listings" 
+    :listing="listing"
+    :collection="collection"
+    v-on:clicked="displayListing"/>
 
-        <ul class='cards__list'>
-            <li class='cards__list--item cards__list--item-active'>ALL <i class='cards__list--item-icon'><os-hamburger height='10px' width='10px'/></i></li>
-            <li class='cards__list--item'>TOP PROJECTS <i class='cards__list--item-icon'><os-hamburger height='10px' width='10px'/></i></li>
-            <li class='cards__list--item'>NEWEST <i class='cards__list--item-icon'><os-hamburger height='10px' width='10px'/></i></li>
-            <!-- <li class='cards__list--item'>BEST SELLERS <i class='cards__list--item-icon'><os-hamburger height='10px' width='10px'/></i></li> -->
-            <li class='cards__list--item'>FILTER <i class='cards__list--item-icon'><os-hamburger height='10px' width='10px'/></i></li>
-        </ul>
-    </div>
-
-  <os-card :listings="listings" :card="cardMode"/>
+  <os-list 
+    v-show="DisplayMode == 'list'" 
+    v-for="listing in listings" 
+    :listing="listing" 
+    v-on:clicked="displayListing"/>
 
 </div>
 </template>
@@ -32,37 +24,46 @@
 import Card from './card/card.vue'
 import hamburger from '@/assets/icons/hamburger.vue'
 import Filter from '@/assets/icons/filter.vue'
+import filter from '@/components/cards/card_controllers/filter/filter'
+import List from '@/components/cards/list/list'
+import { mapGetters } from 'vuex'
 
 export default {
-  props: ['listings'],
-//   props: {
-//     listings: {
-//       type: array,
-//       required: true
-//     }  
-//   },
+  props: {
+    listings: {
+        type: Array,
+        required: true
+    }
+  },
   data () {
     return {
-      cardMode: true,
+      DisplayMode: 'card'
     }
   },
   components: {
     'os-card': Card,
     'os-hamburger': hamburger,
-    'os-filter': Filter
+    'os-filter': Filter,
+    'os-card-filter': filter,
+    'os-list': List
+  },
+  computed: {
+    ...mapGetters({
+        collection: 'authentication/GetAuthCollection'
+    })
   },
   methods: {
-    switchListMode () {
-      this.cardMode = false
+    switchDisplayMode(mode) {
+      this.DisplayMode = mode
     },
-    switchCardMode () {
-      this.cardMode = true
+    displayListing(id) {
+        this.$emit('displayListing', id)
     }
   }
 }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/OnclickSell.com--css--config.scss';
@@ -71,6 +72,13 @@ export default {
     @include layout--container;
     position: relative;
     padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cards__item {
+    width: 50%;
 }
 
 .cards__title {

@@ -1,7 +1,15 @@
 // import localStorage from '../plugins/localStorage'
 export const state = () => ({
+	loading: false
 })
 export const mutations = {
+	startLoading(state, payload) {
+		console.log('fasfsafsa')
+		state.loading = true
+	},
+	stopLoading(state) {
+		state.loading = false
+	}
 }
 
 export const actions = {
@@ -15,8 +23,8 @@ export const actions = {
   }
 }
 
-// export const getters = {
-//   isAuth({getters}, context) {
-//     return context.
-//   }
-// }
+export const getters = {
+  isLoading(state, getters, rootState) {
+    return state.loading
+  }
+}

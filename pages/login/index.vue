@@ -41,6 +41,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import FromInput from '@/components/form/input.vue'
+import swal from 'sweetalert'
 
 export default {
   layout: 'main--layout',
@@ -55,11 +56,17 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loading: 'loader/login'
+      loading: 'loader/isLoading'
     })
   },
   methods: {
     logIn () {
+      swal({
+        title: "Good job!",
+        text: "You clicked the button!",
+        icon: "success",
+        button: "Aww yiss!",
+      })
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.$store.dispatch('authentication/logIn', this.credentials)

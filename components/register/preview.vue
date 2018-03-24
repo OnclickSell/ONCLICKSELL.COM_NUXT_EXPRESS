@@ -2,12 +2,13 @@
     <div>
 
          <div class='l-register'>
-             <img :src="data.profile_picture" width="200px" height="200px" :alt="data.full_name"/>
-            <div>{{data.full_name}}</div>
-            <div>{{data.email}}</div>
-            <div>{{data.description}}</div>
-            <div>{{data.age}}</div>
-            <div>{{data.sex}}</div>
+            <h1>Complete Your Profile</h1>
+             <img :src="user.profile_picture" width="200px" height="200px" :alt="user.full_name"/>
+            <div>{{user.full_name}}</div>
+            <p>Description</p>
+            <div><textarea name="textarea" v-model="credentials.description">{{credentials.description}}</textarea></div>
+            <p>Age</p>
+            <div><input type="text" v-model="credentials.age"></div>
             <button @click="skip">Skip</button>
             <button @click="update" :disabled="isUpdateOn">Update</button>
         </div>            
@@ -16,19 +17,17 @@
 </template>
 <script>
 import InputTooltip from '@/components/others/input--tooltip.vue'
+import { mapGetters, mapActions } from 'vuex'
 import Hamburger from '@/assets/icons/hamburger.vue'
 
 export default {
-  props: ['data'],
+  layout: 'main--layout',
+  middleware: 'checkAuth',
   data () {
     return {
-      details: {
-        full_name: '',
-        email: '',
-        sex: '',
-        password: '',
+      credentials: {
         description: '',
-        profile_picture: ''
+        age: ''
       },
       isUpdateOn: false
     }
@@ -38,13 +37,17 @@ export default {
     'os-hamburger': Hamburger
   },
   computed: {
+    ...mapGetters({
+      loading: 'isLoading',
+      user: 'authentication/GetAuthUser'
+    })
   },
   methods: {
     skip () {
-      this.$emit('skip')
+      this.$route.push('/')
     },
     update () {
-      this.$emit('update', this.details)
+      this.$store.dispatch('authentication/updateUser', this.details)
     }
   }
 }
