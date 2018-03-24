@@ -49,14 +49,25 @@ router.get('/details', AuthMiddleware, async (req, res, next) => {
   
 })
 // router.get('/:id', userController.get_single_user);
+// router.post('/', AuthMiddleware, async (req, res, next) => {
+  
+//   const userController = new UserController(req, res, next)
+//   return await userController.UpdateUser()
+  
+// })
+
 router.post('/', AuthMiddleware, async (req, res, next) => {
-  
-  const userController = new UserController(req, res, next)
-  return await userController.UpdateUser()
-  
+  try {
+    const userController = new UserController(req, res, next)
+    return await userController.UpdateUser()
+  }catch(err) {
+    console.log(err)
+  }
 })
+
+
 // router.put('/avatar', userController.update_user_avatar);
-// router.put('/password', authMiddleware, userController.update_user_password);
+
 // router.delete('/:id', authMiddleware, userController.delete_single_user);
 // router.post('/', authMiddleware, userController.add_user_profile);
 module.exports = router;

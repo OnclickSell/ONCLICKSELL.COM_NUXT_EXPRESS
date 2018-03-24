@@ -177,13 +177,25 @@ export default class userController {
 
     async UpdateUser() {
       try{
-        const Auth = new auth(this.request)
         const userModel = new UserModel()
+        const Auth = new auth(this.request)
         const result = await Auth.GetAuth()
-        let updatedUser = await userModel.Update(result.id, {
-            description: this.request.body.description,
-            age: this.request.body.age
-        })
+        let updatedUser = ''
+        const updateKyes = Object.keys(this.request.body)
+
+
+        for(let i = 0; i < updateKyes.length; i++) {
+            switch(updateKyes[i]) {
+                case 'description':
+                updatedUser = await userModel.Update(result.user.id, {description: this.request.body[updateKyes[i]]})
+                break
+                case 'password':
+                const hash = await this.HashPassword(this.request.body.new_password)
+                updatedUser = await userModel.Update(result.user.id, {password: hash})
+                break
+            }
+        }
+        
         updatedUser = {...updatedUser, token: this.request.query.token}
         responser.send(this.response, 200, "Success", updatedUser)
       }catch(err) {
@@ -191,11 +203,31 @@ export default class userController {
       }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
     async HashPassword(password) {
-        const Hash = await bcrypt.hash(password, 10)
-        return Hash
-        
+        return await bcrypt.hash(password, 10)
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
 
     SetProfilePicture(sex) {
         switch(sex.toUpperCase()) {
@@ -222,88 +254,10 @@ export default class userController {
 
 }
 
-exports.get_auth_user = wrapAsync( async (req, res, next) => {
 
-    try {
-        const authUser = await userModel.get_auth_user(req)
-        response.E200(req, res, authUser)
-    }catch(err) {
-        throw Error(err)
-    }
-})
 
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
 
-exports.delete_single_user = (req, res, next) => {
-    function callback(err, user) {
-        if(err) {
-            res.status(409).json({
-                messgage: "Something is wrong with your request"
-            })
-        }else {
-            res.status(200).json({
-                messgage: 'User were deleted successfully',
-                users: user
-            })
-        }
-    }
-      
-    return userModel.delete_single_user(req.params.id, callback);
-}
 
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.update_user_details = wrapAsync( async function(req, res, next) {
-    const rawUrl = req.url
-    const allowedDetails = ['description', 'age']
-    let newData = {}
-
-    try {
-        const parsedUrl = url.parse(rawUrl)
-        const parsedQs = querystring.parse(parsedUrl.query)
-        const paresedKeys = Object.keys(parsedQs)
-        
-        paresedKeys.forEach(element => {
-            if(allowedDetails.indexOf(element) == -1) {
-                throw new Error('Invalid user detail field')
-            }
-        })
-
-       
-        paresedKeys.forEach(key => {
-            newData[key] = parsedQs[key]
-        })
-    } catch(err) {
-        throw new Error(err)
-    }
-
-    
-
-    try {
-        const result = await userModel.update_user_details(req, newData)
-        response.E200(req, res, result)
-    }catch(err) {
-        throw new Error(err)
-    }
-})
 
 /*
 |--------------------------------------------------------------------------
@@ -328,41 +282,6 @@ exports.update_user_avatar = wrapAsync( async function(req, res, next) {
 })
 
 
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.update_user_password = (req, res, next) => {
-    return userModel.update_user_password(req)
-    .then(result => response.E200(req, res, result))
-    .catch(err => response.E400(req, res,'', err))
-    
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.add_user_profile = (req, res, next) => {
-    return userModel.add_user_profile(req)
-    .then(result => response.E200(req, res, result))
-    .catch(err => response.E400(req, res,'', err))
-}
 
 /*
 |--------------------------------------------------------------------------
