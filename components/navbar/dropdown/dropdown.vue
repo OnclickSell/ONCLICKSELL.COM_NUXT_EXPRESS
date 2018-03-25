@@ -1,7 +1,7 @@
 <template>
     <div class="l-dropdown">
       <span class="dropdown_button" @click="openDropDown">Menu</span>
-      <ul class="dropdown" v-if="isDropDown">
+      <ul class="dropdown" v-if="isDropDown" @click="openDropDown">
         <os-auth-controlls :auth="auth" class="dropdown_item dropdown_auth-controlls" />
         <os-item class='dropdown_item' v-if="auth" href="/" text="NOTIFICATIONS"/>
         <os-item class='dropdown_item' v-if="auth" href="/collections" text="COLLECTIONS"/>
