@@ -1,16 +1,7 @@
 <template>
-    <div>
-        <div class='hero'>
-            <img class='hero__image' src='http://res.cloudinary.com/onclicksell-com/image/upload/v1513738715/OnclickSell.com/Photos/Conceptional-Home-Page-Final-Design.png'>
-            <div class='l-hero__text'>
-              <div class='hero__image--drop'></div>
-              <h1 class='hero__text'>Don't let <br/> your  computer disk <br/> become a graveyard of <br/> usefull web based <br/> projects</h1>
-              <div class='l-hero__button'>
-                  <p class='hero__button--text'>Let us turn them into money for you!</p>
-                  <button class='hero__button'>GET STARTED</button>
-              </div>
-            </div>
-        </div>
+    <div class="home">
+       
+      <os-hero/>
 
       <div class='home__intro'>
 
@@ -56,6 +47,7 @@
 <script>
 import Cards from '@/components/cards/Cards.vue'
 import NewLetter from '@/components/others/NewLetter.vue'
+import Hero from '@/components/hero/index'
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 
@@ -66,7 +58,8 @@ export default {
   layout: 'main--layout',
   components: {
     'os-cards': Cards,
-    'os-new-letter': NewLetter
+    'os-new-letter': NewLetter,
+    'os-hero': Hero
   },
   computed: {
     ...mapGetters({
@@ -87,6 +80,12 @@ export default {
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/OnclickSell.com--css--config.scss';
 
+
+.home {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
 
 
 .home__intro {
@@ -197,133 +196,6 @@ export default {
 
 
 // Home page Hero image styles 
-
-
-
-.hero {
-  width: 100%;
-  height: auto;
-  position: relative;
-  overflow-x: visible;
-}
-
-.hero__image {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  height: auto;
-}
-
-.hero__image--drop {
-  width: 100%;
-  position: absolute;
-  z-index: 20;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  top: 0;
-  background: linear-gradient(10deg, rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.31) 46%,rgba(0,0,0,0.2) 61%,rgba(0,0,0,0) 88%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=1 );
-}
-
-.l-hero__text {
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 3%;
-  top: 0;
-
-  @media all and (min-width: 599px) {
-    bottom: 2%;
-  }
-
-  @media all and (min-width: 768px) {
-    bottom: 2%;
-  }
-}
-
-.hero__text {
-  position: relative;
-  z-index: 50;
-  width: 100%;
-  padding: 12px;
-  color: #FFFFFF;
-  font-size: 2em;
-
-  @media all and (min-width: 599px) {
-    padding: 10% 12px 12px 5%;
-    font-size: 2.4em;
-  }
-
-  @media all and (min-width: 768px) {
-    padding: 15% 12px 12px 5%;
-    font-size: 3em;
-  }
-}
-
-.l-hero__button {
-  width: 100%;
-  padding: 12px;
-  position: absolute;
-  bottom: 0;
-  z-index: 55;
-  text-align: right;
-
-  @media all and (min-width: 599px) {
-    padding: 12px 10% 10% 12px;
-  }
-
-  @media all and (min-width: 768px) {
-    padding: 12px 10% 10% 12px;
-  }
-}
-
-.hero__button--text {
-  width: 180px;
-  margin: 0 10px 0 auto;
-  color: #ffffff;
-  font-size: 1em;
-  text-align: left;
-  font-style: italic;
-  padding: 5px 0;
-
-  @media all and (min-width: 599px) {
-    width: 210px;
-  }
-
-  @media all and (min-width: 768px) {
-    width: 300px;
-    font-size: 1.5em;
-  }
-}
-
-.hero__button {
-  width: 180px;
-  padding: 12px;
-  background: $brand--colour;
-  color: #FFFFFF;
-  text-align: center;
-  font-weight: bold;
-  border: none;
-  border-radius: 4px;
-  margin: 0 10px 0 auto;
-  cursor: pointer;
-
-  &:hover {
-      color: $brand--colour;
-      background-color: #FFFFFF;
-      transition: 0.4s;
-  }
-
-  @media all and (min-width: 599px) {
-    width: 210px;
-  }
-
-  @media all and (min-width: 768px) {
-    width: 300px;
-    font-size: 1.2em;
-  }
-}
 
 
 
