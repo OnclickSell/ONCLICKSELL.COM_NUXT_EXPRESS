@@ -1,9 +1,9 @@
 <template>
-  <div class="main__layout">
+  <div class="main_layout">
       <os-navbar/>
     <nuxt/>
       <os-loader v-if="loading"/>
-      <os-footer/>
+      <os-footer class="layout_footer"/>
   </div>
 </template>
 
@@ -28,8 +28,51 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.main__layout {
-    min-height: 100%;
+<style lang='scss'>
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
+
+body {
+  height: 100%;
+  font-family: $lato;
+
+  @media all and (min-width: 1900px) {
+    width: 1900px !important;
+  }
+
+  @media all and (max-width: 479px) {
+    width: 479px !important;
+  }
+}
+
+
+html {
+  font-size: 17px;
+  height: 100%;
+}
+@media (max-width: 900px) {
+  html { font-size: 15px; }
+}
+@media (max-width: 400px) {
+  html { font-size: 13px; }
+}
+
+
+.nuxt-link-exact-active {
+  color: #97b5ec !important;
+}
+
+
+.main_layout {
+  width: 100%;
+  height: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+
+.layout_footer {
+  top: 100%;
+  bottom: 0;
 }
 </style>

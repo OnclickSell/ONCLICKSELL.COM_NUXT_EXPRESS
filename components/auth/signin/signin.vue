@@ -70,7 +70,7 @@ export default {
       })
     },
     signup() {
-      this.$emit('switchComponent', { component: 'os-signup', values: this.credentials })
+      this.$emit('switchComponent', { component: 'signup', values: this.credentials })
     }
   },
   components: {
