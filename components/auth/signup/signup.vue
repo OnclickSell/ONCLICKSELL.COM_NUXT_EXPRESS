@@ -178,7 +178,7 @@ export default {
     isEmailUnique () {
     },
     signin() {
-      this.$emit('switchComponent', {component: 'os-signin', values: this.credentials})
+      this.$emit('switchComponent', {component: 'signin', values: this.credentials})
     }
   }
 }

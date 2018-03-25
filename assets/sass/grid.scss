@@ -60,9 +60,26 @@ margin-top:$grid-spacing;
 	}
 }
 
-@mixin col-xl-push($column) { left: (100% / 12 * $column) - ($grid-spacing * 2); }
+@mixin col-xl-push($column, $width) { 
+	@supports not (display: grid) {
+		left: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
 
-@mixin col-xl-pull($column) { right: (100% / 12 * $column) - ($grid-spacing * 2); }
+	@supports (display: grid) {
+		grid-column-start: ($width - 12) - ($column - ($column - 1));
+	}
+}
+	
+
+@mixin col-xl-pull($column, $width) { 
+	@supports not (display: grid) {
+	   right: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
+
+	@supports (display: grid) {
+		grid-column-start: - $column;
+	}
+}
 
 
 
@@ -77,9 +94,31 @@ margin-top:$grid-spacing;
 	}
 }
 
-@mixin col-lg-push($column) { left: (100% / 12 * $column) - ($grid-spacing * 2); }
+@mixin col-lg-push($column) { 
+	@supports not (display: grid) {
+		left: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
 
-@mixin col-lg-pull($column) { right: (100% / 12 * $column) - ($grid-spacing * 2); }
+	@supports (display: grid) {
+		grid-column-start: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-end: - 1;
+		}@else {
+			grid-column-end: - ((12 - $width) - $column);
+		}
+		
+	} 
+}
+
+@mixin col-lg-pull($column, $width) { 
+	@supports not (display: grid) {
+		right: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
+
+	@supports (display: grid) {
+		grid-column-start: - $column;
+	}
+}
 
 
 
@@ -94,9 +133,34 @@ margin-top:$grid-spacing;
 	}
 }
 
-@mixin col-md-push($column) { left: (100% / 12 * $column) - ($grid-spacing * 2); }
+@mixin col-md-push($column) { 
+	@supports not (display: grid) {
+		left: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
 
-@mixin col-md-pull($column) { right: (100% / 12 * $column) - ($grid-spacing * 2); }
+	@supports (display: grid) {
+		grid-column-start: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-end: - 1;
+		}@else {
+			grid-column-end: - ((12 - $width) - $column);
+		}
+		
+	} 
+}
+
+@mixin col-md-pull($column, $width) { 
+	@supports not (display: grid) {
+		right: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
+
+	grid-column-end: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-start: 1;
+		}@else {
+			grid-column-start: ((12 - $width) - ($column - 1));
+		}
+}
 
 
 
@@ -112,14 +176,39 @@ margin-top:$grid-spacing;
 	}
 }
 
-@mixin col-sm-push($column) { left: (100% / 12 * $column) - ($grid-spacing * 2); }
+@mixin col-sm-push($column) { 
+	@supports not (display: grid) {
+		left: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
 
-@mixin col-sm-pull($column) { right: (100% / 12 * $column) - ($grid-spacing * 2); }
+	@supports (display: grid) {
+		grid-column-start: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-end: - 1;
+		}@else {
+			grid-column-end: - ((12 - $width) - $column);
+		}
+		
+	} 
+}
+
+@mixin col-sm-pull($column, $width) { 
+	@supports not (display: grid) {
+		right: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
+
+	grid-column-end: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-start: 1;
+		}@else {
+			grid-column-start: ((12 - $width) - ($column - 1));
+		}
+}
 
 
 
 
-//----- Extra Large Screen Sizes
+//----- Extra Small Screen Sizes
 @mixin col-xs($column) { 
 	@supports not (display: grid) {
 	width:($OneColumn * $column) - ($grid-spacing * 2);
@@ -130,7 +219,34 @@ margin-top:$grid-spacing;
 	}
 }
 
-@mixin col-xs-push($column) { left: (100% / 12 * $column) - ($grid-spacing * 2); }
+@mixin col-xs-push($column, $width) { 
+	@supports not (display: grid) {
+		left: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
 
-@mixin col-xs-pull($column) { right: (100% / 12 * $column) - ($grid-spacing * 2); }
+	@supports (display: grid) {
+		grid-column-start: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-end: - 1;
+		}@else {
+			grid-column-end: - ((12 - $width) - $column);
+		}
+		
+	} 
+}
+
+@mixin col-xs-pull($column, $width) { 
+	@supports not (display: grid) {
+		right: (100% / 12 * $column) - ($grid-spacing * 2);	
+	}
+
+	@supports (display: grid) {
+		grid-column-end: span $width;
+		@if ($column + $width) >= 12 {
+			grid-column-start: 1;
+		}@else {
+			grid-column-start: ((12 - $width) - ($column - 1));
+		}
+	} 
+}
 

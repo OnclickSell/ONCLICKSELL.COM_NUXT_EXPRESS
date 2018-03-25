@@ -35,7 +35,8 @@ export const state = () => ({
   collection: {},
   listings: {},
   token: null,
-  tokenExpiration: null
+  tokenExpiration: null,
+  authModuleState: 'signin'
 })
 
 /*
@@ -63,6 +64,9 @@ export const plugins = [
 */
 
 export const mutations = {
+  UpdateAuthModuleState(state, payload) {
+    state.authModuleState = payload
+  },
   setAuthUser (state, payload) {
     state.user = payload
   },
@@ -214,5 +218,8 @@ export const getters = {
   },
   GetAuthListings(state, getters, rootState) {
     return state.listings
+  },
+  GetAuthModuleState(state, getters, rootState) {
+    return state.authModuleState
   }
 }
