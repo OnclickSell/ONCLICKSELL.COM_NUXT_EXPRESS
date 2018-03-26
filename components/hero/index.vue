@@ -39,6 +39,7 @@ export default {
 .hero {
   @include hero;
   position: relative;
+  height: 100vh;
 }
 
 </style>

@@ -1,45 +1,42 @@
 <template>
   
-     <button class='view'>VIEW</button>
+
+       <span @click="clicked" class='card__details--rating'></span>
+
            
 </template>
 
 <script>
 
 export default {
+  props: ['card', 'listings'],
+  data () {
+    return {
+    }
+  },
   methods: {
-    showListing(list) {
-        this.$router.push('/listings/' + list.id + '/' + list.title)
+    clicked(list) {
+      this.$emit('clicked')
     }
   }
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/OnclickSell.com--css--config.scss';
 
-.view {
-  padding: 8px 20px;
-  border: 1px solid #3DC052;
-  border-radius: 4px;
-  background-color: #FFFFFF;
-  color: #666666;
-  font-weight: bold;
-  text-transform: capitalize;
-  cursor: pointer;
 
-  &:hover {
-      color: #FFFFFF;
-      background-color: #3DC052;
-      transition: 0.3s;
-  }
 
-  @media all  and (min-width : 599px) {
-     padding: 8px 35px;
-  }
+.card__details--rating {
+    display: inline-block;
+    width: 40px;
+    background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    padding: 12px;
 }
-
 
 </style>

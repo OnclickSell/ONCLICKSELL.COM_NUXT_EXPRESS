@@ -1,7 +1,7 @@
 <template>
   
 
-       <span class='card__details--rating'></span>
+       <span @click="clicked" class='card__details--rating'></span>
 
            
 </template>
@@ -15,8 +15,8 @@ export default {
     }
   },
   methods: {
-    showListing(list) {
-        this.$router.push('/listings/' + list.id + '/' + list.title)
+    clicked(list) {
+      this.$emit('clicked')
     }
   }
 }
@@ -30,7 +30,7 @@ export default {
 
 
 .card__details--rating {
-    @include layout--item;
+    display: inline-block;
     width: 40px;
     background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
     background-repeat: no-repeat;
