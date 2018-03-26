@@ -1,7 +1,7 @@
 <template>
 <div class='cards'>
 
-  <os-card-filter style="{width: 100%}" v-on:SwitchDisplayMode="switchDisplayMode"/>
+  <!-- <os-card-filter style="{width: 100%}" v-on:SwitchDisplayMode="switchDisplayMode"/> -->
 
   <os-card 
     class="cards__item"
@@ -67,18 +67,32 @@ export default {
 
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
 
 .cards {
-    @include layout--container;
+    @include row;
     position: relative;
     padding: 20px 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    font-size: 1.2rem;
 }
 
 .cards__item {
-    width: 50%;
+    @include col-xs(12);
+    margin-top: 3%;
+    @media all and (min-width: 768px) {
+        @include col-xs(6);
+    }
+
+    @media all and (min-width: 1200px) {
+        @include col-xs(4);
+    }
+
+    @media all and (min-width: 1700px) {
+        @include col-xs(3);
+    }
 }
 
 .cards__title {

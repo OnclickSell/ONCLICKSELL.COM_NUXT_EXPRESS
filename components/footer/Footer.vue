@@ -67,6 +67,10 @@ export default {
     width: 100%;
     z-index: 50;
     padding: 12px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .footer__list {

@@ -33,7 +33,6 @@ export default {
 @import '~assets/sass/default.scss';
 
 body {
-  height: 100%;
   font-family: $lato;
 
   @media all and (min-width: 1900px) {
@@ -47,8 +46,9 @@ body {
 
 
 html {
+  position: relative;
   font-size: 17px;
-  height: 100%;
+  min-height: 100%;
 }
 @media (max-width: 900px) {
   html { font-size: 15px; }
@@ -64,10 +64,8 @@ html {
 
 
 .main_layout {
-  width: 100%;
-  height: 100%;
-  height: 100vh;
   position: relative;
+  width: 100%;
 }
 
 

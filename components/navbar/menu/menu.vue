@@ -5,7 +5,7 @@
         <os-item class='menu_item' v-if="auth" href="/collection" text="COLLECTIONS"/>
         <os-item class='menu_item' href="/sell" text="SELL NOW"/>
         <os-item class='menu_item' v-if="!auth" href="/about-us" text="ABOUT US"/>
-        <os-item class='menu_item' v-if="auth" v-on:clicked="logout" href="/auth/signin" text="LOGOUT"/>
+        <os-item class='menu_item' v-if="auth" v-on:clicked="logout" text="LOGOUT"/>
         <os-item class='menu_item' v-if="!auth" href="/auth/signin" text="SIGN IN"/>
         <os-item class='menu_item' v-if="!auth" href="/auth/signup" text="SIGN UP"/>
       </ul>
