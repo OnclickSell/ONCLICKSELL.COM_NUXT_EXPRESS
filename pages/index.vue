@@ -10,13 +10,12 @@
       </div>
 
       <os-cards v-on:displayListing="displayListing" :listings="listings"/>
-      <os-new-letter/>
+      <!-- <os-new-letter/> -->
     </div>
 </template>
 
 <script>
 import Cards from '@/components/cards/index'
-import NewLetter from '@/components/others/NewLetter.vue'
 import Hero from '@/components/hero/index'
 import Intro from '@/components/intro/index'
 import { mapGetters } from 'vuex'
@@ -56,7 +55,6 @@ export default {
   },
   components: {
     'os-cards': Cards,
-    'os-new-letter': NewLetter,
     'os-hero': Hero,
     'os-intro': Intro
   },

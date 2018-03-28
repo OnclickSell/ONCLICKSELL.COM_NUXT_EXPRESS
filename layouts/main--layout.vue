@@ -9,7 +9,7 @@
 
 <script>
 import Navbar from '@/components/navbar/Navbar.vue'
-import Footer from '@/components/footer/Footer.vue'
+import Footer from '@/components/footer/index.vue'
 import Loader from '@/components/UI/loader/loader'
 import swal from 'sweetalert'
 import { mapGetters } from 'vuex'

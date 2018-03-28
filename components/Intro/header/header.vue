@@ -7,7 +7,6 @@
         <span class='home__intro--box-icon'></span>
       </div>
   </div>
-
 </template>
 
 <script>
