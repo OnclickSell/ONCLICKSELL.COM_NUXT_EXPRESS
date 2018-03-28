@@ -4,7 +4,6 @@
       <h3 class='home__intro--title'>{{title}}</h3>
       <p class='home__intro--description'>{{description}}</p>
   </div>
-
 </template>
 
 <script>
