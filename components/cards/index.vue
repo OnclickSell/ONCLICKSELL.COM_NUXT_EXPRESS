@@ -1,7 +1,8 @@
 <template>
 <div class='cards'>
 
-  <!-- <os-card-filter style="{width: 100%}" v-on:SwitchDisplayMode="switchDisplayMode"/> -->
+  <!-- <os-card-filter class="cards_filter" style="{width: 100%}" v-on:SwitchDisplayMode="switchDisplayMode"/> -->
+  <os-cards-top class="cards_top" />
 
   <os-card 
     class="cards__item"
@@ -22,9 +23,7 @@
 
 <script>
 import Card from './card/card.vue'
-import hamburger from '@/assets/icons/hamburger.vue'
-import Filter from '@/assets/icons/filter.vue'
-import filter from '@/components/cards/card_controllers/filter/filter'
+import CardsTop from '@/components/cards/cards_top/index'
 import List from '@/components/cards/list/list'
 import { mapGetters } from 'vuex'
 
@@ -42,9 +41,7 @@ export default {
   },
   components: {
     'os-card': Card,
-    'os-hamburger': hamburger,
-    'os-filter': Filter,
-    'os-card-filter': filter,
+    'os-cards-top': CardsTop,
     'os-list': List
   },
   computed: {
@@ -93,6 +90,10 @@ export default {
     @media all and (min-width: 1700px) {
         @include col-xs(3);
     }
+}
+
+.cards_top {
+    @include col-xs(12);
 }
 
 .cards__title {

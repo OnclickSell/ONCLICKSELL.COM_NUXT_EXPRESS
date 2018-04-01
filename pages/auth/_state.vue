@@ -1,14 +1,7 @@
 <template>
-    <div>
-      <keep-alive>
-        <component 
-          :is="ActiveComponent" 
-          :errors="errors"
-          :data="credentials"
-          v-on:submit="submit" 
-          v-on:switchComponent="switchComponent"></component>
-      </keep-alive>
-    </div>
+  <div>
+    <os-auth/>   
+  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -16,6 +9,8 @@ import FromInput from '@/components/form/input.vue'
 import swal from 'sweetalert'
 import Signup from '@/components/auth/signup/signup'
 import Signin from '@/components/auth/signin/signin'
+
+import Auth from '@/components/auth/index'
 
 export default {
   layout: 'main--layout',
@@ -74,7 +69,8 @@ export default {
   components: {
       'os-input': FromInput,
       'signup': Signup,
-      'signin': Signin
+      'signin': Signin,
+      'os-auth': Auth
   }
 }
 </script>

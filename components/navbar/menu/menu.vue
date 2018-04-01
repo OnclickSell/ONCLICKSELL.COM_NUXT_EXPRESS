@@ -1,13 +1,45 @@
 <template>
     <div>
       <ul class="menu">
-        <os-item class='menu_item' v-if="auth" href="/" text="NOTIFICATIONS"/>
-        <os-item class='menu_item' v-if="auth" href="/collection" text="COLLECTIONS"/>
-        <os-item class='menu_item' href="/sell" text="SELL NOW"/>
-        <os-item class='menu_item' v-if="!auth" href="/about-us" text="ABOUT US"/>
-        <os-item class='menu_item' v-if="auth" v-on:clicked="logout" text="LOGOUT"/>
-        <os-item class='menu_item' v-if="!auth" href="/auth/signin" text="SIGN IN"/>
-        <os-item class='menu_item' v-if="!auth" href="/auth/signup" text="SIGN UP"/>
+        <os-item 
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}"
+            class='menu_item' 
+            v-if="auth" href="/" 
+            text="NOTIFICATIONS"/>
+        <os-item 
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '-32px 0'}"
+            class='menu_item' 
+            v-if="auth" href="/collection" 
+            text="COLLECTIONS"/>
+        <os-item
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '-128px 0'}" 
+            class='menu_item' 
+            href="/sell" 
+            text="SELL NOW"/>
+        <os-item
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '-64px 0'}" 
+            class='menu_item' 
+            v-if="!auth" 
+            href="/about-us" 
+            text="ABOUT US"/>
+        <os-item
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '-32px -32px'}" 
+            class='menu_item' 
+            v-if="auth" 
+            v-on:clicked="logout" 
+            text="LOGOUT"/>
+        <os-item
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0px -32'}" 
+            class='menu_item' 
+            v-if="!auth" 
+            href="/auth/signin" 
+            text="SIGN IN"/>
+        <os-item
+            :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '-32px -64px'}" 
+            class='menu_item' 
+            v-if="!auth" 
+            href="/auth/signup" 
+            text="SIGN UP"/>
       </ul>
     </div>
 </template>
@@ -70,6 +102,7 @@ export default {
         border-right: none;
     }
 }
+
 
 </style>
 
