@@ -2,12 +2,16 @@
     
   <li class="l-item">
     <nuxt-link v-if="href" tag="span" :to="href" class="item__link" @click="clicked">
-        <span class="item__icon"></span>
+        <span 
+          class="item__icon" 
+          v-bind:style="{backgroundImage: 'url(' + icon.icon + ')', backgroundPosition: icon.position}"></span>
         <span class="item__text">{{text}}</span>
     </nuxt-link>
 
     <span v-else="href" class="item__link" @click="clicked">
-        <span class="item__icon"></span>
+        <span 
+          class="item__icon" 
+          v-bind:style="{backgroundImage: 'url(' + icon.icon + ')', backgroundPosition: icon.position}"></span>
         <span class="item__text">{{text}}</span>
     </span>
   </li>
@@ -26,6 +30,10 @@ export default {
     },
     href: {
       type: String,
+    },
+    icon: {
+      type: Object,
+      required: false
     }
   },
   methods: {
@@ -59,13 +67,11 @@ export default {
 }
 
 .item__icon {
-  background: url('http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-check-icon.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   margin: auto;
 }
 

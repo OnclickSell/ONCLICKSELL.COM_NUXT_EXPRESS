@@ -1,89 +1,61 @@
 <template>
     <div>
 
-         <div class='l-register' v-if="!isAuth">
-            <div class='register'>
-                <div class='l-register__header'>
-                    <p class='register__heading'>Sell your first<br/> project today!</p>
+        <os-auth-panel>
+        
+          <div slot="controlls" class="auth_signup-controlls">
+              <os-auth-errors
+                v-on:closed="cancelError"
+                v-show="errors.any()" 
+                :errors="errors.items" />
+                    <os-input 
+                      class="auth_signup-input"
+                      title="Full Name"
+                      v-model="credentials.email"
+                      InputType='text'
+                      v-validate="'required|email'"
+                      InputName='name'
+                      data-vv-value-path="innerValue"
+                      data-vv-name="name"
+                      InputHolder="e.g. Aliakbar Sultani"/>
+
+                    <os-input 
+                      class="auth_signup-input"
+                      title="Email Address"
+                      v-model="credentials.email"
+                      InputType='email'
+                      v-validate="'required|email'"
+                      InputName='password'
+                      data-vv-value-path="innerValue"
+                      data-vv-name="email"
+                      InputHolder="Your Email Address"/>
+
+                    <os-input 
+                      class="auth_signup-input"
+                      title="Password"
+                      v-model="credentials.password"
+                      InputType='password'
+                      v-validate="'required'"
+                      InputName='password'
+                      data-vv-value-path="innerValue"
+                      data-vv-name="password"
+                      InputHolder="Your password"/>
+
+
+                  <os-auth-buttons 
+                    class="auth_signup-input"
+                    v-on:clicked="submit"
+                    v-on:linkClicked="signin"
+                    text="Sign Up" 
+                    link="Sign In"/>
                 </div>
 
-                <div class="l-register__inputs">
 
-                    <div class='l-register__github'>
-                        <div class='register__github register__github--button' @click="signin">Login With GitHub Account</div>
-                    </div>
-                    <span class='register__email--or'>OR</span>
-                    <div class='register__inputs'>
-                        <h3 class='register__inputs--heading'>Create a New Account</h3>
-                        <os-input 
-                            v-model="credentials.full_name"
-                            InputType='full_name'
-                            v-validate="'required|max:50|min:2'"
-                            InputName='full_name'
-                            data-vv-value-path="innerValue"
-                            data-vv-name="full_name"
-                            InputHolder="Your full name e.g Jogn Smith"
-                            :InputError="errors.first('full_name')"
-                            :tooltip="{position: 'right', distance: 260}"/>
-                        <os-input 
-                            v-model="credentials.email"
-                            InputType='email'
-                            v-validate="'required|email|unique'"
-                            InputName='email'
-                            data-vv-value-path="innerValue"
-                            data-vv-name="email"
-                            InputHolder="Your email e.g JognSmith@example.com"
-                            :InputError="errors.first('email')"
-                            :tooltip="{position: 'right', distance: 260}"/>    
-                        <os-radio 
-                            v-model="credentials.sex"
-                            v-validate="'required|in:male,female'"
-                            InputName='sex'
-                            data-vv-value-path="innerValue"
-                            data-vv-name="sex"
-                            InputHolder="Male"
-                            InputValue="male"
-                            :InputDefault="true"
-                            :InputError="errors.first('sex')"
-                            :tooltip="{position: 'right', distance: 260}"/>    
-                        <os-radio 
-                            v-model="credentials.sex"
-                            InputName='sex'
-                            data-vv-value-path="innerValue"
-                            data-vv-name="sex"
-                            InputHolder="Female"
-                            InputValue="female"
-                            :InputError="errors.first('sex')"
-                            :tooltip="{position: 'right', distance: 260}"/>    
-                            
-                        <os-input 
-                            v-model="credentials.password"
-                            InputType='password'
-                            v-validate="'required|min:8|max:254'"
-                            InputName='password'
-                            data-vv-value-path="innerValue"
-                            data-vv-name="password"
-                            ref="password"
-                            InputHolder="Your password e.g *********"
-                            :InputError="errors.first('password')"
-                            :tooltip="{position: 'right', distance: 260}"/>
-                        <os-input 
-                            v-model="credentials.password_confirm"
-                            InputType='password'
-                            v-validate="'required|confirmed:password'"
-                            InputName='password_confirm'
-                            data-vv-value-path="innerValue"
-                            data-vv-name="password_confirm"
-                            InputHolder="Re-enter your password"
-                            :InputError="errors.first('password_confirm')"
-                            :tooltip="{position: 'right', distance: 260}"/>
-                        <button class='register__button' v-if="!loading" @click="submit">Register</button>
-                    </div>
-
-                </div>
-
+            <div slot="describtion" class="auth_signup-description">
+              <h1 class="auth_signup-title">Sign Up</h1>
+              <p class="auth_signup-body">Sign to Onclicksell.com to be notified of any events!</p>
             </div>
-        </div>   
+      </os-auth-panel>   
 
 
         <os-update 
@@ -96,12 +68,15 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Hamburger from '@/assets/icons/hamburger.vue'
-import FromInput from '@/components/form/input.vue'
 import FromRadio from '@/components/form/radio.vue'
+import FromInput from '@/components/auth/input/index'
 import Update from './update'
 import { instance as axios } from '@/plugins/axios'
 import { Validator } from 'vee-validate'
+import swal from 'sweetalert'
+import AuthPanel from '@/components/auth/panel/index'
+import AuthButtons from '@/components/auth/buttons/index'
+import AuthErrors from '@/components/auth/errors/index'
 
 const check_email = {
   getMessage(field, params, data) {
@@ -141,8 +116,10 @@ export default {
   components: {
     'os-input': FromInput,
     'os-radio': FromRadio,
-    'os-hamburger': Hamburger,
-    'os-update': Update
+    'os-update': Update,
+    'os-auth-panel': AuthPanel,
+    'os-auth-buttons': AuthButtons,
+    'os-auth-errors': AuthErrors
   },
   computed: {
     ...mapGetters({
@@ -154,6 +131,9 @@ export default {
   methods: {
     ...mapActions({
     }),
+    cancelError() {
+      this.errors.clear()
+    },
     submit () {
       this.$validator.validateAll().then((result) => {
         if (result) {
@@ -178,7 +158,8 @@ export default {
     isEmailUnique () {
     },
     signin() {
-      this.$emit('switchComponent', {component: 'signin', values: this.credentials})
+      // this.$emit('switchComponent', {component: 'signin', values: this.credentials})
+      this.$router.push('/auth/signin')
     }
   }
 }
@@ -187,6 +168,45 @@ export default {
 <style lang='scss'>
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/Onclicksell.com--css--config.scss';
+
+
+
+
+.auth_signup {
+  position: relative;
+  width: 100%;
+}
+
+.auth_signup-input {
+  margin-top: 25px;
+}
+
+
+.auth_signup-title {
+  text-align: left;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.auth_signup-body {
+  text-align: left;
+  color: grey;
+  margin: 0;
+}
+
+.auth_signup-description {
+    padding: 12%;
+}
+
+.auth_signup-controlls {
+    padding: 1% 12%;
+}
+
+
+
+
+
+
 
 
 .l-register {
