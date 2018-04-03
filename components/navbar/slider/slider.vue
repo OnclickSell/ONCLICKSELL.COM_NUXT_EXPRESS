@@ -1,8 +1,8 @@
 <template>
-    <div class="slider" @click="clicked">
+    <div class="l-slider" @click="clicked">
         <os-avatar v-if="auth" :auth="auth" class="slider_avatar" />
-        <os-toolbar-controlls :auth="auth" class="slider-items"/>
-        <os-auth-controlls :auth="auth" class="slider_auth-controlls" />
+        <os-toolbar-controlls :auth="auth" class="slider-items" :class="{'slider_auth-controlls-push': !auth}"/>
+        <!-- <os-auth-controlls :auth="auth" class="slider_auth-controlls" /> -->
     </div>
 
 </template>
@@ -37,13 +37,12 @@ export default {
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/OnclickSell.com--css--config.scss';
 
-.slider {
-    padding-top: 10%;
-    height: 100%;
-    width: 100%;
-    position: fixed;
+.l-slider {
+    position: absolute;
     bottom: 0;
     left: 0;
+    height: 100%;
+    width: 100%;
     background: #FFFFFF;
     z-index: 200;
 }
@@ -52,15 +51,18 @@ export default {
     position: relative;
     width: 100%;
     margin: auto;
-    margin-top: 30px;
     margin-bottom: 20px;
 }
 
 .slider_auth-controlls {
     position: absolute;
-    bottom: 10%;
+    bottom: 0;
     right: 0;
     width: 100%;
+}
+
+.slider_auth-controlls-push {
+  margin-top: 10%;
 }
 
 

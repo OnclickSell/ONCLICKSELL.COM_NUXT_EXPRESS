@@ -33,17 +33,22 @@ export default {
 @import '~assets/sass/default.scss';
 
 body {
-  font-family: $lato;
+  @include workSans_medium;
+  line-height: 1.35;
 
   @media all and (min-width: 1900px) {
     width: 1900px !important;
   }
 
-  @media all and (max-width: 479px) {
+ /* @media all and (max-width: 479px) {
     width: 479px !important;
-  }
+  }*/
 }
 
+html, body {
+  padding: 0;
+  margin: 0;
+}
 
 html {
   position: relative;

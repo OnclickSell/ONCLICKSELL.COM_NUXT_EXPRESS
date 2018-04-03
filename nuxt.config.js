@@ -15,7 +15,9 @@ module.exports = {
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      // { rel:"stylesheet", href:"https://basehold.it/24" },
+      { href:"https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400|Work+Sans:300,500", rel:"stylesheet"}
     ],
     script: [
       { src: 'https://js.stripe.com/v3/'}

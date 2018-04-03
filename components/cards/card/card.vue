@@ -1,18 +1,24 @@
 <template>
-    <div class='l-card'>      
-        <div  :key="listing.id" class='card' @click.self="cardClicked">
-            <os-card--thumbnail :src="listing.thumbnail" :alt="listing.title" class="card_thumbnail" />
-            <div class='card_section'>
-                <div class='card_title'>{{ ellipsis(listing.title, 30) }}</div>
-                <div class='card_summary'>{{ ellipsis(listing.summary, 80)}}</div>
-            </div>
-            <div class='card_footer'>
-                <span class='card_price'>${{ellipsis('4000', 9)}} USD</span>
-                <os-card-buttons :listing="listing" class="card_buttons"/>
-               <!--  <span v-on:click="addToCollection">{{collectionBtnText}}</span> -->
-            </div>
+  <div class='l-card' :key="listing.id">
+    <div class="card" @click.self="cardClicked">
+        <!-- Thumbnail-->
+        <div class="card_thumbnail" @click="cardClicked">
+          <div class="card_feature">New</div>
+          <img :src="listing.thumbnail">
+        </div>
+        <!-- Post Content-->
+        <div class="card_content" @click.self="cardClicked">
+          <div class="card_price" @click.self="cardClicked">${{ellipsis('4000', 9)}}</div>
+          <h1 class="card_content-title" @click.self="cardClicked">{{ ellipsis(listing.title, 30) }}</h1>
+          <h2 class="card_content-sub_title" @click.self="cardClicked">The city that never sleeps.</h2>
+          <p class="card_content-description" @click.self="cardClicked">{{ ellipsis(listing.description, 80)}}</p>
+          <div class="card_controlls">
+            <span class="card_controlls-add"></span>
+            <span class="card_controlls-card"></span>
+          </div>
         </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -75,10 +81,17 @@ export default {
 
 <style lang='scss'>
 
+@container_width: 800px;
+
 @import '~assets/sass/grid.scss';
 @import '~assets/sass/default.scss';
 
 @import '~assets/sass/CSS-Layout-system.scss';
+
+
+@import 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-97/variables.less';
+@import 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/mixins.less';
+
 
 
 .l-card {
@@ -87,221 +100,126 @@ export default {
 }
 
 .card {
+  position: relative;
+  z-index: 1;
   display: inline-block;
-  width: 350px;
-  height: 400px;
-  border-radius: 3px;
-  background-color: #FFFFFF;
-  box-shadow: 0px 0px 5px 2px rgba(222,213,222,0.63);
-  margin-bottom: 10px;
-  margin-top: 10px;
+  box-shadow: 1px 1px 6px #d8d2d2;
+  background: #FFFFFF;
+  width: 270px;
+  height: 360px;
+  &:hover {
+    cursor: pointer;
+    .card_thumbnail {
+      img {
+        -webkit-transform: scale(1.1);
+        -moz-transform: scale(1.1);
+        transform: scale(1.1);
+        opacity: .6;
+      }
+    }
+    .post-content {
+    }
+  }  
 }
 
 .card_thumbnail {
-  height: 190px;
-  width: 100%;
-  overflow: hidden;
-}
-
-
-.card_section {
-  height: 170px;
-  width: 100%;
-  text-align: left;
-}
-
-.card_title {
-  padding: 25px;
-  color: #252323;
-  font-size: 1em;
-  font-weight: bold;
-  font-family: $lato;
-  /* Adding tree to the end of text */
-  /*text-overflow: ellipsis;
-  white-space: nowrap;*/
-}
-
-.card_summary {
-  padding: 0 25px;
-  color: #666666;
-  font-size: 0.9em;
-}
-
-
-.card_footer {
-  @include row;
-  width: 100%;
-  height: 40px;
-  padding: 5px 25px;
-}
-
-.card_price {
-  @include col-xs(8);
-  font-size: 1.2em;
-  color: #79bf95;
-  text-align: left;
-}
-
-.card_buttons {
-  @include col-xs(4);
-  text-align: right;
-}
-
-
-
-
-
-
-.l-list {
-    @include layout--container;
-    width: 100%;
-}
-
-.list {
-  @include layout--container;
-  @include layout--item;
-  margin: 0;
-  border-bottom: 1px solid #bfbebe dashed;
-  width: 100%;
-  padding: 12px 0;
-  cursor: pointer;
-
-  &:hover {
-      background-color: #f2f0f0;
-      transition: 0.4s;
-  }
-}
-
-.list--active {
-  border-left: 4px solid green;
-}
-
-.list__title {
-  @include layout--item;
-  width: layout--item--width(4, 5, false);
-  color: #666666;
-  font-size: 0.8em;
-}
-
-.list__icon {
-  @include layout--item;
-  width: layout--item--width(4, 2, false);
-  background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  padding: 12px;
-}
-
-.list__price {
-  @include layout--item;
-  width: layout--item--width(4, 3, false);
-  color: #3DC052;
-  font-size: 0.8em;
-  text-align: right;
-
-  @media all  and (min-width : 960px) {
-    text-align: center;
-  }
-}
-
-.list__sells {
-  @include layout--item;
-  width: layout--item--width(4, 2, false);
-  font-size: 0.7em;
-  text-align: right;
-  color: #666666;
-}
-
-
-
-
-
-.List--container {
-    @include layout--container;
-    width: 100%;
-    border-left: 4px solid green;
-    border-bottom: 1px solid rgb(221, 215, 215);
-    border-bottom-style: dashed;
-    display: block;
-    height: auto;
+    background: #000000;
+    height: 360px;
     overflow: hidden;
-    margin-bottom: 5px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: rgb(235, 244, 235);
-        transition: background-color 0.4s;
+    .card_feature {
+      border-radius: 50%;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 1;
+      background: #51cea7;
+      width: 55px;
+      height: 55px;
+      padding: 12.5px 0;
+      color: #FFFFFF;
+      font-weight: 700;
+      text-align: center;
     }
-
-    > div {
-        @include layout--item;
+    img {
+      transition: .600s ease;
+      display: block;
+      width: 100%;
     }
+  }
 
-    .List__title {
-        width: layout--item--width(3, 6, false);
-        padding: 12px;
-        color: #3694ed;
-        margin-right: 0;
-        margin-left: 0;
-
-        @media only screen  and (min-width : 768px) {
-            width: layout--item--width(3, 4, false);
-        }
+.card_content {
+    position: absolute;
+    text-align: left;
+    bottom: 0;
+    background: #FFFFFF;
+    width: 100%;
+    padding: 12px;
+  
+    .card_price {
+      position: absolute;
+      top: -38px;
+      left: 0;
+      background: #51cea7;
+      padding: 10px 15px;
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
     }
-
-    .List__buttons {
-        width: layout--item--width(3, 2, false);
-        padding: 12px 0;
-
-        > i {
-            background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-            background: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-            background-position: center;
-            background-repeat: no-repeat;
-            display: block;
-            height: 16px;
-            width: 16px;
-            margin-right: auto;
-        }
+    .card_content-title {
+      margin: 0;
+      padding: 0 0 10px;
+      color: grey;
+      font-size: 1em;
+      @include workSans_medium;
+      text-align: left;
     }
-
-    .List__price {
-        width: layout--item--width(3, 4, false);
-        margin-right: 0;
-        margin-left: 7.5%;
-        padding: 12px 0;
-
-        @media only screen  and (min-width : 540px) {
-            margin-left: 5%;
-            padding-right: 1%;
-        }
-        
-        @media only screen  and (min-width : 768px) {
-            margin-left: 3%;
-            padding-right: 1%;
-            width: layout--item--width(3, 6, false);
-        }
-
-        > span {
-            display: block;
-            width: 100%;
-            color: #88f47e;
-            font-size: 1em;
-            padding: 2px 0 2px 0;
-            text-align: right;
-        }
+    .card_content-sub_title {
+      margin: 0;
+      padding: 0 0 20px;
+      color: green;
+      font-size: 0.9em;
+      font-weight: 400;
     }
-
-    .List__footer {
-        width: layout--item--width(1, 12, false);
-
-        > span {
-            display: block;
-            color: #999999;
-            font-size: 0.9em;
-            padding: 2px 0 2px 0;
-        }
+    .card_content-description {
+      /*display: none;*/
+      height: 60px;
+      color: grey;
+      font-size: 0.7em;
+      line-height: 1.7em;
+      margin: 0;
+      margin-bottom: 45px;
     }
-}
+    .card_controlls {
+      color: grey;
+      height: 40px;
+      padding: 5px;
+      text-align: right;
+      box-shadow: 0px -1px 1px gainsboro;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      .card_controlls-card {
+        display: inline-block;
+        margin: 0 16px 0 0;
+        width: 32px;
+        height: 32px;
+        background: url(http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png);
+        background-position: -96px 0px;
+        background-repeat: no-repeat;
+
+      }
+      .card_controlls-add {
+        display: inline-block;
+        margin: 0 16px 0 0;
+        width: 32px;
+        height: 32px;
+        background: url(http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png);
+        background-position: -96px 0px;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+
 </style>

@@ -2,9 +2,8 @@
 // Onclicksell.com colour scheme variables
 //////////////////////////////////////////
 
-$brand--colour: #3EA98D;
-$default--blue: #169BD5;
-$default--font--colour: #666666;
+$default_green: #3dbf57;
+$default--blue: #3da5bf;
 
 //////////////////////////////////////////
 // Onclicksell.com fonts variables
@@ -16,10 +15,44 @@ $default--pt-sans: 'pt sans', sans-serif;
 $lato: 'lato', sans-serif;
 $pt-sans: 'pt sans', sans-serif;
 
+//////////////////////////////////////////
+// Onclicksell.com default fonts
+//////////////////////////////////////////
+@mixin workSans_medium {
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 500;
+}
+
+
+@mixin workSans_light {
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 300;
+}
+
+@mixin sourceSans {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 400;
+}
+
+@mixin sourceSans_extra-light {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 200;
+}
+
+//////////////////////////////////////////
+// Onclicksell.com default font colours
+//////////////////////////////////////////
+
+@mixin body_grey {
+	color: rgb(51,51,51);
+	color: #333333;
+}
 
 
 
-
+//////////////////////////////////////////
+// Onclicksell.com default others
+//////////////////////////////////////////
 
 
 @mixin hero {
