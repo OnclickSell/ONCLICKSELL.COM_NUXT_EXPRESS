@@ -1,11 +1,15 @@
 <template>
-    <nav class='navbar' :class="{'navbar--fixed': isNavOpen}">
+    <!-- <nav class='navbar' :class="{'navbar--fixed': isNavOpen}"> -->
+    <nav class='navbar' :class="{'navbar-open': isNavOpen}">
 
         <!-- Logo --> 
         <os-logo class="navbar-logo" link="/"/>
 
+        <!-- Navbar Button --> 
+        <os-button :active="isNavOpen" class="navbar_button" v-on:clicked="openNav"/>
+
         <!-- Logo --> 
-        <os-menu :auth="user" class="menu" :class="{'menu-push': !user}" v-if="!isNavOpen"/>
+        <os-menu :auth="user" class="navbar_menu" :class="{'menu-push': !user}" v-if="!isNavOpen"/>
 
         <!-- Dropdown -->
 
@@ -15,11 +19,12 @@
 
         <os-avatar :auth="user" class="navbar_avatar" v-if="isAuth" v-show="!isNavOpen"/>
 
-        <!-- Logo --> 
-        <os-slider :auth="user" v-on:clicked="openNav" class="slider" v-if="isNavOpen"/>
+        <transition name="navbar_slider">
+            <!-- Logo --> 
+            <os-slider :auth="user" v-on:clicked="openNav" class="navbar_slider" v-if="isNavOpen"/>
+        </transition>
 
-         <!-- Navbar Button --> 
-        <os-button class="navbar-button" v-on:clicked="openNav"/>
+        
 
     </nav>  
 </template>
@@ -105,31 +110,50 @@ export default {
 .navbar {
     @include row;
     grid-column-gap: 0 !important;
-    grid-auto-flow: column !important;
+    grid-auto-flow: 0 !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     width: 100%;
-    height: 80px;
+    height: 50px;
+    overflow: hidden;
     z-index: 100;
     background-color: #FFFFFF;
-    border-bottom: 1px solid #d6d2d2;
-    -webkit-box-shadow: 0px 2px 5px 0px rgba(48, 47, 47, 0.75);
-    -moz-box-shadow: 0px 2px 5px 0px rgba(48, 47, 47, 0.75);
-    box-shadow: 0px 2px 5px 0px rgba(48, 47, 47, 0.75);
+    box-shadow: 0 0 1px rgba(0,65,94,0.2);
+    transition: height 600ms 0s ease;
+}
+
+.navbar-open {
+    height: 100%;
+    overflow: visible;
 }
 
 
-.navbar-button {
-    @include col-xs-push(12, 3);
+.navbar_button {
+    position: absolute;
+    right: 8px;
+    top: 10px;
     @media all and (min-width: 768px) {
         display: none;
     }
 }
 
 
+
 .navbar-logo {
     @include col-xs(2);
+    @media all and(min-width: 960px) {
+        @include col-xs(1);
+    }
+
+    @media all and (min-width: 1200px) {
+        @include col-xs(2);
+    }
 }
 
-.menu {
+.navbar_menu {
     @include col-xs(7);
     height: 100%;
     display: none !important;
@@ -139,13 +163,27 @@ export default {
 }
 
 .menu-push {
-    @include col-xs-push(12, 7);
+    @include col-xs-push(12, 6);
 }
 
 
-.slider {
+.navbar_slider {
     top: 80px;
     @include col-xs(12);
+}
+
+.navbar_slider-enter-active {
+   transition: all .3s ease;
+   transition-delay: 0.3s;
+}
+
+.navbar_slider-leave-active {
+  transition: all .3s ease;
+}
+
+.navbar_slider-enter, .navbar_slider-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
 }
 
 
@@ -156,12 +194,15 @@ export default {
 
 
 .navbar_dropdown {
-    display: none;
     height: 100%;
+    display: none;
     @include col-xs-push(3, 4);
-    padding: 12px;
-    @media all and (min-width: 768px) and (max-width: 960px) {
+    @media all and (min-width: 768px) {
         display: block !important;
+    }
+
+    @media all and (min-width: 960px){
+        display: none !important;
     }
 }
 
@@ -172,11 +213,16 @@ export default {
     align-items: center;
     display: none;
     border-left: 1px solid #d6d2d2;
-    @media all and (max-width: 960px) {
-        @include col-xs-push(12, 4)
-    }
     @media all and (min-width: 768px) {
-        display: flex;
+        @include col-xs-push(12, 4);
+        display: block;
+    }
+    @media all and (min-width: 960px) {
+        @include col-xs-push(12, 4);
+    }
+
+    @media all and (min-width: 1200px) {
+        @include col-xs-push(12, 3);
     }
 }
 

@@ -2,14 +2,22 @@
     <div class="l-cards_top">
         <os-cards-search placeholder="Type the name of project.." class="cards_search"/>
         <span class="cards_top-heading">Results: <b>454</b></span>
-        <div class="l-cards_top-filter-icon"><span class="cards_top-filter-icon"></span></div>
+        <div class="l-cards_top-filter-icon">
+          <span @click="toggleFilter" :class="{'filter_open': filter}" class="cards_top-filter-icon"></span>
+        </div>
+
         <keep-alive>
-        <os-filter v-if="filter" class="l-cards_top-filter"/>
+        <os-filter v-on:filterApplied="applyFilter" v-if="filter" class="l-cards_top-filter"/>
         </keep-alive>
-        <os-item class="cards_top-items" text="All" v-on:clicked="clicked"/>
-        <os-item class="cards_top-items" text="Top Projects" v-on:clicked="clicked"/>
-        <os-item class="cards_top-items" text="Newest" v-on:clicked="clicked"/>
-        <os-item class="cards_top-items" text="Best Seller" v-on:clicked="clicked"/>
+
+        <div class="cards_top-links-container">
+          <os-item 
+            v-for="tab in tabs" 
+            class="cards_top-links" 
+            :active="isActive(tab)" 
+            :text="tab" 
+            v-on:clicked="tabSelected(tab)"/>
+        </div>
     </div>
 </template>
 
@@ -23,12 +31,56 @@ import CardsFilter from '@/components/cards/card_controllers/filter/index'
 export default {
   data() {
     return {
-        filter: true
+      filter: false,
+      baseFilters: {
+        price: {
+          min: null,
+          max: null
+        },
+        frontend: {
+          plateform: null,
+          framework: null
+        },
+        backend: {
+          plateform: null,
+          framework: null
+        }
+      },
+      tabs: [
+        'All',
+        'Top Projects',
+        'Newest',
+        'best Seller'
+      ],
+      activeTab: 'all'
     }
   },
   methods: {
-    clicked() {
-        alert('fasfsaf')
+    tabSelected(tab) {
+      switch(tab.toUpperCase()) {
+        case 'ALL':
+        this.applyFilter({...this.baseFilters})
+        break
+        case 'TOP PROJECTS':
+        this.applyFilter({...this.baseFilters, created_at: '02/02/208'})
+        break
+        case 'NEWEST':
+        this.applyFilter({...this.baseFilters, created_at: '02/02/208'})
+        break
+        case 'BEST SELLER':
+        this.applyFilter({...this.baseFilters, created_at: '02/02/208'})
+        break
+      }
+      this.activeTab = tab
+    },
+    isActive(name) {
+      return name.toUpperCase() == this.activeTab.toUpperCase()
+    },
+    toggleFilter() {
+      this.filter = !this.filter
+    },
+    applyFilter(filters) {
+      this.$emit('filterApplied', filters)
     }
   },
   components: {
@@ -79,8 +131,33 @@ export default {
     @include col-xs(2);
 }
 
+.cards_top-links-container {
+  @include col-xs(12);
+  grid-column-gap: 0 !important;
+  @include row;
+  border-bottom: 3px solid green;
+}
+
+.cards_top-links {
+  @include col-xs(3);
+  text-align: center;
+  display: inline-block;
+
+  @media all and(min-width: 599px) {
+    @include col-xs(2);
+  }
+
+  @media all and(min-width: 960px) {
+    @include col-xs(2);
+  }
+}
+
 .cards_search {
     @include col-xs(12);
+}
+
+.filter_open {
+  background-position: 0 -32px;
 }
 
 </style>

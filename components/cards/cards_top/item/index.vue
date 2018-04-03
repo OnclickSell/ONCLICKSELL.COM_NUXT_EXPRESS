@@ -1,5 +1,5 @@
 <template>
-    <div class="l-cards_top-item">
+    <div class="l-cards_top-item" :class="{'cards_top-item-active': active}">
     	<p class="cards_top-item" @click="clicked">{{text}}</p>
     </div>
 </template>
@@ -12,7 +12,11 @@ export default {
   	text: {
   		type: String,
   		required: true
-  	}
+  	},
+    active: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
   	clicked() {
@@ -29,16 +33,29 @@ export default {
 
 .l-cards_top-item {
 	position: relative;
-	border-bottom: 3px solid green;
 }
 
 
 .cards_top-item {
-	padding: 5px;
+	padding: 10px;
 	text-align: center;
-	font-size: 0.9em;
+	font-size: 0.6em;
 	text-transform: uppercase;
 	margin: 0;
+  color: #666666;
+}
+
+.cards_top-item-active {
+  background: #e4e4e4;
+  color: #000000;
+}
+
+.cards_top-item-active:after {
+  content: "";
+  display: block;
+  line-height: 3px;
+  margin-bottom: -3px;
+  border-bottom: 3px solid #5ef520;
 }
 
 </style>

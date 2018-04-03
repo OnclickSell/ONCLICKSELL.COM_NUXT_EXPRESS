@@ -95,7 +95,7 @@ export default {
     top: 110%;
     width: 100%;
     max-height: 150px;
-    overflow: scroll;
+    overflow-y: scroll;
     box-shadow: 0px 0px 2px #bfadad inset;
     border-radius: 3px;
     background-color: #FFFFFF;

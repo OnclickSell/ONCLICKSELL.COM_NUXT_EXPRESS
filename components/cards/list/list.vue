@@ -1,6 +1,6 @@
 <template>
   
-    <div class='l-list' :key="listing.id"  @click="listClicked">
+    <!-- <div class='l-list' :key="listing.id"  @click="listClicked">
         <div class='list list--active'>
             <div class='list__title'>{{ listing.title }}</div>
             <div class='list__icon'>
@@ -14,7 +14,26 @@
             </div>
         </div>
 
-    </div>
+    </div> -->
+
+
+    <div class="l-list">
+        <div class="list" :key="listing.id"  @click="listClicked">
+            <span class="list_feature">New</span>
+            <div class="list_thumbnail" v-bind:style="{background: 'url(' + listing.thumbnail + ')'}"></div>
+            <div class="list_drop"></div>
+            <div class="list_content">
+              <h1 class="list_title">{{ listing.title }}</h1>
+              <h2 class="list_sub-title">Opening a door to the future</h2>
+              <p class="list_summary">{{ ellipsis(listing.description, 80)}}</p>
+              <div class="list_controlls">
+                  <span class="list_price">${{ 4385 }} USD</span>
+                  <span class="list_controlls-card"></span>
+                  <span class="list_controlls-add"></span>
+              </div>
+            </div>
+        </div>
+</div>
 
 </template>
 
@@ -33,6 +52,12 @@ export default {
     }
   },
   methods: {
+    ellipsis(string, limit) {
+      let dots = "...";
+      if(string.length > limit)
+        string = string.substring(0, limit) + dots
+      return string
+    },
     listClicked() {
       this.$emit('clicked', this.listing.id)
     }
@@ -48,252 +73,189 @@ export default {
 
 @import '~assets/sass/CSS-Layout-system.scss';
 @import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
-.card {
-    @include layout--container;
-    width: 100%;
-    padding: 5px;
+
+/*PEN STYLES*/
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:400,700);
+$green: #75D13B;
+$grey: #e9e9e9;
+
+@mixin transition($dur, $prop: all) {
+  transition: $prop $dur ease;
+  -webkit-transition: $prop $dur ease;
 }
 
-.l-card {
-    @include layout--item;
-    width: layout--item--width(2, 6, false);
-    height: 300px;
-    border-radius: 3px;
-    background-color: #FFFFFF;
-    box-shadow: 0px 0px 5px 2px rgba(222,213,222,0.63);
-    margin-bottom: 10px;
-    margin-top: 10px;
-    
-    @media all  and (min-width : 599px) {
-      width: layout--item--width(3, 4, false); 
-    }
-
-    @media all  and (min-width : 960px) {
-      width: layout--item--width(4, 3, false); 
-    }
-
-    @media all  and (min-width : 1200px) {
-      width: layout--item--width(4, 3, false); 
-    }
+@mixin bgImg($url) {
+  background: url($url) center no-repeat;
+  background-size: cover;
 }
 
-.card__title {
-    padding: 5px;
-    color: #666666;
-    font-size: 0.9em;
-
-    @media all  and (min-width : 599px) {
-       padding: 12px 5px;
-       font-size: 1em;
-    }
-}
-
-.card__thumbnail {
-    width: 100%;
-    height: auto;
-}
-
-.card__details {
-    @include layout--container;
-    width: 100%;
-    padding: 12px;
-}
-
-.card__details--love {
-    @include layout--item;
-    width: layout--item--width(2, 6, false);
-    background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    padding: 12px;
-}
-
-.card__details--rating {
-    @include layout--item;
-    width: layout--item--width(2, 6, false);
-    background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    padding: 12px;
-}
-
-.card__footer {
-    @include layout--container;
-    padding: 5px;
-}
-
-.card__footer--text {
-    @include layout--item;
-    width: layout--item--width(2, 6, true);
-    margin: 0;
-    padding: 5px 2px;
-    color: #666666;
-    font-size: 0.8em;
-    border-top: 1px solid #aca9a9 dashed;
-}
-
-.card__footer--text-green {
-    color: #88f47e;
-    text-align: right;
-}
-
-
-
+body {background: #f1f1f1; margin: 2rem}
 
 .l-list {
-    @include layout--container;
-    width: 100%;
-}
-
-.list {
-  @include layout--container;
-  @include layout--item;
-  margin: 0;
-  border-bottom: 1px solid #bfbebe dashed;
-  width: 100%;
-  padding: 12px 0;
-  cursor: pointer;
-
-  &:hover {
-      background-color: #f2f0f0;
-      transition: 0.4s;
-  }
-}
-
-.list--active {
-  border-left: 4px solid green;
-}
-
-.list__title {
-  @include layout--item;
-  width: layout--item--width(4, 5, false);
-  color: #666666;
-  font-size: 0.8em;
-}
-
-.list__icon {
-  @include layout--item;
-  width: layout--item--width(4, 2, false);
-  background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  position: relative;
+  @include col-xs(12);
   padding: 12px;
 }
 
-.list__price {
-  @include layout--item;
-  width: layout--item--width(4, 3, false);
-  color: #3DC052;
-  font-size: 0.8em;
-  text-align: right;
+.list {
+  @include transition(0.3s, height);
+  height: 160px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 3px 7px -3px rgba(0, 0, 0, 0.3);
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.45em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-  @media all  and (min-width : 960px) {
-    text-align: center;
+  &:hover {
+    cursor: pointer;
+    .list_drop {
+      left: 0;
+    }
+  }
+
+  .list_thumbnail {
+    height: 100%;
+    position: relative;
+    background: url('http://i62.tinypic.com/34oq4o0.jpg');
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+  }
+
+  .list_drop {
+    @include transition(0.3s);
+    background: rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
+    color: #fff;
+    font-family: "Open Sans";
+    list-style: none;
+    margin: 0;
+    padding: 10px 15px;
+    height: 100%;
+
+    /*POSITION*/
+    position: absolute;
+    top: 0;
+    left: -100%;
+  }
+
+  .list_content {
+    background: #FFFFFF;
+    padding: 10px;
+    box-sizing: border-box;
+    position: relative;
+    float: left;
+    width: 60%;
+    z-index: 0;
+
+    &:before {
+      transform: skewX(-5deg);
+      content: "";
+      background: #fff;
+      width: 100%;
+      z-index: -1;
+
+      /*POSITION*/
+      position: absolute;
+      left: -15px;
+      top: 0;
+      bottom: -7px;
+    }
+
+    .list_title {
+      @include workSans_medium;
+      font-size: 1.1em;
+      line-height: 1em;
+      margin: 0 0 10px 0;
+    }
+
+    .list_sub-title {
+      color: $grey / 1.5;
+      font-family: "Open Sans";
+      line-height: 1.2em;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      font-weight: 400;
+      margin: 1.2% 0;
+    }
+
+    .list_summary {
+      position: relative;
+      margin: 0;
+      height: 60px;
+      padding-top: 10px;
+    }
   }
 }
 
-.list__sells {
-  @include layout--item;
-  width: layout--item--width(4, 2, false);
-  font-size: 0.7em;
+
+.list_controlls {
+  position: relative;
+  padding: 5px;
+  width: 100%;
+  height: 40px;
   text-align: right;
-  color: #666666;
 }
 
+.list_price {
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  font-size: 1.1em;
+  color: green;
+}
 
+.list_controlls-card, .list_controlls-add {
+  height: 32px;
+  width: 32px;
+  display: inline-block;
+  background: url(http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png);
+  background-position: 0 0px;
+  background-repeat: no-repeat;
+}
 
+.list_feature {
+  position: absolute;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  color: #FFFFFF;
+  font-size: 0.9em;
+  text-align: center;
+  width: 100px;
+  padding: 10px 5px;
+  background: #3dbf54;
+}
 
-
-.List--container {
-    @include layout--container;
-    width: 100%;
-    border-left: 4px solid green;
-    border-bottom: 1px solid rgb(221, 215, 215);
-    border-bottom-style: dashed;
-    display: block;
-    height: auto;
-    overflow: hidden;
-    margin-bottom: 5px;
-    cursor: pointer;
+@media screen and (min-width: 200px) {
+  .list {
 
     &:hover {
-        background-color: rgb(235, 244, 235);
-        transition: background-color 0.4s;
+      .list_thumbnail {
+        transform: rotate(5deg) scale(1.3);
+      }
     }
 
-    > div {
-        @include layout--item;
+    .list_thumbnail {
+      @include transition(0.5s);
+      float: left;
+      height: 100%;
+      width: 40%;
     }
 
-    .List__title {
-        width: layout--item--width(3, 6, false);
-        padding: 12px;
-        color: #3694ed;
-        margin-right: 0;
-        margin-left: 0;
-
-        @media only screen  and (min-width : 768px) {
-            width: layout--item--width(3, 4, false);
-        }
+    .list_drop {
+      width: 40%;
     }
-
-    .List__buttons {
-        width: layout--item--width(3, 2, false);
-        padding: 12px 0;
-
-        > i {
-            background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-            background: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1513506291/OnclickSell.com/Icons/Onclicksell.com-notification-bell-64px.svg');
-            background-position: center;
-            background-repeat: no-repeat;
-            display: block;
-            height: 16px;
-            width: 16px;
-            margin-right: auto;
-        }
-    }
-
-    .List__price {
-        width: layout--item--width(3, 4, false);
-        margin-right: 0;
-        margin-left: 7.5%;
-        padding: 12px 0;
-
-        @media only screen  and (min-width : 540px) {
-            margin-left: 5%;
-            padding-right: 1%;
-        }
-        
-        @media only screen  and (min-width : 768px) {
-            margin-left: 3%;
-            padding-right: 1%;
-            width: layout--item--width(3, 6, false);
-        }
-
-        > span {
-            display: block;
-            width: 100%;
-            color: #88f47e;
-            font-size: 1em;
-            padding: 2px 0 2px 0;
-            text-align: right;
-        }
-    }
-
-    .List__footer {
-        width: layout--item--width(1, 12, false);
-
-        > span {
-            display: block;
-            color: #999999;
-            font-size: 0.9em;
-            padding: 2px 0 2px 0;
-        }
-    }
+  }
 }
+
 </style>

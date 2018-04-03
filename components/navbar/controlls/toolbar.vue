@@ -1,16 +1,44 @@
 <template>
-    <ul class="toolbar">
-        <os-item class='toolbar_item' v-if="auth" href="/" text="NOTIFICATIONS"/>
-        <os-item class='toolbar_item' v-if="auth" href="/collections" text="COLLECTIONS"/>
-        <os-item class='toolbar_item' href="/sell" text="SELL NOW"/>
-        <os-item class='toolbar_item' href="/" text="HOME"/>
+    <ul class="toolbar" @click="clicked">
+       <!--  <os-item 
+          :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}" 
+          class='toolbar_item' 
+          v-if="auth" href="/fasfsaf" 
+          text="NOTIFICATIONS"/> -->
+        <os-item 
+          :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}"
+          class='toolbar_item' 
+          v-if="auth" 
+          href="/collections" 
+          text="COLLECTIONS"/>
+        <os-item 
+          :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}"
+          class='toolbar_item' 
+          href="/sell" 
+          text="SELL NOW"/>
+          <os-item
+          :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}" 
+          v-if="auth" 
+          class='toolbar_item' 
+          v-on:clicked="logout" 
+          text="LOG OUT"/>
+        <os-item 
+          :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}"
+          v-if="!auth" 
+          class='toolbar_item' 
+          href="/auth/signin" 
+          text="SIGN IN"/>
+        <os-item 
+          :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}"
+          v-if="!auth" 
+          class='toolbar_item' 
+          href="/auth/signup" 
+          text="SIGN UP"/>
     </ul>
 </template>
 
 <script>
-import hamburger from '@/assets/icons/hamburger.vue'
 import Item from '@/components/navbar/items/item/item'
-
 export default {
   props: {
     auth: {
@@ -32,7 +60,6 @@ export default {
     window.removeEventListener('resize', this.handleResize)
   },
   components: {
-    'os-hamburger': hamburger,
     'os-item': Item
   },
   data () {
@@ -47,6 +74,9 @@ export default {
     logout () {
       this.$store.dispatch('authentication/logOut')
       this.$router.push('/login')
+    },
+    clicked() {
+      this.$emit('clicked')
     },
     handleResize (event) {
       const width = event.target.outerWidth
@@ -71,16 +101,30 @@ export default {
     @include row;
     padding: 0;
     margin: 0;
+
+    @media all and(min-width: 960px) {
+      grid-column-gap: 0 !important;
+      padding: 0 12px;
+    }
 }
 
 .toolbar_item {
     @include col-xs(12);
-    padding: 4% 0;
+    padding: 5px 0;
 
     @media all and(min-width: 499px) {
         padding: 2% 0;
     }
+
+    @media all and(min-width: 768px) {
+      @include col-xs(4);
+    }
+
+    @media all and(min-width: 960px) {
+      border-left: 1px solid #f3f3f3;
+    }
 }
+
 
 </style>
 

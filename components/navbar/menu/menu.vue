@@ -1,7 +1,7 @@
 <template>
     <div>
-      <ul class="menu">
-        <os-item 
+      <!-- <ul class="menu"> -->
+        <!-- <os-item 
             :icon="{icon: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png', position: '0 0'}"
             class='menu_item' 
             v-if="auth" href="/" 
@@ -39,14 +39,15 @@
             class='menu_item' 
             v-if="!auth" 
             href="/auth/signup" 
-            text="SIGN UP"/>
-      </ul>
+            text="SIGN UP"/> -->
+            <os-toolbar :auth="auth"/>
+      <!-- </ul> -->
     </div>
 </template>
 
 <script>
 import Item from '@/components/navbar/items/item/item'
-import Avatar from '@/components/navbar/profile/avatar'
+import Toolbar from '@/components/navbar/controlls/toolbar'
 
 export default {
   props: {
@@ -57,7 +58,7 @@ export default {
   },
   components: {
     'os-item': Item,
-    'os-avatar': Avatar
+    'os-toolbar': Toolbar
   },
   methods: {
     logout () {
