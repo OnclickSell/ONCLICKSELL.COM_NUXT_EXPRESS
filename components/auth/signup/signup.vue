@@ -1,5 +1,4 @@
 <template>
-    <div>
 
         <os-auth-panel>
         
@@ -55,16 +54,17 @@
               <h1 class="auth_signup-title">Sign Up</h1>
               <p class="auth_signup-body">Sign to Onclicksell.com to be notified of any events!</p>
             </div>
-      </os-auth-panel>   
 
-
-        <os-update 
+             <os-update 
           v-if="isAuth" 
           :data="Auth" 
           v-on:skip="skip" 
-          v-on:update="update"/>         
+          v-on:update="update"/>    
+      </os-auth-panel>   
 
-    </div>         
+
+            
+    
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
@@ -166,16 +166,11 @@ export default {
 </script>
 
 <style lang='scss'>
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/Onclicksell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
 
-
-.auth_signup {
-  position: relative;
-  width: 100%;
-}
 
 .auth_signup-input {
   margin-top: 25px;
@@ -185,21 +180,23 @@ export default {
 .auth_signup-title {
   text-align: left;
   color: #FFFFFF;
+  @include workSans_light;
   margin: 0;
 }
 
 .auth_signup-body {
   text-align: left;
-  color: grey;
+  color: #FFFFFF;
+  @include sourceSans;
   margin: 0;
 }
 
 .auth_signup-description {
-    padding: 12%;
+    padding: 5%;
 }
 
 .auth_signup-controlls {
-    padding: 1% 12%;
+    padding: 5%;
 }
 
 
@@ -209,7 +206,7 @@ export default {
 
 
 
-.l-register {
+/*.l-register {
     position: relative;
     text-align: center;
 
@@ -397,5 +394,5 @@ export default {
     @media all and (min-width: 768px) {
         width: 230px;
     }
-}
+}*/
 </style>

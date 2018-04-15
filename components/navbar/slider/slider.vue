@@ -1,16 +1,14 @@
 <template>
     <div class="l-slider" @click="clicked">
         <os-avatar v-if="auth" :auth="auth" class="slider_avatar" />
-        <os-toolbar-controlls :auth="auth" class="slider-items" :class="{'slider_auth-controlls-push': !auth}"/>
-        <!-- <os-auth-controlls :auth="auth" class="slider_auth-controlls" /> -->
+        <os-items :isAuth="auth"/>
     </div>
 
 </template>
 
 <script>
-import Avatar from '@/components/navbar/profile/avatar'
-import AuthControlls from '@/components/navbar/controlls/auth'
-import ToolbarControlls from '@/components/navbar/controlls/toolbar'
+import Avatar from '@/components/navbar/slider/components/avatar.vue'
+import Items from '@/components/navbar/slider/components/items.vue'
 
 export default {
   props: {
@@ -20,8 +18,7 @@ export default {
   },
   components: {
     'os-avatar': Avatar,
-    'os-auth-controlls': AuthControlls,
-    'os-toolbar-controlls': ToolbarControlls
+    'os-items': Items
   },
   methods: {
     clicked() {
@@ -51,7 +48,9 @@ export default {
     position: relative;
     width: 100%;
     margin: auto;
-    margin-bottom: 20px;
+    @media only screen and (min-height: 490px) {
+      margin-bottom: 20px;
+    }
 }
 
 .slider_auth-controlls {

@@ -3,13 +3,15 @@
        
       <os-hero/>
 
+      <os-cards v-on:displayListing="displayListing" :listings="listings"/>
+
       <div class='home__intro'>
 
         <os-intro :data="intro"/>
                     
       </div>
 
-      <os-cards v-on:displayListing="displayListing" :listings="listings"/>
+      
       <!-- <os-new-letter/> -->
     </div>
 </template>

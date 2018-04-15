@@ -1,10 +1,9 @@
 <template>
-   
 
     <input 
       :name="name" 
       type='text' 
-      class='basic-info__input__input' 
+      class='input' 
       :placeholder="placeholder" 
       @input="change">
 
@@ -30,55 +29,29 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
 
-.basic-info__form {
-    @include layout--container;
+.input {
     position: relative;
-}
-
-.basic-info__input-help {
-    width: 90%;
-    margin-left: 5%;
-    text-align: right;
-    font-size: 0.9em;
-    text-decoration: underline;
-    color: #666666;
-
-    &:hover {
-        cursor: pointer;
-        color: #ccc8c8;
-        transition: 0.3s;
-    }
-}
-
-.basic-info__input__input {
     width: 100%;
-    padding: 5px 0 4px 0;
+    padding: 10px 5px;
     border: none;
-    border-bottom: 5px solid #8CB662;
+    border-bottom: 3px solid $default_green;
     position: relative;
-    background-color: transparent;
-}
-
-.input__fill {
-     background-color: #ffffff;
-}
-
-.basic-info__input__input::placeholder {
-    color: #3c3b3b;
-}
-
-.input__title {
+    background-color: #eee;
     color: #666666;
-    font-size: 1em;
-    padding: 8px 0px;
+    @include workSans_medium;
 }
+
+.input::placeholder {
+    color: #666666;
+}
+
 
 
 </style>

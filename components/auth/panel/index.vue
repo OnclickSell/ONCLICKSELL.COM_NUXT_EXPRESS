@@ -1,12 +1,23 @@
 <template>
-  <div class="auth_panel">
-    <div class="auth_panel-controlls">
-      <slot name="controlls"></slot>
-    </div>
-    <div class="auth_panel-describtion">
-      <slot name="describtion"/>
-    </div>
-  </div>         
+
+
+                <div class="auth_panel">
+
+                    <div class="auth_panel-left">
+                      <div class="panel-right-content">
+                          <slot name="describtion"/>
+                      </div>
+                    </div>
+
+
+                    <div class="auth_panel-right">
+                        <slot name="controlls"></slot>
+                    </div>
+
+                </div> 
+
+
+
 </template>
 <script>
 
@@ -16,67 +27,75 @@ export default {
 </script>
 
 <style lang='scss'>
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/Onclicksell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
 .auth_panel {
-  display: inline-block;
-  width: 70%;
-  background: #FFFFFF;
-  margin-top: 10%;
-  margin-bottom: 10%;
-  border-radius: 3px;
-}
-
-.auth_panel:after {
-  display:block;
-  clear:both;
-  content:'';
-}
-
-.auth_panel-controlls {
-  display: inline-block;
-  position: relative;
-  float: right;
+  display: flex;
+  flex-wrap: wrap;
   width: 100%;
-  min-height: 350px;
-  background-color: #FFFFFF;
- /* padding: 8%;*/
-  border-radius: 3px;
+  background: #FFFFFF;
+
+
+  @media all and (min-width: 599px) {
+    width: 80%;
+    box-shadow: 0px 0px 34px #cec3c3;
+  }
 
   @media all and (min-width: 768px) {
-    float: right;
-    width: 60%;
-    border-radius: 3px 3px 0 0;
+    width: 75%;
+  }
+
+  @media all and (min-width: 960px) {
+    width: 70%;
+  }
+
+  @media all and (min-width: 1100px) {
+    width: 65%;
   }
 
   @media all and (min-width: 1200px) {
-    height: 450px;
+    width: 50%;
   }
 }
 
-.auth_panel-describtion {
-  display: none;
+.auth_panel-right {
   position: relative;
-  float: right;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  min-height: 350px;
-  /*padding: 8%;*/
+  min-height: 100%;
+
+  @media all and (min-width: 599px) {
+    width: 60%;
+  }
+}
+
+.auth_panel-left {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
   background-image: url('http://res.cloudinary.com/onclicksell-com/image/upload/v1515050579/OnclickSell.com/Photos/home-office-2452806_960_720.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   text-align: center;
-  border-radius: 0 0 3px 3px;
 
-  @media all and (min-width: 768px) {
-    float: left;
+  @media all and (min-width: 599px) {
     width: 40%;
-    display: inline-block;
   }
+}
 
-  @media all and (min-width: 1200px) {
-    height: 450px;
+.panel-right-content {
+  width: 80%;
+  margin: auto;
+  padding: 20px 0;
+  color: #FFFFFF;
+
+  @media all and (min-width: 599px) {
+    padding-top: 40px;
   }
 }
 

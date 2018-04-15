@@ -35,8 +35,8 @@ export default {
 
 
 .basic-info__button {
-    background-color: #3EA98D;
-    border: 1px solid #3EA98D;
+    background-color: #3dc053;
+    border: 1px solid #3dc053;
     border-radius: 4px;
     color: #FFFFFF;
     font-size: 1.2em;

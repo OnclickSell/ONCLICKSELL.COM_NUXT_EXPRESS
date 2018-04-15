@@ -29,7 +29,7 @@ export default {
 </script>
 
 
-<style lang='scss'>
+<style lang='scss' scoped>
 
 @import '~assets/sass/grid.scss';
 @import '~assets/sass/default.scss';

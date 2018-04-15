@@ -1,115 +1,33 @@
 <template>
-  <div>
-    <div class='l-basic-info'>
-        
-        <div class='basic-info__item basic-info__input'>
-            <p>Project Type</p>
-            <os-input
-               data-vv-name="project_type"
-               v-validate="'required'"
-               :InputHolder='basicInfo.type' 
-               InputType="dropdown"
-               InputName="project type"
-               :InputError="errors.first('type')"
-               :tooltip="{position: 'top', distance: 35}"
-               :options="[
-                {title: 'Website', value: 'Website'},
-                {title: 'Web Application', value: 'Web Application'},
-                {title: 'Static Website', value: 'Static Website'}
-               ]"
-               v-model="basicInfo.type"/>
-        </div>
+
+  <div class='l-basic-info'>
+
+      <div v-if="errors.any()" class="basic-input-errors">
+          <p v-for="error in errors.all()">{{error}}</p>
+      </div>
+
+      <div class='basic-info__item basic-info__input' v-for="(input, index) in inputs">
+          <label class="input_title">{{input.title}}</label>
+          <os-input
+            :data-vv-name="input.name"
+            :data-vv-value-path="input.name"
+            v-validate="input.rules"
+            :InputHolder='input.placeholder' 
+            :InputType="input.type"
+            :InputName="input.name"
+            :data="input.data"
+            v-model="input.value"/>
+      </div>
 
 
-        <div class='basic-info__item basic-info__input' v-if="basicInfo.type == 'Website'">
-            <p>Website Type</p>
-            <os-input
-               data-vv-name="subType"
-               v-validate="'required'"
-               :InputHolder='basicInfo.subType' 
-               InputType="dropdown"
-               InputName="subType"
-               :InputError="errors.first('subType')"
-               :tooltip="{position: 'top', distance: 35}"
-               :options="[
-                {title: 'Static Website', value: 'Static Website'},
-                {title: 'Dynamic Website', value: 'Dynamic Website'},
-                {title: 'E-commerce', value: 'E-commerce'}
-               ]"
-               v-model="basicInfo.subType"/>
-        </div>
- 
+      <div class="l_input_buttons">
+        <button class="input_buttons" @click="switch_page('os-frontend')">Next</button>
+        <button class="input_buttons" @click="switch_page('os-basic-details')">Back</button>
+      </div>
 
 
-        <div class='basic-info__item basic-info__input'>
-            <p>Listing Title</p>
-            <os-input
-               data-vv-name="title"
-               v-validate="'required|min:20|max:120'"
-               InputHolder='e.g. My First Project...' 
-               InputType="text"
-               InputName="project type"
-               :InputError="errors.first('title')"
-               :tooltip="{position: 'top', distance: 35}"
-               v-model="basicInfo.title"/>
-        </div>
+  </div>
 
-
-
-        <div class='basic-info__item basic-info__input'>
-            <p>Listing Description</p>
-            <os-input
-               data-vv-name="description"
-               v-validate="'required|min:200|max:3000'"
-               InputHolder='Some Description About Your Listing...' 
-               InputType="textarea"
-               InputName="description"
-               :InputError="errors.first('description')"
-               :tooltip="{position: 'top', distance: 100}"
-               v-model="basicInfo.description"/>
-        </div>
-
-
-        <div class='basic-info__item basic-info__input'>
-            <p>Listing Summary</p>
-            <os-input
-               data-vv-name="summary"
-               v-validate="'required|min:100|max:2000'"
-               InputHolder='Describe what your project is about in a minimum of 100 words...' 
-               InputType="textarea"
-               InputName="summary"
-               :InputError="errors.first('summary')"
-               :tooltip="{position: 'top', distance: 100}"
-               v-model="basicInfo.summary"/>
-        </div>
-      
-
-        <div class='basic-info__item basic-info__input'>
-            <os-input
-               InputHolder='NEXT' 
-               InputType="button"
-               v-on:clicked="switch_page('os-frontend')"
-               :tooltip="{position: 'top', distance: 100}"
-               InputName="submit"/>
-        </div>
-
-        <div class='basic-info__item basic-info__input'>
-            <os-input
-               InputHolder='BACK' 
-               InputType="button"
-               v-on:clicked="switch_page('os-basic-details')"
-               :tooltip="{position: 'top', distance: 100}"
-               InputName="submit"/>
-        </div>
-
-           <!--  <div class='basic-info__item basic-info__input--top-margin'>
-                <os-explainer title='Basic Info' class='basic__info--explainer'>
-                    <p slot='content'>A project description is the information clients expect to know when purchasing your project.</p>
-                </os-explainer>
-            </div>  -->
-
-        </div>
-    </div>
 </template>
 
 <script>
@@ -122,19 +40,55 @@ export default {
   layout: 'main--layout',
   data() {
       return {
-        project_type: [
-          {type: 'Web Application', subType: ''},
-          {type: 'Website', subType: [{type: 'Static'}, {type: 'Dynamic'}]},
-          {type: 'E-commerce', subType: ''}
-        ],
-        project_sub_type: '',
         basicInfo: {
           type: 'Website',
           subType: '',
           title: '',
           summary: '',
           description: ''
-        }
+        },
+        inputs: [
+          {
+            name: 'Project_type',
+            type: 'dropdown',
+            rules: 'required',
+            title: 'Project Type',
+            placeholder: 'Project Type',
+            data: [
+              {name: 'Website', value: 'Website', key: 1},
+              {name: 'Web Application', value: 'Web Application', key: 2},
+              {name: 'Static Website', value: 'Static Website', key: 3}
+            ],
+            value: ''
+          },
+          {
+            name: 'Project_title',
+            type: 'input',
+            rules: 'required',
+            title: 'Project Title',
+            placeholder: 'Some Title',
+            data: '',
+            value: ''
+          },
+          {
+            name: 'Project_summary',
+            type: 'textarea',
+            rules: 'required',
+            title: 'Project Summary',
+            placeholder: 'Project Summary',
+            data: '',
+            value: ''
+          },
+          {
+            name: 'Project_description',
+            type: 'textarea',
+            rules: 'required',
+            title: 'Project Description',
+            placeholder: 'Put something in!',
+            data: '',
+            value: ''
+          }
+        ]
       }
   },
   components: {
@@ -142,41 +96,10 @@ export default {
   },
   methods: {
     switch_page(page) {
-      this.$validator.validateAll().then((result) => {
-        if(result)
-          this.$emit('switched', {page: page, context: this.basicInfo})
-      })
-    }
-  },
-  computed: {
-    set_project_type: {
-      set: function (newValue) {
-        let subType
-        this.project_type.map(type => {
-          if (type === newValue)
-            subType = type.subType
-        })
-
-        if(!subType == '')
-          this.project_sub_type = subType
-
-        else 
-          this.project_sub_type = ''
-        
-
-        this.basicInfo.type = newValue.type
-      },
-      get: function (value) {
-        this.basicInfo.type
-      }
-    },
-    set_project_sub_type: {
-      set: function (newValue) {
-        this.basicInfo.subType = newValue.type
-      },
-      get: function (value) {
-        this.basicInfo.subType
-      }
+      // this.$validator.validateAll().then((result) => {
+      //   if(result)
+          this.$emit('switched', {page: page, context: 'safsafsaf'})
+      // })
     }
   }
 }
@@ -184,29 +107,21 @@ export default {
 
 <style lang='scss'>
 
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
 .l-basic-info {
-    @include layout--container;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     position: relative;
     padding: 5px;
 }
 
 .basic-info__item {
-    @include layout--item;
-    width: layout--item--width(1, 12, false);
-
-    @media all and (min-width: 599px) {
-        width: layout--item--width(1, 10, false);
-        @include layout--item--offset(1, 1);
-    }
-
-    @media all and (min-width: 960px) {
-        width: layout--item--width(1, 9, false);
-        @include layout--item--offset(8, 2);
-    }
+   width: 80%;
+   margin: auto;
 }
 
 .basic-info__input {
@@ -221,4 +136,26 @@ export default {
     margin-top: 20%;
 }
 
+.input_title {
+  display: inline-block;
+  padding: 10px 0px;
+  @include workSans_light;
+}
+
+
+.l_input_buttons {
+  width: 80%;
+  margin: 20px 0;
+}
+
+.input_buttons {
+  width: 100%;
+  margin: 10px auto;
+  background: #3dc053;
+  color: #FFFFFF;
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+  padding: 12px;
+}
 </style>
