@@ -5,7 +5,7 @@
       rows="10"
       :placeholder="placeholder"
       :name="name"
-      class='basic-info__input__input basic-info__textarea--stop-v-resize xs-p-a-2'/>
+      class='textarea'/>
 </template>
 
 <script>
@@ -20,10 +20,6 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-    }
-  },
   methods: {
     change (event) {      
       this.$emit('input', event.target.value )
@@ -34,27 +30,21 @@ export default {
 
 <style lang='scss' scoped>
 
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
 
-.basic-info__form {
-    @include layout--container;
+.textarea {
+  display: block;
+  width: 100%;
+  resize: vertical;
+  background-color: #eee;
+  border-radius: 3px 3px 0 0;
+  padding: 12px;
+  border: none;
+  border-bottom: 5px solid $default_green;
+  @include workSans_medium;
 }
-
-.basic-info__textarea--stop-v-resize {
-    resize: vertical;
-    background-color: #eee;
-    margin-top: 5px;
-    padding: 5px;
-    border-radius: 3px 3px 0 0;
-}
-
-.textarea__title {
-    color: #666666;
-    padding: 12px 0px;
-}
-
 
 </style>

@@ -113,8 +113,7 @@ export default {
   },
   components: {
     'os-input': Input,
-    'os-explainer': Explainer,
-    'os-plan': Plan
+    'os-explainer': Explainer
   }
 }
 </script>

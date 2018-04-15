@@ -2,7 +2,6 @@
 <template>
 
    <div>
-       <os-footer-top/>
        <os-footer-section/>
        <os-footer-bottom/>
    </div>
@@ -10,7 +9,6 @@
 </template>
 
 <script>
-import FooterTop from '@/components/footer/top/index'
 import FooterSection from '@/components/footer/section/index'
 import FooterBottom from '@/components/footer/bottom/index'
 export default {
@@ -23,7 +21,6 @@ export default {
   computed: {
   },
   components: {
-    'os-footer-top': FooterTop,
     'os-footer-section': FooterSection,
     'os-footer-bottom': FooterBottom
   }

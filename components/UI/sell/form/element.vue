@@ -1,25 +1,17 @@
 <template>
     <div class='basic-info__form'>
 
-        <os-input--tooltip 
-            v-on:clicked="closeTooltip"
-            v-show="tooltipIsOpen" 
-            :distance='tooltip.distance' 
-            :error="InputError" 
-            :position="tooltip.position"/>
-
         <component 
           v-on:input="change"
           v-on:clicked="clicked"
           :is="ActiveComponent"
           :placeholder="InputHolder"
-          :options="options"
+          :data="data"
           :name="InputName"/>
     </div>
 </template>
 
 <script>
-import InputTooltip from '@/components/UI/tooltip/tooltip'
 import Text from './elements/text'
 import number from './elements/number'
 import Textarea from './elements/textarea'
@@ -40,20 +32,7 @@ export default {
           type: String,
           required: true
         },
-        value: {
-          required: false
-        },
-        InputError: {
-          type: String,
-          required: false
-        },
-        tooltip: {
-          type: Object,
-          required: false,
-          default: {distance: 20, position: "top"}
-        },
-        options: {
-          type: Array,
+        data: {
           required: false
         }
     },
@@ -74,13 +53,9 @@ export default {
     },
     clicked () {
         this.$emit('clicked')
-    },
-    closeTooltip() {
-        this.tooltipIsOpen = false
     }
   },
   components: {
-    'os-input--tooltip': InputTooltip,
     'os-text': Text,
     'os-number': number,
     'os-textarea': Textarea,

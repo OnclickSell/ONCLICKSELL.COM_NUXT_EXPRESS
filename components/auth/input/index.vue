@@ -52,7 +52,7 @@ export default {
 
 <style lang='scss' scoped>
 @import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/default.scss';
 
 .auth_input {
     display: block;
@@ -65,12 +65,12 @@ export default {
   text-align: left;
   font-size: 0.8em;
   padding: 2px;
-  color: grey;
+  color: #d6d6d6;
 }
 
 .auth_input-field {
     padding: 10px 5px;
-    color: #666666;
+    @include body_grey;
     width: 100%;
     border: none;
     border-bottom: 1px solid #cecece;

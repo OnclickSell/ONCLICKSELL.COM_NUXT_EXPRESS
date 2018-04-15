@@ -1,12 +1,16 @@
 <template>
-  <div class="auth_sigin">
       <os-auth-panel>
 
           <div slot="controlls" class="auth_signin-controlls">
+
+            <transition name="auth_error">
               <os-auth-errors
                 v-on:closed="cancelError"
                 v-show="errors.any()" 
                 :errors="errors.items" />
+            </transition>
+
+
                     <os-input 
                       class="auth_sigin-input"
                       title="Email Address"
@@ -16,7 +20,7 @@
                       InputName='password'
                       data-vv-value-path="innerValue"
                       data-vv-name="email"
-                      InputHolder="Your Email Address"
+                      InputHolder="e.g Aliakbar.su@myself.com"
                       :InputError="errors.first('email')"
                       :tooltip="{position: 'right', distance: 260}"/>
 
@@ -47,9 +51,7 @@
               <h1 class="auth_signin-title">Sign In</h1>
               <p class="auth_signin-body">Sign to Onclicksell.com to be notified of any events!</p>
             </div>
-      </os-auth-panel>
-
-    </div>         
+      </os-auth-panel>   
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -103,14 +105,9 @@ export default {
 </script>
 
 <style lang='scss'>
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/Onclicksell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
-
-.auth_signin {
-  position: relative;
-  width: 100%;
-}
 
 .auth_sigin-input {
   margin-top: 25px;
@@ -120,23 +117,41 @@ export default {
 .auth_signin-title {
   text-align: left;
   color: #FFFFFF;
+  @include workSans_light;
   margin: 0;
   padding: 5px;
 }
 
 .auth_signin-body {
   text-align: left;
-  color: grey;
+  color: #FFFFFF;
+  @include sourceSans;
   padding: 5px;
   margin: 0;
 }
 
 .auth_signin-controlls {
-  padding: 12%;
+  padding: 5%;
 }
 
 .auth_signin-description {
-  padding: 12%;
+  padding: 5%;
 }
 
+
+.auth_error-enter-active {
+   transition: opacity .2s ease;
+}
+
+.auth_error-leave-active {
+  transition: opacity .1s ease;
+}
+
+.auth_error-enter, .auth_error-leave-to {
+  opacity: 0;
+}
+
+.auth_error-leave-to {
+  transform: translate(0, -10px);
+}
 </style>

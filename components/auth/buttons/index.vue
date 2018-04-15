@@ -1,8 +1,10 @@
 <template>
-    
   <div class="auth_buttons">
-    <button class='auth_button' @click="clicked">{{text}}</button>
-    <span class="l-auth_button-link">Or <b class="auth_button-link" @click="linkClicked">{{link}}</b></a></span>
+
+      <button class='auth_button' @click="clicked">{{text}}</button>
+      <div class="auth_button-or">Or You Can  <span class="auth_button-link" @click="linkClicked">{{link}}</span></div>
+      
+  
   </div>
 
 </template>
@@ -36,13 +38,15 @@ export default {
 
 
 .auth_buttons {
-  @include row;
-  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px 0;
 }
 
 .auth_button {
-  @include col-xs(5);
+  width: 100%;
   display: inline-block;
   color: #ffffff;
   background-color: #3EA98D;
@@ -56,15 +60,20 @@ export default {
   }
 }
 
-.l-auth_button-link {
-  @include col-xs(7);
-  padding: 15px;
-  font-size: 0.6em;
+.auth_button-or {
+  width: 100%;
+  padding: 5px;
+  margin: 10px auto 10px auto;
+  border-bottom: 1px solid #e8e1e1;
+  border-top: 1px solid #e8e1e1;
+  font-size: 0.7em;
+  text-transform: uppercase;
 }
 
 .auth_button-link {
+  width: 100%;
   color: #149e59;
-  font-size: 1.5em;
+  text-decoration: underline;
   &:hover {
     cursor: pointer;
     color: #666666;

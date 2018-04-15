@@ -52,7 +52,7 @@ module.exports = {
   ** Nuxt.js routes
   */
   router: {
-    middleware: ['checkAuth']
+    // middleware: ['checkAuth']
   },
   /*
   ** Build configuration

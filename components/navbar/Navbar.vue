@@ -9,19 +9,16 @@
         <os-button :active="isNavOpen" class="navbar_button" v-on:clicked="openNav"/>
 
         <!-- Logo --> 
-        <os-menu :auth="user" class="navbar_menu" :class="{'menu-push': !user}" v-if="!isNavOpen"/>
-
-        <!-- Dropdown -->
-
-        <os-dropdown :auth="user" class="navbar_dropdown" v-if="!isNavOpen"/>
-
-        <!-- Avatar -->
-
-        <os-avatar :auth="user" class="navbar_avatar" v-if="isAuth" v-show="!isNavOpen"/>
+        <os-menu :auth="user" class="navbar_menu" v-if="!isNavOpen"/>
 
         <transition name="navbar_slider">
             <!-- Logo --> 
-            <os-slider :auth="user" v-on:clicked="openNav" class="navbar_slider" v-if="isNavOpen"/>
+            <os-slider 
+                :auth="user" 
+                v-on:clicked="openNav" 
+                class="navbar_slider" 
+                :class="{'space_top': !isAuth}" 
+                v-if="isNavOpen"/>
         </transition>
 
         
@@ -33,28 +30,27 @@
 import { mapGetters } from 'vuex'
 import Button from '@/components/navbar/button/button'
 import Logo from '@/components/logo/logo'
-import Menu from '@/components/navbar/menu/menu'
+import Menu from '@/components/navbar/menu/index'
 import Slider from '@/components/navbar/slider/slider'
-import Avatar from '@/components/navbar/profile/avatar'
-import Dropdown from '@/components/navbar/dropdown/dropdown'
 
 
 export default {
-  beforeDestroy: function () {
-    window.removeEventListener('resize', this.handleResize)
-  },
   components: {
     'os-button': Button,
     'os-logo': Logo,
     'os-menu': Menu,
-    'os-slider': Slider,
-    'os-avatar': Avatar,
-    'os-dropdown': Dropdown
+    'os-slider': Slider
   },
   data () {
     return {
       isNavOpen: false
     }
+  },
+  computed: {
+    ...mapGetters({
+      isAuth: 'authentication/isAuth',
+      user: 'authentication/GetAuthUser'
+    })
   },
   methods: {
     openNav () {
@@ -67,16 +63,11 @@ export default {
         }
 
     },
-    logout () {
-      this.$store.dispatch('authentication/logOut')
-      this.$router.push('/login')
-    },
-    handleResize (event) {
-      const width = event.target.outerWidth
-      if(width < 768) {
+    handleResize (width) {
+      if(width > 768) {
           this.isNavOpen = false
       } else {
-          this.isNavOpen = true
+          this.isNavOpen = this.isNavOpen
       }
     }
   },
@@ -84,17 +75,12 @@ export default {
     const that = this
     if(process.client) {
         window.addEventListener('resize', () => {
-        if (window.outerWidth > 768) {
-            that.isNavOpen = false
-        }
+        that.handleResize(window.outerWidth)
     })
     }
   },
-  computed: {
-    ...mapGetters({
-      isAuth: 'authentication/isAuth',
-      user: 'authentication/GetAuthUser'
-    })
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.handleResize)
   }
 }
 </script>
@@ -108,17 +94,15 @@ export default {
 
 
 .navbar {
-    @include row;
-    grid-column-gap: 0 !important;
-    grid-auto-flow: 0 !important;
     position: fixed;
+    display: flex;
+    justify-content: space-between;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
     width: 100%;
     height: 50px;
-    overflow: hidden;
     z-index: 100;
     background-color: #FFFFFF;
     box-shadow: 0 0 1px rgba(0,65,94,0.2);
@@ -143,33 +127,33 @@ export default {
 
 
 .navbar-logo {
-    @include col-xs(2);
-    @media all and(min-width: 960px) {
-        @include col-xs(1);
-    }
-
-    @media all and (min-width: 1200px) {
-        @include col-xs(2);
-    }
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 150px;
 }
 
 .navbar_menu {
-    @include col-xs(7);
+    width: 100%;
     height: 100%;
     display: none !important;
-    @media all and (min-width: 960px) {
-        display: block !important;
+    @media all and (min-width: 768px) {
+        display: flex !important;
     }
 }
 
-.menu-push {
-    @include col-xs-push(12, 6);
-}
 
 
 .navbar_slider {
-    top: 80px;
-    @include col-xs(12);
+    top: 55px;
+    width: 100%;
+    @media screen and (min-height: 490px) {
+      top: 80px;
+    }
+}
+
+.space_top {
+    top: 100px !important;
 }
 
 .navbar_slider-enter-active {
@@ -191,42 +175,6 @@ export default {
 .navbar--fixed {
     position: fixed;
 }
-
-
-.navbar_dropdown {
-    height: 100%;
-    display: none;
-    @include col-xs-push(3, 4);
-    @media all and (min-width: 768px) {
-        display: block !important;
-    }
-
-    @media all and (min-width: 960px){
-        display: none !important;
-    }
-}
-
-
-.navbar_avatar {
-    @include col-xs-push(12, 3);
-    justify-content: space-around;
-    align-items: center;
-    display: none;
-    border-left: 1px solid #d6d2d2;
-    @media all and (min-width: 768px) {
-        @include col-xs-push(12, 4);
-        display: block;
-    }
-    @media all and (min-width: 960px) {
-        @include col-xs-push(12, 4);
-    }
-
-    @media all and (min-width: 1200px) {
-        @include col-xs-push(12, 3);
-    }
-}
-
-
 
 
 

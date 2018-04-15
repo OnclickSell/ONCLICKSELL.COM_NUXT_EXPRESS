@@ -1,7 +1,5 @@
 <template>
-  <div>
     <os-auth/>   
-  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -14,7 +12,7 @@ import Auth from '@/components/auth/index'
 
 export default {
   layout: 'main--layout',
-  middleware: 'notAuth',
+  // middleware: 'notAuth',
   data () {
     return {
       url: '/signin',

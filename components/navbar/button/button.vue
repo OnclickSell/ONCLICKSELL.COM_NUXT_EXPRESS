@@ -37,12 +37,13 @@ export default {
     background: url(http://res.cloudinary.com/onclicksell-com/image/upload/v1522396512/OnclickSell.com/Icons/Onclicksell.com-icons_copy_3.png);
     background-position: 0 0px;
     background-repeat: no-repeat;
-    transition: background 600ms 0s ease
 }
 
 .nav_button-active {
     background-position: 0 -32px;
 }
+
+
 
 
 

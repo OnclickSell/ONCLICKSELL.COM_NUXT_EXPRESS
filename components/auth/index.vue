@@ -93,19 +93,20 @@ export default {
 
 
 .l-auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    height: 100%;
-    background-image: url('https://wallpaperstock.net/verschwommene-placebo-wallpapers_34011_1920x1200.jpg');
+    height: auto;
+    background-image: url('https://www.pixelstalk.net/wp-content/uploads/images1/Blur-Background-Simple-Images-Wallpaper-Of-Nature-Download.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     text-align: center;
     margin: 0;
-/*
-    -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);*/
+
+    @media all and (min-width: 599px) {
+      height: 100%;
+    }
 }
 
 </style>

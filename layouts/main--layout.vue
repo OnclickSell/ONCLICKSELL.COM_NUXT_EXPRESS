@@ -45,16 +45,18 @@ body {
   }*/
 }
 
-html, body {
-  padding: 0;
-  margin: 0;
-}
-
 html {
+  height: 100%;
   position: relative;
   font-size: 17px;
-  min-height: 100%;
 }
+
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+
 @media (max-width: 900px) {
   html { font-size: 15px; }
 }
@@ -71,6 +73,12 @@ html {
 .main_layout {
   position: relative;
   width: 100%;
+  height: 100%;
+  padding-top: 50px;
+}
+
+#__nuxt, #__layout {
+  height: 100%;
 }
 
 
