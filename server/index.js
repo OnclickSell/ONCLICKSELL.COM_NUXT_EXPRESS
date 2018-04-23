@@ -36,6 +36,8 @@ const technologyRoutes = require('./api/routes/technology')
 
 const planRoutes = require('./api/routes/plan')
 
+import adminRoutes from './api/routes/admin'
+
 import collectionRoutes from './api/routes/collection'
 
 app.use(morgan('dev'));
@@ -61,6 +63,7 @@ app.use('/api/v1/tickets', ticketRoutes);
 app.use('/api/v1/technologies', technologyRoutes);
 app.use('/api/v1/plans', planRoutes);
 app.use('/api/v1/collections', collectionRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // handles all global errors
 app.use(function(error, req, res, next) {

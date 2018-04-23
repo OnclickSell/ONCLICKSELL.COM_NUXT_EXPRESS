@@ -14,6 +14,8 @@ import { createStore } from './store.js'
 /* Plugins */
 import nuxt_plugin_axios_3566aa80 from 'nuxt_plugin_axios_3566aa80' // Source: ..\\plugins\\axios
 import nuxt_plugin_veevalidate_6e5ad03a from 'nuxt_plugin_veevalidate_6e5ad03a' // Source: ..\\plugins\\vee-validate
+import nuxt_plugin_mixins_9ca86422 from 'nuxt_plugin_mixins_9ca86422' // Source: ..\\plugins\\mixins.js
+import nuxt_plugin_eventBus_aaeb250a from 'nuxt_plugin_eventBus_aaeb250a' // Source: ..\\plugins\\eventBus.js
 
 
 // Component: <no-ssr>
@@ -154,6 +156,8 @@ async function createApp (ssrContext) {
   
   if (typeof nuxt_plugin_axios_3566aa80 === 'function') await nuxt_plugin_axios_3566aa80(app.context, inject)
   if (typeof nuxt_plugin_veevalidate_6e5ad03a === 'function') await nuxt_plugin_veevalidate_6e5ad03a(app.context, inject)
+  if (typeof nuxt_plugin_mixins_9ca86422 === 'function') await nuxt_plugin_mixins_9ca86422(app.context, inject)
+  if (typeof nuxt_plugin_eventBus_aaeb250a === 'function') await nuxt_plugin_eventBus_aaeb250a(app.context, inject)
   
 
   // If server-side, wait for async component to be resolved first

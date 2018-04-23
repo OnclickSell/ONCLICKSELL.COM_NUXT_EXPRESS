@@ -5,6 +5,7 @@
       rows="10"
       :placeholder="placeholder"
       :name="name"
+      :class="{'error': error}"
       class='textarea'/>
 </template>
 
@@ -18,6 +19,9 @@ export default {
     name: {
       type: String,
       required: true
+    },
+    error: {
+      type: Boolean
     }
   },
   methods: {
@@ -45,6 +49,11 @@ export default {
   border: none;
   border-bottom: 5px solid $default_green;
   @include workSans_medium;
+  transition: border 0.2s;
+}
+
+.error {
+  border-bottom: 5px solid red !important;
 }
 
 </style>

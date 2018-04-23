@@ -1,5 +1,3 @@
-
-
 const authModel = require('../models/auth');
 import auth from '../../packages/auth'
 import userController from './userController'

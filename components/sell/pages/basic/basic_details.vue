@@ -1,28 +1,28 @@
 <template>
 
-  <div class='l-basic-info'>
+  <div class='l-project'>
 
-      <div v-if="errors.any()" class="basic-input-errors">
-          <p v-for="error in errors.all()">{{error}}</p>
-      </div>
+      <os-error-panel :show="inputErrors.length !== 0" class="l-project_errors">
+          <p v-for="error in inputErrors" :key="error.field">{{error.error}}</p>
+      </os-error-panel>
 
-      <div class='basic-info__item basic-info__input' v-for="(input, index) in inputs">
-          <label class="input_title">{{input.title}}</label>
+      <div class='project_items basic-info__input' v-for="(input, index) in inputs">
+          <label class="project_items-titles">{{input.title}}</label>
           <os-input
             :data-vv-name="input.name"
             :data-vv-value-path="input.name"
-            v-validate="input.rules"
             :InputHolder='input.placeholder' 
             :InputType="input.type"
             :InputName="input.name"
             :data="input.data"
-            v-model="input.value"/>
+            :error="isError(index)"
+            v-on:input="(value) => {inputChangeHandler(value, index)}"/>
       </div>
 
 
-      <div class="l_input_buttons">
-        <button class="input_buttons" @click="switch_page('os-frontend')">Next</button>
-        <button class="input_buttons" @click="switch_page('os-basic-details')">Back</button>
+      <div class="l-project_items-buttons">
+        <button class="project_items-buttons" @click="switch_page('os-frontend')">Next</button>
+        <button class="project_items-buttons" @click="switch_page('os-basic-details')">Back</button>
       </div>
 
 
@@ -33,7 +33,8 @@
 <script>
 import Explainer from '@/components/others/explainer'
 import Input from '@/components/UI/sell/form/element'
-
+import ErrorPanel from '@/components/UI/error/error_panel.vue'
+import Mixins from '@/mixins/sell.js'
 
 
 export default {
@@ -49,9 +50,10 @@ export default {
         },
         inputs: [
           {
-            name: 'Project_type',
+            name: 'type',
             type: 'dropdown',
-            rules: 'required',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
             title: 'Project Type',
             placeholder: 'Project Type',
             data: [
@@ -62,27 +64,30 @@ export default {
             value: ''
           },
           {
-            name: 'Project_title',
+            name: 'title',
             type: 'input',
-            rules: 'required',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
             title: 'Project Title',
             placeholder: 'Some Title',
             data: '',
             value: ''
           },
           {
-            name: 'Project_summary',
+            name: 'summary',
             type: 'textarea',
-            rules: 'required',
+            rules: [{name: 'required', value: ''}, {name: 'min', value: 10}],
+            touched: false,
             title: 'Project Summary',
             placeholder: 'Project Summary',
             data: '',
             value: ''
           },
           {
-            name: 'Project_description',
+            name: 'description',
             type: 'textarea',
-            rules: 'required',
+            rules: [{name: 'required', value: ''}, {name: 'max', value: 10}],
+            touched: false,
             title: 'Project Description',
             placeholder: 'Put something in!',
             data: '',
@@ -92,16 +97,33 @@ export default {
       }
   },
   components: {
-    'os-input': Input
+    'os-input': Input,
+    'os-error-panel': ErrorPanel
   },
   methods: {
-    switch_page(page) {
-      // this.$validator.validateAll().then((result) => {
-      //   if(result)
-          this.$emit('switched', {page: page, context: 'safsafsaf'})
-      // })
+    check() {
+      this.inputs.map(value => this.data[value.name] = value.value)
+      // this.inputs = this.inputs.filter(item => item.title !== 'Sub Type')
+      // const value = this.inputs[0].value
+      // const oldValue = {...this.inputs[0]}
+      // if (value.toUpperCase() === 'WEBSITE')
+      //   this.inputs = this.inputs.splice(0, 1, oldValue, {
+      //       name: 'subType',
+      //       type: 'dropdown',
+      //       rules: [{name: 'required', value: ''}, {name: 'max', value: 10}],
+      //       touched: false,
+      //       title: 'Sub Type',
+      //       placeholder: 'e.g Static',
+      //       data: [
+      //         {name: 'Website', value: 'Website', key: 1},
+      //         {name: 'Web Application', value: 'Web Application', key: 2},
+      //         {name: 'Static Website', value: 'Static Website', key: 3}
+      //       ],
+      //       value: ''
+      //     })
     }
-  }
+  },
+  mixins: [Mixins]
 }
 </script>
 
@@ -111,7 +133,7 @@ export default {
 @import '~assets/sass/default.scss';
 
 
-.l-basic-info {
+.l-project {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -119,36 +141,27 @@ export default {
     padding: 5px;
 }
 
-.basic-info__item {
+.project_items {
    width: 80%;
    margin: auto;
+   margin-top: 10%;
 }
 
-.basic-info__input {
-    margin-top: 10%;
-}
 
-.basic-info__textarea {
-    margin-top: 20%;
-}
 
-.basic__info--explainer {
-    margin-top: 20%;
-}
 
-.input_title {
+.project_items-titles {
   display: inline-block;
   padding: 10px 0px;
   @include workSans_light;
 }
 
-
-.l_input_buttons {
+.l-project_items-buttons {
   width: 80%;
-  margin: 20px 0;
+  margin: 10% auto 10% auto;
 }
 
-.input_buttons {
+.project_items-buttons {
   width: 100%;
   margin: 10px auto;
   background: #3dc053;
@@ -157,5 +170,11 @@ export default {
   border: none;
   border-radius: 3px;
   padding: 12px;
+}
+
+
+.l-project_errors {
+  margin-top: 10%;
+  width: 80%;
 }
 </style>

@@ -1,13 +1,11 @@
 
 import listingsModel from '../models/listings'
-const responser = require('../../packages/responser')
-const wrapAsync = require('../../packages/wrapAsync')
-let uploader = require('../../packages/uploader')
-uploader = new uploader('OnclickSell.com/', 'screenshots', 2)
-let validator = require('../../packages/validator');
-validator = new validator()
+import Responser from '../../packages/responser'
+import ImageUploader from '../../packages/image_uploader/index'
 const mailer = require('../../packages/mailer')
 import Controller from './controller'
+import Validator from '../../packages/validator/index'
+import { CreateCustomer } from '../../packages/stripe/index'
 
 
 /*
@@ -33,9 +31,9 @@ export default class listingController extends Controller {
             }
             const ListingModel = new listingsModel()
             const result = await ListingModel.GetAll(Filter.limit, Filter.offset, Filter.order)
-            responser.send(this.response, 200, "Success", result)
+            Responser.send(this.response, 200, "Success", result)
         }catch(err) {
-            responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
+            Responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
         }
     }
 
@@ -43,9 +41,9 @@ export default class listingController extends Controller {
         try {
             const ListingModel = new listingsModel()
             const result = await ListingModel.FindBy('id', this.request.params.id)
-            responser.send(this.response, 200, "Success", result)
+            Responser.send(this.response, 200, "Success", result)
         }catch(err) {
-            responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
+            Responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
         }
     }
 
@@ -53,227 +51,92 @@ export default class listingController extends Controller {
     async CreateListing() {
         try {
 
-            const ListingModel = new listingsModel()
-            const result = await ListingModel.CreateListing(this.request.body)
-            responser.send(this.response, 200, "Success", result)
+            // Image the Screenshots
+            const imageUploader = new ImageUploader(this.request)
+            const result = await imageUploader.Upload('/OnclickSell.com/Projects/Thumbnails')
+        
+            // Extract the data from the form fields and store the screenshots in parsedData result
+            const parsedData = JSON.parse(result.fields.data)
+            parsedData.screenshots = result.result
+
+            // Validate Listing Data
+            const validationResult = Validator(LISTING_VALIDATION, parsedData)
+
+            if(validationResult.error) {
+
+                parsedData.screenshots.map(screenshot => {
+                    console.log(screenshot)
+                    // imageUploader.Delete(screenshot)
+                })
+
+                Responser.send(this.response, 400, "Failed", {validationResult})
+
+            }else {
+                try {
+                    // Authorize Credit Card
+                    // const ListingModel = new listingsModel()
+                    // const createdList = await ListingModel.CreateListing(parsedData)
+                    console.log('hi - creating customer')
+                    await CreateCustomer({
+                        user_id: this.request.body.user.id,
+                        email: this.request.body.user.email,
+                        description: this.request.body.user.description
+                    })
+                    // Create A Subscription
+                    // Send Email to the user
+                    Responser.send(this.response, 200, "Success", createdList)
+                }catch(err) {
+
+                }
+            }
+
+            
+    
 
         }catch(err) {
             console.log(err)
-            responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
+            Responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
         }
     }
 }
 
-exports.create_listing = wrapAsync( async (req, res, next) => {
-
-    try {
-        // const screenshots = await uploader.upload_screenshots(req, {folder: 'ffsf'})
-        // req.body.newListing['screenshots'] = screenshots
-        
-        //  res.json(req.body.newListing.plan.id)
-        let mailOptions = {
-            from: '"Fred Foo 👻" <foo@example.com>', // sender address
-            to: 'aliakbar.su@hotmail.com', // list of receivers
-            subject: 'Hello ✔', // Subject line
-            text: 'Hello world?', // plain text body
-            html: '<b>Hello world?</b>' // html body
-        };
-        // mailer.send(mailOptions)
-    }catch(err) {
-        throw { type: "BadRequest", message: err.message }
-    }
-    console.log(req.body)
-    try {
-        
-
-        await validator.validate({
-            title: ['required'],
-            summary: ['required'],
-            description: ['required'],
-            price: ['required'],
-            plan_id: ['required'],
-            F_framework_id: ['required'],
-            F_plateform_id: ['required'],
-            F_libraries_id: ['required'],
-            B_framework_id: ['required'],
-            B_plateform_id: ['required'],
-            B_libraries_id: ['required']
-          }, {
-              title: req.body.context.title,
-              summary: req.body.context.summary,
-              description: req.body.context.description,
-              price: req.body.context.price,
-              plan_id: req.body.context.plan.id.toString(),
-              F_framework_id: req.body.context.frontend.framework.id.toString(),
-              F_plateform_id: req.body.context.frontend.plateform.id.toString(),
-              F_libraries_id: req.body.context.frontend.libraries.id.toString(),
-              B_framework_id: req.body.context.backend.framework.id.toString(),
-              B_plateform_id: req.body.context.backend.plateform.id.toString(),
-              B_libraries_id: req.body.context.backend.libraries.id.toString(),
-          })
 
 
-            // const screenshots = await uploader.uploadWithCloudinary(req.body.context.screenshot)
-            // req.body.context.screenshot = screenshots
-        
-
-    } catch (err) {
-        throw { type: "BadRequest", message: err.message }
-    }
-
-    try{
-      
-        const created_listing = await listingsModel.create_listing({...req.body.context})
-        responser.send(res, 200, "Success", created_listing)
-    }catch(err) {
-        console.log(err.message)
-        throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
-    }
-})
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.get_listings = wrapAsync( async(req, res, next) => {
-  
-    try {
-        const filters = {
-            offset: req.query.offset,
-            limit: req.query.limit,
-            order: req.query.order
-        }
-        console.log(filters)
-        const listings = await listingsModel.get_listings(filters)
-        responser.send(res, 200, "Success", listings)
-    }catch (err) { 
-        throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
-    }
-})
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.get_single_listing = (req, res, next) => {
-
-    return listingsModel.get_single_listing({id: req.params.id, title: req.params.title})
-    .then(result => {
-        res.status(200).json({
-            status: 'success',
-            messgage: 'All the users are listed below',
-            context: result
-        })
-    })
-    .catch(err => {
-        res.status(409).json({
-            status: 'failled',
-            messgage: "Something is wrong with your request",
-            context: err
-        })
-    })
-}
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.delete_single_listings = (req, res, next) => {
-    function callback(err, user) {
-        if(err) {
-            res.status(409).json({
-                messgage: "Something is wrong with your request"
-            })
-        }else {
-            res.status(200).json({
-                messgage: 'User were deleted successfully',
-                users: user
-            })
-        }
-    }
-      
-    return listingsModel.delete_single_listings(req.params.id, callback);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.update_single_listings = (req, res, next) => {
-    function callback(err, user) {
-        if(err) {
-            res.status(409).json({
-                messgage: "Something is wrong with your request"
-            })
-        }else {
-            res.status(200).json({
-                messgage: 'User were updated successfully',
-                users: user
-            })
-        }
-    }
-      
-    return listingsModel.update_single_listings(req.params.id, req.body, callback);
+const LISTING_VALIDATION = {
+    type: 'required',
+    title: 'required',
+    summary: 'required',
+    description: 'required',
+    frontend: {
+        plateform: 'required',
+        plateform_v: 'required',
+        framework: 'required',
+        framework_v: 'required',
+        libraries: 'required',
+        html: 'required',
+        css: 'required'
+    },
+    backend: {
+        plateform: 'required',
+        plateform_v: 'required',
+        framework: 'required',
+        framework_v: 'required',
+        libraries: 'required'
+    },
+    plan: {
+        id: 'required',
+        plan_name: 'required'
+    },
+    billing_cycles: 'required',
+    FirstName: 'required',
+    LastName: 'required',
+    EmailAddress: 'required',
+    password: 'required'
+    
 }
 
 
 
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.fetch_technologies = (req, res, next) => {
-    console.log('sfsafsf')
-    return listingsModel.fetch_technologies()
-    .then(result => {
-        res.status(200).json({
-            messgage: 'User were updated successfully',
-            technologies: result
-        })
-    })
-    .catch(err => {
-        res.status(500).json({
-            messgage: 'Something went wrong',
-            error: err
-        })
-    })
-}
 
 
 

@@ -1,5 +1,5 @@
 import auth from '../../packages/auth'
-const responser = require('../../packages/responser')
+import Responser from '../../packages/responser'
 
 // const jwt = require('jsonwebtoken');
 // module.exports = (req, res, next) => {
@@ -20,9 +20,11 @@ export default async (req, res, next) => {
     const Auth = new auth(req)
     const isAuth = await Auth.Check()
     if(isAuth) {
+        const user = await Auth.GetAuth()
+        req.body['user'] = user.user
         next()
     }else {
-        responser.send(res, 400, "Failed", "You are not Authenticated!" )
+        Responser.send(res, 400, "Failed", "['Middleware']- You are not Authenticated!" )
     }
 }
 
