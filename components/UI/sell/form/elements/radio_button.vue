@@ -2,8 +2,8 @@
          <div class='l-radio'>
             <label 
                 class='radio__button' 
-                v-for='option in options' 
-                :key='option'>
+                v-for='option in data' 
+                :key='option.title'>
                 <span class="radio__title">{{option.title}}</span>
             <input 
                 @click="select" 
@@ -20,15 +20,11 @@
 <script>
 export default {
    props: {
-      placeholder: {
-        type: String,
-        required: false
-      },
       name: {
         type: String,
         required: true
       },
-      options: {
+      data: {
         type: Array,
         required: true
       }
@@ -48,6 +44,8 @@ export default {
 @import '~assets/sass/OnclickSell.com--css--config.scss';
 
 .l-radio {
+    display: flex;
+    justify-content: flex-start;
     width: 100%;
     padding: 5px;
 }
@@ -87,6 +85,7 @@ export default {
     max-width: 50%;
     position: relative;
     padding-left: 35px;
+    padding-right: 25px;
     margin-bottom: 12px;
     cursor: pointer;
     font-size: 1em;

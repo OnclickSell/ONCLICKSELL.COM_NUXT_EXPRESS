@@ -20,7 +20,7 @@ module.exports = {
       { href:"https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400|Work+Sans:300,500", rel:"stylesheet"}
     ],
     script: [
-      { src: 'https://js.stripe.com/v3/'}
+      { src: 'https://js.stripe.com/v3/', body: true}
     ]
   },
   /*
@@ -39,7 +39,7 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: ['~/plugins/axios', '~/plugins/vee-validate'],
+  plugins: ['~/plugins/axios', '~/plugins/vee-validate', '~/plugins/mixins.js', {src: '~/plugins/eventBus.js'}],
 
   /*
   ** Nuxt.js modules

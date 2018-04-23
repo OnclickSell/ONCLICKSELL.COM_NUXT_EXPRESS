@@ -90,7 +90,9 @@ export const actions = {
         })
     },
     submit(vuexContext, payload) {
-      return axios.post('http://localhost:4000/api/v1/listings/', payload)
+      console.log(vuexContext)
+      const token = vuexContext.rootGetters['authentication/getToken']
+      return axios.post(`http://localhost:4000/api/v1/listings?token=${token}`, payload)
         .then(response => {
           console.log(response.data)
         })

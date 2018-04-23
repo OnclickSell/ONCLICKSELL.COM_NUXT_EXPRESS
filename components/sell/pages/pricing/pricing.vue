@@ -1,281 +1,283 @@
 <template>
-    <div>
-            <p>Listing Title</p>
-            <os-input
-               data-vv-name="price"
-               v-validate="'required|between:10,2000'"
-               InputHolder='$ Your Listing Price' 
-               InputType="number"
-               InputName="price"
-               :InputError="errors.first('price')"
-               :tooltip="{position: 'top', distance: 35}"
-               v-model="data.price"/>
-       <!--  <div class='set-price'>
+   <div class="l-pricing">
 
-            <div class='set-price__item'>
-                <div class='set-price__alert-box'>
-                    <h1 class='set-price__alert-box--title'>Consider referral fee in your price</h1>
-                    <p class='set-price__alert-box--content'>OnclickSell.com will charge you a referral fee plus a flat rate per successfull sale, and deposites the remain amount to your account,  these values could change, depending on the plan you choose. </p>
-                </div>
-            </div>
+      <div class="pricing_intro">
+        <h1 class="pricing_intro-title">Pay for what you need :)</h1>
+      </div>
 
-            <div class='set-price__item set-price__input'>
-                <os-input-help/>
-               <os-input :fill='false' v-model="data.price" placeholder='$ How much your website worth?'/>
-            </div>
-
-            <div class='set-price__item'>
-                <div class='plan-container'>
-                    <h1 class="plane__title">Large plan</h1>
-                    <div class="plan__features">
-                        <ul class='plan__features--list'>
-                            <li class='plan__features--item'>No flat rate</li>
-                            <li class='plan__features--item'>$30 monthly subscription fee</li>
-                            <li class='plan__features--item'>15% Referral fee per successful sale</li>
-                        </ul>
-                    </div>
-                    <p class="plan__description">Suitable for large scale web based projects that exceeds 40GB in size.</p>
-                </div>
-
-
-                <div class='set-price__table'>
-                    <ul class='set-price__list'>
-                        <li class='set-price__list--title'>Initial price</li>
-                        <li class='set-price__list--title'>Flate rate</li>
-                        <li class='set-price__list--title'>Referral fee</li>
-                        <li class='set-price__list--title'>Referral fee</li>
-                        <li class='set-price__list--item'>$400</li>
-                        <li class='set-price__list--item'>$0</li>
-                        <li class='set-price__list--item'>15%</li>
-                        <li class='set-price__list--item'>$390</li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class='set-price__item'>
-                <div class="set-price__info-panel">
-                    <h1 class="set-price__info-panel--title">How does it work?</h1>
-                    <p class="set-price__info-panel--content">The price that you set for your application is the price that will display on your listed items. After the buyer purchased your item the fees will subtract from the actual price and the Deposit amount will be Deposit to your account based on the plane you choose.</p>
-                </div>
-            </div>
-
-            <div class='set-price__item set-price__button'>
-               <os-button v-on:clicked="switch_page('os-screenshot')" title='PREVIOUS'/>
-               <os-button v-on:clicked="switch_page('os-subscription')" title='NEXT'/>
-            </div>
-        </div> -->
-
-        <div class='basic-info__item basic-info__input'>
-            <os-input
-               InputHolder='NEXT' 
-               InputType="button"
-               v-on:clicked="switch_page('os-subscription')"
-               :tooltip="{position: 'top', distance: 100}"
-               InputName="submit"/>
+      <div class="pricing_container">
+          <div class="pricing_columns" v-for="each in plans">
+              <h1 class="pricing_columns-title">{{each.plan_name}}</h1>
+              <h1 class="pricing_columns-price">
+                <span class="price_sign">$</span>
+                <span class="price">{{each.price}}</span>
+                <span class="price_currency">USD/Month</span>
+              </h1>
+              <p class="pricing_columns-description">{{each.description}}</p>
+              <button class="pricing_columns-buttons" @click="switch_page('os-payment', each)">Get Started</button>
+          </div>
+      </div>
+      <div class="pricing_footer">
+        <div class="pricing_footer-title">Ned any help with prices?</div>
+        <div class="pricing_footer-content">
+            I'm having a problem centering an element that has the attribute position set to absolute. Does anyone know why the images are not centered?
         </div>
+        <button class="pricing_footer-button" >Get Help</button>
+      </div>
 
-        <div class='basic-info__item basic-info__input'>
-            <os-input
-               InputHolder='BACK' 
-               InputType="button"
-               v-on:clicked="switch_page('os-plans')"
-               :tooltip="{position: 'top', distance: 100}"
-               InputName="submit"/>
-        </div>
-    
-       
-    </div>
+      <div class="l-project_items-buttons">
+        <button class="project_items-buttons" @click="switch_page('os-basic-details')">Back</button>
+      </div>
+     
+   </div>
 </template>
 
 <script>
 import Explainer from '@/components/others/explainer.vue'
 import Input from '@/components/UI/sell/form/element'
+import Mixins from '@/mixins/sell.js'
 
 export default {
   layout: 'main--layout',
   data () {
     return {
-      features: ['$0.00 flat rate', '15% referral fee per successful sale', '$30 monthly subsription fee'],
-      description: 'Suitable for small scaled projects that do not exceed 10GB in size',
-      data: {
-        price: 0
-      }
+      pricing: [
+        {title: 'Blue package', price: 29, description: 'This is just a dummy text and will be soon deleted!'},
+        {title: 'Green package', price: 50, description: 'This is just a dummy text and will be soon deleted!'},
+        {title: 'Red package', price: 30, description: 'This is just a dummy text and will be soon deleted!'}
+      ]
     }
   },
   methods: {
-    switch_page(page) {
-      this.$validator.validateAll().then((result) => {
-        if(result)
-          this.$emit('switched', {page: page, context:  this.data})
-      })
+    switch_page(page, plan) {
+      this.data = {plan: plan}
+      this.$emit('switched', {page: page, context: this.data})
     }
   },
   components: {
     'os-input': Input,
     'os-explainer': Explainer
-  }
+  },
+  computed: {
+    plans() {
+      return this.$store.getters['listings/GetPlans']
+    }
+  },
+  mixins: [Mixins]
 }
 </script>
 
 <style lang='scss' scoped>
 
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
+.l-pricing {
+  position: relative;
+  height: 100%;
+}
 
+.pricing_intro {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 300px;
+  background: url('https://webgradients.com/public/webgradients_png/035%20Itmeo%20Branding.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 
-.set-price {
-    @include layout--container;
+  @media screen and (min-width: 700px) {
+    height: 500px;
+  }
+}
+
+.pricing_intro-title {
+  width: 100%;
+  padding: 12px;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 2.3em; 
+}
+
+.pricing_container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  margin: auto;
+  margin-top: -10%;
+  background: #FFFFFF;
+
+  @media screen and (min-width: 490px) {
+    width: 75%;
+  }
+
+  @media screen and (min-width: 550px) {
+    width: 70%;
+  }
+
+  @media screen and (min-width: 700px) {
+    flex-wrap: nowrap;
+  }
+}
+
+.pricing_columns {
+  display: flex;
+  padding: 20px 12px;
+  height: 165px;
+  width: 100%;
+  align-items: flex-start;
+  position: relative;
+  border: 1px solid #f3f3f3;
+
+  @media screen and (min-width: 700px) {
+    flex-wrap: wrap;
+    height: 300px;
+    padding: 12px;
+  }
+
+}
+
+.pricing_columns-title {
+  width: 40%;
+  margin: 0;
+  padding: 5px 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  color: #1bd6ba;
+
+  @media screen and (min-width: 700px) {
     width: 100%;
-    padding: 20px;
+    padding: 20px 0;
+    font-size: 1.1em;
+  }
 }
 
-.set-price__item {
-    @include layout--item;
-    width: layout--item--width(1, 12, false);
+.pricing_columns-price {
+  position: relative;
+  width: 40%;
+  margin: 0;
+  font-size: 1em;
+  text-align: center;
 
-    @media only screen  and (min-width : 540px) {
-        width: layout--item--width(1, 10, false);
-        @include layout--item--offset(1, 1);
-    }
-
-}
-
-
-.set-price__alert-box {
+  @media screen and (min-width: 700px) {
     width: 100%;
-    border-radius: 4px;
-    padding: 5px;
-    margin: 30px 0 0 0;
-    box-shadow: 0px 0px 5px 2px rgba(222,213,222,0.63);
-
-    @media only screen  and (min-width : 768px) {
-        margin: 50px 0 0 0;
-    }
-}
-
-.set-price__alert-box--title {
-    color: #666666;
-    margin: 0;
-    padding: 3px;
     font-size: 1.3em;
+  }
 }
 
-.set-price__alert-box--content {
-    color: #666666;
-    margin: 0;
-    padding: 8px 4px;
-    font-size: 0.9em;
+.price_sign {
+  font-size: 0.6em;
 }
 
-
-.set-price__input {
-    margin-top: 40px;
-    margin-bottom: 40px;
-
-    @media only screen  and (min-width : 768px) { 
-       margin-top: 50px;
-       width: 60%;
-    }
+.price {
+  font-size: 1.8em;
 }
 
+.price_currency {
+  font-size: 0.4em;
+}
 
+.pricing_columns-description {
+  width: 40%;
+  margin: 0;
+  text-align: center;
+  font-size: 0.9em;
+  color: #666666;
 
-.plan-container {
+  @media screen and (min-width: 700px) {
     width: 100%;
-    background-color: #199ED8;
-    border-radius: 4px;
-    margin: 10px 0 40px 0;
-    @media only screen  and (min-width : 768px) { 
-        width: layout--item--width(2, 5, false);
-        @include layout--item;
-        margin: 30px 0 50px 5%;
-    }
+    padding: 5px 0 60px;
+  }
 }
 
-.plane__title {
-    margin: 0;
-    padding: 5px;
-    color: #FFFFFF;
-    border-bottom: 4px solid #FFFFFF;
+.pricing_columns-buttons {
+  display: block;
+  align-self: flex-end;
+  position: absolute;
+  width: 90%;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: none;
+  background-color: $default--blue;
+  padding: 12px;
+  text-align: center;
+  color: #FFFFFF;
 }
 
-.plan__features--list {
-    color: #FFFFFF;
+.pricing_footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+  min-height: 250px;
+  width: 80%;
+  margin: 10% auto 10% auto;
+  padding: 20px 0;
+  background-color: #23e8a6;
 }
 
-.plan__description {
-    color: #FFFFFF;
-    padding: 5px;
+.pricing_footer-title {
+  background-color: #23e8a6;
+  color: #FFFFFF;
+  padding: 20px;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  font-size: 1.1em;
+  font-weight: bold;
 }
 
-.set-price__table {
-    width: 90%;
-    margin: 10px auto 10px auto;
-
-    @media only screen  and (min-width : 768px) { 
-        width: layout--item--width(2, 5, false);
-        @include layout--item;
-        margin: 30px auto 50px 10%;
-    }
+.pricing_footer-content {
+  text-align: center;
+  color: #FFFFFF;
+  padding: 20px;
+  width: 80%;
+  margin: auto;
+  font-size: 1em;
+  @include workSans_light;
 }
 
-.set-price__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-radius: 3px 3px 0 0;
-    @include layout--container;
+.pricing_footer-button {
+  text-align: center;
+  color: #FFFFFF;
+  background-color: #23e8a6;
+  border: 1px solid #FFFFFF;
+  padding: 15px;
+  width: 250px;
+  margin: auto;
 }
 
-.set-price__list--title, .set-price__list--item {
-    @include layout--item;
-    width: layout--item--width(4, 3, true);
-    padding: 15px 5px;
-    text-align: center;
-    background: #D7D7D7;
-    margin: 0;
-    height: 50px;
-    font-size: 12px;
-    color: #666666;
-    font-weight: bold;
+.l-project_items-buttons {
+  width: 80%;
+  margin: 10% auto 10% auto;
+  @media screen and (min-width: 768px) {
+      width: 90%;
+  }
 }
 
-.set-price__list--item {
-    background-color: #F2F2F2;
-    font-weight: normal;
+.project_items-buttons {
+  width: 100%;
+  margin: 10px 0;
+  background: #3dc053;
+  color: #FFFFFF;
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+  padding: 12px;
+
+  @media screen and (min-width: 768px) {
+      width: 40%;
+      margin-left: auto;
+      margin-right: 0;
+      display: block;
+  }
 }
 
-.set-price__info-panel {
-    width: 100%;
-    margin: 40px 0 0 0;
-    background-color: #F2F2F2;
-    padding: 5px;
-    border-radius: 4px;
-
-    @media only screen  and (min-width : 768px) { 
-        margin: 40px 0 30px 0;
-    }
-}
-
-.set-price__info-panel--title {
-    color: #666666;
-    margin: 0;
-    padding: 5px;
-    font-size: 1.3em;
-}
-
-.set-price__info-panel--content {
-    color: #666666;
-    padding: 5px;
-    font-size: 0.9em;
-}
-
-.set-price__button {
-   margin-top: 20px;
-}
 
 
 </style>

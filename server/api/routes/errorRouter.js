@@ -10,10 +10,11 @@ const bcrypt = require('bcrypt');
 import auth from '../../packages/auth'
 import userModel from '../models/user'
 import listingModel from '../models/listings';
-
-import Validator from '../../packages/validator/validator'
+import Validator from '../../packages/validator/index'
 import PasswordReset from '../../packages/passwordReset/passwordReset'
 import Mailer from '../../packages/mailer/mailer'
+import ImageUploader from '../../packages/image_uploader/index'
+import Formidable from 'formidable'
 // let validator = require('../../packages/validator');
 // validator = new validator()
 let uploader = require('../../packages/uploader')
@@ -115,6 +116,25 @@ router.post('/validator', async (req, res, next) => {
     
 
   }catch(err) {
+    console.log(err)
+  }
+  
+})
+
+router.post('/uploadImage', async (req, res, next) => {
+  try {
+    console.log('fsfsf')
+    const imageUploader = new ImageUploader(req)
+    // const result = await imageUploader.Upload('/OnclickSell.com/Projects/Thumbnails')
+    // const result = await imageUploader.Delete('OnclickSell.com/Projects/Thumbnails/upload_558dc970eed7daf6d47a351cc4aad8e2_dyhc0i')
+    var form = new Formidable.IncomingForm();
+    form.multiples = true;
+    form.parse(req, async (err, fields, files) => {
+        // const paresedData = JSON.parse(fields.data)
+        console.log(fields)
+    })
+
+  }catch (err) {
     console.log(err)
   }
   

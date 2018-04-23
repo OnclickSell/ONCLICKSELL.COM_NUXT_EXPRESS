@@ -7,6 +7,7 @@
           :is="ActiveComponent"
           :placeholder="InputHolder"
           :data="data"
+          :error="error"
           :name="InputName"/>
     </div>
 </template>
@@ -34,6 +35,9 @@ export default {
         },
         data: {
           required: false
+        },
+        error: {
+          type: Boolean
         }
     },
   data() {

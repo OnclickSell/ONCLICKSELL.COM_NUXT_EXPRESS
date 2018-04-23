@@ -9,12 +9,12 @@
         
        
         <keep-alive>
-            <component v-bind:is="current_page" 
-            :frontendContext="technologies"
-            :backendContext="technologies"
-            v-on:switched="switch_page"
-            v-on:submit="submit"
-            />
+
+            <component 
+              v-bind:is="current_page" 
+              v-on:switched="switch_page"
+              v-on:submit="submit"/>
+
         </keep-alive>
 
     </div>
@@ -26,9 +26,10 @@ import BasicDetails from '@/components/sell/pages/basic/basic_details'
 import Frontend from '@/components/sell/pages/frontend/frontend'
 import Backend from '@/components/sell/pages/backend/backend'
 import Screenshot from '@/components/sell/pages/screenshot/screenshot'
-import Pricing from '@/components/sell/pages/pricing/pricing'
+import Pricing from '@/components/sell/pages/pricing/pricing.vue'
 import Subscription from '@/components/sell/pages/subscription/subscription'
 import Payment from '@/components/sell/pages/payment/payment'
+import Preview from '@/components/sell/pages/project_preview/index.vue'
 import { mapGetters } from 'vuex'
 import swal from 'sweetalert'
 
@@ -50,7 +51,8 @@ export default {
             'os-frontend',
             'os-backend',
             'os-screenshot',
-            'os-pricing'
+            'os-pricing',
+            'os-preview'
         ],
         current_page: 'os-basic-details'
       }
@@ -63,7 +65,8 @@ export default {
     'os-screenshot': Screenshot,
     'os-pricing': Pricing,
     'os-subscription': Subscription,
-    'os-payment': Payment
+    'os-payment': Payment,
+    'os-preview': Preview
   },
   methods: {
     switch_page (value) {
@@ -71,9 +74,12 @@ export default {
       this.listing_details = {...this.listing_details, ...value.context}
       this.current_page = value.page
     },
-    submit(value) {
-      this.listing_details = {...this.listing_details, ...value.context}
-      this.$store.dispatch('listings/submit', this.listing_details)
+    submit() {
+      const that = this
+      const jsonData = JSON.stringify({...that.listing_details, screenshots: null})
+      let form = this.listing_details.screenshots
+      form.append('data', jsonData)
+      this.$store.dispatch('listings/submit', form)
     }
   },
   beforeRouteLeave (to, from, next) {
@@ -97,6 +103,9 @@ export default {
     ...mapGetters({
       technologies: 'listings/getTechnologies'
     })
+  },
+  created() {
+    // this.$bus.$on('project_done', () => this.submit)
   }
 }
 </script>

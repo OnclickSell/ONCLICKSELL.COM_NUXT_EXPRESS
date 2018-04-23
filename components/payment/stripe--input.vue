@@ -1,29 +1,23 @@
 <template>
-    <div>
-        <div class='frontend'>
-          
+    <div class='l-payment_gateway'>
+      <div class="payment_gateway-items" id="l-cardNumber">
+        <label for="cardNumber" class="payment_gateway-titles">Card Number</label>
+        <div id="cardNumber" :class="{'error': Allfields.cardNumber.error}" ref="cardNumber"></div>
+      </div>
 
-            <div class='frontend__item frontend__item--float'>
-                <label for="cardNumber">Card Number</label>
-                <div id="cardNumber" ref="cardNumber"></div>
-                <span class="fields__error" v-if="fields.cardNumber">{{fields.cardNumber.error}}</span>
+      <div class="payment_gateway-items" id="l-cardExpiry">
+        <label for="cardExpiry" class="payment_gateway-titles">Expiry</label>
+        <div id="cardExpiry" :class="{'error': Allfields.cardExpiry.error}" ref="cardExpiry"></div>
+      </div>
 
-                <label for="cardExpiry">Expiry</label>
-                <div id="cardExpiry" ref="cardExpiry"></div>
-                <span class="fields__error" v-if="fields.cardExpiry">{{fields.cardExpiry.error}}</span>
+      <div class="payment_gateway-items" id="l-cardCVC">
+        <label for="cardCvc" class="payment_gateway-titles">CVC</label>
+        <div id="cardCvc" :class="{'error': Allfields.cardCvc.error}" ref="cardCvc"></div>
+      </div>
 
-                <label for="cardCvc">CVC</label>
-                <div id="cardCvc" ref="cardCvc"></div>
-                <span class="fields__error" v-if="fields.cardCvc">{{fields.cardCvc.error}}</span>
-
-                <button @click="makePayment">Pay Now</button>
-            </div>
-  
-          
-
-        </div>
-    
-       
+      <!-- <div class="payment_gateway-items l-payment_gateway-button">
+        <button @click="makePayment" class="payment_gateway-button">Pay Now</button>
+      </div> -->
     </div>
 </template>
 
@@ -36,14 +30,13 @@ if(process.client) {
     elements = stripe.elements()
 }
 
-
 export default {
   data () {
     return {
       cardDetails: {
         token: ''
       },
-      fields: {
+      Allfields: {
         cardNumber: {
           error: ''
         },
@@ -58,6 +51,12 @@ export default {
   },
   mounted() {
     this.createElements()
+  },
+  created() {
+    const that = this
+    this.$bus.$on('createToken', () => {
+      that.makePayment()
+    })
   },
   methods: {
     createElements () {
@@ -80,34 +79,38 @@ export default {
       cardCvc.mount(this.$refs.cardCvc)
     },
     validateCardNumber(event) {
-        if (event.error) {
-            this.fields.cardNumber.error = event.error.message
-        } else {
-            this.fields.cardNumber.error = ''
-        }
+        if (event.error)
+          this.addError('cardNumber', 'The card number is not valid')
+        else
+          this.removeError('cardNumber', 'The card number is not valid')
     },
     validateCardExpiry(event) {
-        if (event.error) {
-            this.fields.cardExpiry.error = event.error.message
-        } else {
-            this.fields.cardExpiry.error = ''
-        }
+        if (event.error)
+          this.addError('cardExpiry', 'The card Expiry is not valid')
+        else
+          this.removeError('cardExpiry', 'The card Expiry is not valid')
     },
     validateCardCvc(event) {
-        if (event.error) {
-            this.fields.cardCvc.error = event.error.message
-        } else {
-            this.fields.cardCvc.error = ''
-        }
+        if (event.error)
+          this.addError('cardCvc', 'The card CVC is not valid')
+        else
+          this.removeError('cardCvc', 'The card CVC is not valid')
     },
     makePayment() {
       let that = this
       stripe.createToken(cardNumber).then(function(result) {
           if(!result.error) {
-            alert('asfasfsf')
-              that.$emit('createToken', result.token)
+            that.$emit('TokenCreated', result.token)
           }
       })
+    },
+    addError(field, error) {
+      this.Allfields[field].error = error
+      this.$emit('errorAdded', {field: field, error: error})
+    },
+    removeError(field, error) {
+      this.$emit('errorRemoved', error)
+      this.Allfields[field].error = null
     }
   }
  
@@ -116,49 +119,73 @@ export default {
 
 <style lang='scss' scoped>
 
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
-.fields__error {
-    color: red;
-    font-size: 0.8em;
-    display: block;
+
+.l-payment_gateway {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.frontend {
-    @include layout--container;
-    width: 100%;
-    padding: 20px;
-
-    @media only screen  and (min-width : 960px) {
-        width: layout--item--width(1, 10, false);
-        @include layout--item--offset(3, 1);
-    }
+.payment_gateway-titles {
+  padding: 5px 0;
+  display: block;
+  @include workSans_medium;
+  color: #666666;
 }
 
-.frontend__item {
-    @include layout--item;
-    width: layout--item--width(2, 6, true);
-    padding: 12px 8px;
-    margin: 0;
+.payment_gateway-items {
+  margin: 10px auto 10px auto;
 }
 
-.frontend__item--float {
-    width: layout--item--width(1, 12, true);
-    margin: 0;
-
-    @media only screen  and (min-width : 768px) {
-        width: layout--item--width(2, 6, false);
-    }
-
-    @media only screen  and (min-width : 960px) {
-        width: layout--item--width(2, 5, false);
-    }
+#l-cardNumber {
+  width: 100%;
 }
 
-.frontend__item--top-margin {
-    margin-top: 10%;
+#l-cardExpiry {
+  width: 45%;
+  margin-left: 0;
+  margin-right: auto;
 }
+
+#l-cardCVC {
+  width: 45%;
+  margin-right: 0;
+  margin-left: auto;
+
+}
+
+#cardNumber, #cardExpiry, #cardCvc {
+  padding: 10px 5px;
+  border: none;
+  border-bottom: 5px solid #3dbf57;
+  background-color: #eee;
+  color: #666666;
+}
+
+.l-payment_gateway-button {
+  width: 100%;
+  padding: 10px 0;
+}
+
+.payment_gateway-button {
+  width: 100%;
+  padding: 12px;
+  color: #FFFFFF;
+  background-color: #3dc053;
+  border: none;
+  border-radius: 3px;
+  text-align: center;
+}
+
+
+.error {
+  border-bottom: 5px solid red !important;
+}
+
 
 </style>

@@ -23,24 +23,23 @@ export default class technologyModel extends Model {
     }
 
     async CreateTechnology(data) {
-        console.log(data)
         const CreatedTechnology = await this.Create({
             listing_id: data.id,
-            html: data.frontend.html.title,
-            css: data.frontend.css.title,
+            html: data.frontend.html,
+            css: data.frontend.css,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
-
+        
         await db('frontend_plateform').insert({
-            frontend_plateform_id: data.frontend.plateform.value,
+            frontend_plateform_id: data.frontend.plateform,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('frontend_framework').insert({
-            frontend_framework_id: data.frontend.framework.value,
+            frontend_framework_id: data.frontend.framework,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
@@ -48,8 +47,8 @@ export default class technologyModel extends Model {
 
         await db('frontend_libraries').insert({
             technology_id: CreatedTechnology.id,
-            name: data.frontend.libraries.title,
-            version: data.frontend.libraries.version,
+            name: data.frontend.libraries,
+            version: data.frontend.libraries,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
@@ -57,23 +56,23 @@ export default class technologyModel extends Model {
 
 
         await db('backend_plateform').insert({
-            backend_plateform_id: data.backend.plateform.value,
+            backend_plateform_id: data.backend.plateform,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('backend_framework').insert({
-            backend_framework_id: data.backend.framework.value,
+            backend_framework_id: data.backend.framework,
             technology_id: CreatedTechnology.id,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })
 
         await db('backend_libraries').insert({
-            technology_id: CreatedTechnology.value,
-            name: data.backend.libraries.title,
-            version: data.backend.libraries.version,
+            technology_id: CreatedTechnology.id,
+            name: data.backend.libraries,
+            version: data.backend.libraries,
             created_at: this.timestamp,
             updated_at: this.timestamp
         })

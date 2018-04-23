@@ -1,7 +1,7 @@
 <template>
 
 
-    <div class='l-dropdown' @click="toggle">
+    <div class='l-dropdown' @click="toggle" :class="{'error': error}">
 
 
         <span class='dropdown__title'>{{ selected ? selected : placeholder}}</span>
@@ -37,6 +37,9 @@ export default {
       },
       data: {
         required: true
+      },
+      error: {
+        type: Boolean
       }
   },
   data() {
@@ -53,6 +56,21 @@ export default {
       this.selected = value
       this.$emit('input', value )
     }
+  },
+  created() {
+    if(process.client) {
+      let that = this
+      window.addEventListener('click', () => {
+         // if (that.open)
+         //  that.open = false
+      })
+    }
+  },
+  BeforeDestroy() {
+    window.addEventListener('click', () => {
+        if (this.open)
+          this.open = false
+      })
   }
 }
 </script>
@@ -106,6 +124,9 @@ export default {
     position: absolute;
     top: 111%;
     width: 100%;
+    max-height: 150px;
+    overflow: scroll;
+    overflow-x: hidden;
     right: 0;
     border-radius: 3px;
     z-index: 55;
@@ -131,5 +152,9 @@ export default {
         transition: 0.4s;
         cursor: pointer;
     }
+}
+
+.error {
+  border: 1px solid red;
 }
 </style>

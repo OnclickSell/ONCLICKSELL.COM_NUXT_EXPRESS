@@ -1,224 +1,234 @@
 <template>
-    <div>
-        <div class='frontend'>
+   <div class="l-payment">
 
-            <div class='backend__item fluid frontend__item--top-margin'><os-input-help/></div>
-          
 
-            <div class='frontend__item frontend__item--float'>
-               <os-stripe--input v-on:createToken="storeToken"></os-stripe--input>
-            </div>
+      <os-error-panel :show="inputErrors.length !== 0" class="l-project_errors">
+          <p v-for="error in inputErrors" :key="error.field">{{error.error}}</p>
+      </os-error-panel>
 
-            <div class='frontend__item'>
-                <os-button v-on:clicked="switch_page('os-subscription')" title='PREVIOUS'/>
-                <os-button v-on:clicked="switch_page('os-payment')" title='NEXT'/>
-                <os-button v-on:clicked="submit" title='Create Listing'/>
-            </div>
-
-  
+      <div class="payment_items">
+        <h1 class="payment_items-title">Your Billing Cycle</h1>
+        <div v-for="(input, index) in inputs" v-if="index < 1">
+            <os-input
+            :data-vv-name="input.name"
+            :data-vv-value-path="input.name"
+            :InputHolder='input.placeholder' 
+            :InputType="input.type"
+            :InputName="input.name"
+            :data="input.data"
+            :error="isError(index)"
+            v-on:input="(value) => {inputChangeHandler(value, index)}"/>
         </div>
-    
-       
-    </div>
+      </div>
+
+       <div class="payment_items">
+        <h1 class="payment_items-title">Your Basic Informations</h1>
+        <div v-for="(input, index) in inputs" v-if="(index > 0 && index < 3)" class="payment_items-input">
+             <os-input
+            :data-vv-name="input.name"
+            :data-vv-value-path="input.name"
+            :InputHolder='input.placeholder' 
+            :InputType="input.type"
+            :InputName="input.name"
+            :data="input.data"
+            :error="isError(index)"
+            v-on:input="(value) => {inputChangeHandler(value, index)}"/>
+        </div>
+      </div>
+
+       <div class="payment_items">
+        <h1 class="payment_items-title">Your Account Credentials</h1>
+        <div v-for="(input, index) in inputs" v-if="index > 2 && index < 5" class="payment_items-input">
+             <os-input
+            :data-vv-name="input.name"
+            :data-vv-value-path="input.name"
+            :InputHolder='input.placeholder' 
+            :InputType="input.type"
+            :InputName="input.name"
+            :data="input.data"
+            :error="isError(index)"
+            v-on:input="(value) => {inputChangeHandler(value, index)}"/>
+        </div>
+      </div>
+
+       <div class="payment_items">
+        <h1 class="payment_items-title">Your Payment Information</h1>
+        <no-ssr>
+        <os-stripe 
+          v-on:errorAdded="cardErrorAdded" 
+          v-on:errorRemoved="cardErrorRemoved" 
+          v-on:TokenCreated="storeTokenHandler"></os-stripe>
+        </no-ssr>
+      </div>
+
+      <div class="l-project_items-buttons">
+        <button class="project_items-buttons" @click="submit">Next</button>
+        <button class="project_items-buttons" @click="switch_page('os-basic-details')">Back</button>
+      </div>
+   </div>
 </template>
 
 <script>
 import Explainer from '@/components/others/explainer.vue'
 import Input from '@/components/UI/sell/form/element'
-import StripeInput from '@/components/payment/stripe--input.vue'
-import { mapGetters } from 'vuex'
-import axios from 'axios'
-
-
-
-
+import ErrorPanel from '@/components/UI/error/error_panel.vue'
+import Stripe_payment from '@/components/payment/stripe--input.vue'
+import Mixins from '@/mixins/sell.js'
 export default {
-//   head: {
-//     script: [
-//       { src: 'https://js.stripe.com/v3/'}
-//     ]
-//   },
-  layout: 'main--layout',
-  fetch({store}) {
-    return store.dispatch('listings/fetchTechnologies')
-  },
-  data () {
+  data() {
     return {
-      features: ['$0.00 flat rate', '15% referral fee per successful sale', '$30 monthly subsription fee'],
-      description: 'Suitable for small scaled projects that do not exceed 10GB in size',
-      paymentDetails: {
-        token: ''
-      }
+      inputs: [
+          {
+            name: 'billing_cycles',
+            type: 'radio',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
+            title: null,
+            placeholder: null,
+            data: [
+              {title: 'Monthly', value: 30, name: 'billing_cycles', checked: true},
+              {title: 'Anually', value: 360, name: 'billing_cycles'}
+            ],
+            value: ''
+          },
+          {
+            name: 'FirstName',
+            type: 'text',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
+            title: 'Your First Name',
+            placeholder: 'e.g Aliakbar',
+            data: '',
+            value: ''
+          },
+          {
+            name: 'LastName',
+            type: 'text',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
+            title: 'Last Name',
+            placeholder: 'e.g Sultani',
+            data: '',
+            value: ''
+          },
+          {
+            name: 'EmailAddress',
+            type: 'text',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
+            title: 'Email Address',
+            placeholder: 'e.g Ali.su@myself.com',
+            data: '',
+            value: ''
+          },
+          {
+            name: 'password',
+            type: 'text',
+            rules: [{name: 'required', value: ''}],
+            touched: false,
+            title: 'Account Password',
+            placeholder: '***********',
+            data: '',
+            value: ''
+          }
+        ]
     }
   },
-  mounted() {
-  },
   methods: {
-    switch_page(page) {
-      this.$emit('switched', {page: page, context: {payment: this.paymentDetails.token }})
+      check() {
+      this.inputs.map(value => this.data[value.name] = value.value)
+    },
+    cardErrorAdded(error) {
+      this.addError(error.error, error.field)
+    },
+    cardErrorRemoved(error) {
+      this.removeError(error)
+    },
+    storeTokenHandler(token) {
+      this.data['token'] = token
     },
     submit() {
-      this.$emit('submit', {context: {payment: this.paymentDetails.token }})
-    },
-    storeToken(token) {
-      this.paymentDetails.token = token
+      const that = this
+      this.$bus.$emit('createToken')
+      setTimeout(() => {
+        if(that.data.token == undefined)
+          that.submit()
+        that.switch_page('os-screenshot')
+      }, 2000)
     }
   },
   components: {
     'os-input': Input,
-    'os-explainer': Explainer,
-    'os-stripe--input': StripeInput
+    'os-error-panel': ErrorPanel,
+    'os-stripe': Stripe_payment
   },
-  computed: {
-    ...mapGetters({
-      technologies: 'listings/getTechnologies'
-    }),
-    get_framework_version: {
-      get: function() {
-        let selectedVersions = []
-        this.technologies.frontend.framework.map((value) => {
-            if(this.frontend_tehnologies.framework.name === value.name) {
-              selectedVersions.push({version: value.version})
-            }
-        })
-        return selectedVersions
-      }
-    },
-    setFramework: {
-      get: function() {
-        return this.frontend_tehnologies
-      },
-      set: function (value) {
-        this.frontend_tehnologies.framework = value
-      }
-    },
-    set_framework_version: {
-      get: function() {
-        return this.frontend_tehnologies
-      },
-      set: function (value) {
-        let new_value = {...this.frontend_tehnologies.framework}
-        new_value.version = value.version
-        this.frontend_tehnologies.framework = new_value
-      }
-    },
-    setPlateform: {
-      get: function() {
-        return this.frontend_tehnologies.plateform
-    },
-      set: function (value) {
-        this.frontend_tehnologies.plateform = value
-      }
-    },
-    set_plateform_version: {
-      get: function() {
-        return this.frontend_tehnologies
-      },
-      set: function (value) {
-        let new_value = {...this.frontend_tehnologies.plateform}
-        new_value.version = value.version
-        this.frontend_tehnologies.plateform = new_value
-      }
-    },
-     get_plateform_version: {
-      get: function() {
-        let selectedVersions = []
-        this.technologies.frontend.plateform.map((value) => {
-            if(this.frontend_tehnologies.plateform.name === value.name) {
-              selectedVersions.push({version: value.version})
-            }
-        })
-        return selectedVersions
-      }
-    },
-    setLibraries: {
-      get: function() {
-        return this.frontend_tehnologies.libraries
-    },
-      set: function (value) {
-        this.frontend_tehnologies.libraries = value
-      }
-    },
-    set_libraries_version: {
-      get: function() {
-        return this.frontend_tehnologies
-      },
-      set: function (value) {
-        let new_value = {...this.frontend_tehnologies.libraries}
-        new_value.version = value.version
-        this.frontend_tehnologies.libraries = new_value
-      }
-    },
-    get_libraries_version: {
-      get: function() {
-        let selectedVersions = []
-        this.technologies.frontend.framework.map((value) => {
-            if(this.frontend_tehnologies.libraries.name === value.name) {
-              selectedVersions.push({version: value.version})
-            }
-        })
-        return selectedVersions
-      }
-    },
-    get_html() {
-      let html_versions = []
-      this.technologies.frontend.html.map((item) => {
-          html_versions.push(item.version)
-      })
-      return html_versions
-    },
-    get_css() {
-      let css_versions = []
-      this.technologies.frontend.css.map((item) => {
-          css_versions.push(item.version)
-      })
-      return css_versions
-    }
-  }
+  mixins: [Mixins]
 }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 
-@import '~assets/sass/CSS-Layout-system.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
-
-
+@import '~assets/sass/grid.scss';
+@import '~assets/sass/default.scss';
 
 
-.frontend {
-    @include layout--container;
-    width: 100%;
-    padding: 20px;
-
-    @media only screen  and (min-width : 960px) {
-        width: layout--item--width(1, 10, false);
-        @include layout--item--offset(3, 1);
-    }
+.l-payment {
+  padding: 12px;
 }
 
-.frontend__item {
-    @include layout--item;
-    width: layout--item--width(2, 6, true);
-    padding: 12px 8px;
-    margin: 0;
+.payment_items {
+  width: 90%;
+  margin: auto;
+  padding: 12px;
+  border-bottom: 1px solid #f3f3f3;
 }
 
-.frontend__item--float {
-    width: layout--item--width(1, 12, true);
-    margin: 0;
 
-    @media only screen  and (min-width : 768px) {
-        width: layout--item--width(2, 6, false);
-    }
-
-    @media only screen  and (min-width : 960px) {
-        width: layout--item--width(2, 5, false);
-    }
+.payment_items-title {
+  color: grey;
+  font-size: 1.1em;
 }
 
-.frontend__item--top-margin {
-    margin-top: 10%;
+.payment_items-input {
+  width: 100%;
+  margin: 10px 0;
+}
+
+
+.l-project_items-buttons {
+  width: 80%;
+  margin: 10% auto 10% auto;
+  @media screen and (min-width: 768px) {
+      width: 90%;
+  }
+}
+
+.project_items-buttons {
+  width: 100%;
+  margin: 10px 0;
+  background: #3dc053;
+  color: #FFFFFF;
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+  padding: 12px;
+
+  @media screen and (min-width: 768px) {
+      width: 40%;
+      margin-left: auto;
+      margin-right: 0;
+      display: block;
+  }
+}
+
+
+.l-project_errors {
+  margin-top: 20%;
+  width: 80%;
+  margin: auto;
+  @media screen and (min-width: 768px) {
+      width: 90%;
+  }
 }
 
 </style>

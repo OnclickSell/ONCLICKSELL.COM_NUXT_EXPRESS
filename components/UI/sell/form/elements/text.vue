@@ -4,6 +4,7 @@
       :name="name" 
       type='text' 
       class='input' 
+      :class="{'error': error}"
       :placeholder="placeholder" 
       @input="change">
 
@@ -19,6 +20,9 @@ export default {
       name: {
         type: String,
         required: true
+      },
+      error: {
+        type: Boolean
       }
   },
   methods: {
@@ -41,15 +45,20 @@ export default {
     width: 100%;
     padding: 10px 5px;
     border: none;
-    border-bottom: 3px solid $default_green;
+    border-bottom: 5px solid $default_green;
     position: relative;
     background-color: #eee;
     color: #666666;
     @include workSans_medium;
+    transition: border 0.2s;
 }
 
 .input::placeholder {
     color: #666666;
+}
+
+.error {
+  border-bottom: 5px solid red !important;
 }
 
 
