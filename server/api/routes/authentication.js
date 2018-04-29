@@ -3,7 +3,7 @@ const router = express.Router();
 import authController from '../controllers/authController'
 import authMiddleware from '../middlewares/authMiddleware'
 import userController from '../controllers/userController';
-import auth from '../../packages/auth'
+import Auth from '../../packages/auth'
 import userModel from '../models/user';
 var ExpressBrute = require('express-brute');
 
@@ -52,11 +52,11 @@ router.post('/signIn', async (req, res, next) => {
 
 router.post('/signUp', async (req, res, next) => {
 	try {
-		const Auth = new authController(req, res, next)
-		return await Auth.SignUp()
+		const auth = new authController(req, res, next)
+		return await auth.SignUp()
 	}catch(err) {
 		next(err)
-		console.log(err)
+		console.log(err, 'from auth router')
 	}
 })
 

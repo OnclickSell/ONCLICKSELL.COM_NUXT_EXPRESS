@@ -31,9 +31,9 @@ const getExpirationDate = (expiresIn) => {
 |
 */
 export const state = () => ({
-  user: {},
-  collection: {},
-  listings: {},
+  user: 'fasfsaf',
+  collection: null,
+  listings: null,
   token: null,
   tokenExpiration: null,
   authModuleState: 'signin'
@@ -118,13 +118,13 @@ let tokenExpiration = null
 export const actions = {
   authentication ({commit, dispatch, state}, credentials) {
     return new Promise((resolve, reject) => {
-      axios.post('http://localhost:4000/api/v1/auth/' + credentials.url, credentials.values)
+      axios.post('http://localhost:4000/api/v1/auth/' + credentials.url, credentials)
       .then(response => {
         commit('setAuthUser', response.data.Context.user)
         commit('setToken', response.data.Context.token)
         commit('setTokenExpiration')
-        commit('SetAuthListings', response.data.Context.listings)
-        commit('SetAuthCollection', response.data.Context.collection)
+        // commit('SetAuthListings', response.data.Context.listings)
+        // commit('SetAuthCollection', response.data.Context.collection)
         resolve()
       })
       .catch(err => reject(err.response.data))

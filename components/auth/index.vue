@@ -26,10 +26,10 @@ export default {
   props: ['data'],
   data () {
     return {
-      url: '/signin',
       errors: '',
       credentials: {
-        full_name: '',
+        url: '/signin',
+        name: '',
         email: '',
         sex: '',
         password: '',
@@ -47,7 +47,7 @@ export default {
     async submit(data) {
       try {
         this.$store.commit('startLoading')
-        await this.$store.dispatch('authentication/authentication', { values: data, url: this.url })
+        await this.$store.dispatch('authentication/authentication', data)
         this.$store.commit('stopLoading')
         this.$route.push('/')
       }catch(err) {

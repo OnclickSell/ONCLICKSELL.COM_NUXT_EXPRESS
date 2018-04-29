@@ -5,6 +5,17 @@ import authMiddleware from '../middlewares/authMiddleware'
 
 
 
+router.get('/initSellPages', async (req, res, next) => {
+    try {
+        const ListingsController = new listingsController(req, res, next)
+        return await ListingsController.InitSellPages()
+    }catch(err) {
+        console.log(err)
+    }
+    
+})
+
+
 router.get('/:id/:title', async (req, res, next) => {
     try {
         const ListingsController = new listingsController(req, res, next)
@@ -26,7 +37,6 @@ router.get('/', async (req, res, next) => {
 })
 router.post('/', authMiddleware, async (req, res, next) => {
     try {
-        console.log(req.body)
         const ListingsController = new listingsController(req, res, next)
         return await ListingsController.CreateListing()
     }catch(err) {

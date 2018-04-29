@@ -1,9 +1,9 @@
 <template>
   <div class="main_layout">
       <os-navbar/>
-    <nuxt/>
+          <nuxt/>
       <os-loader v-if="loading"/>
-      <os-footer class="layout_footer"/>
+      <!-- <os-footer class="layout_footer"/> -->
   </div>
 </template>
 

@@ -86,6 +86,7 @@ export default {
       // })
       this.$validator.validateAll().then((result) => {
         if (result) {
+          this.credentials.url = '/signin'
           this.$emit('submit', { ...this.credentials })
         }
       })

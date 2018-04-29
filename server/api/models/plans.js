@@ -1,6 +1,8 @@
 const db = require('../../database/config');
 const bcrypt = require('bcrypt');
 import Model from './model'
+import mongoose from 'mongoose'
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +15,25 @@ import Model from './model'
 |
 */
 
-export default class PlansModel extends Model {
-    constructor () {
-        super()
-        this.table = 'plan'
-    }
-}
+const Schema = mongoose.Schema;
+const PLANS_SCHEMA = new Schema({
+    id: String,
+    created: Number,
+    objectType: String,
+    amount: Number,
+    currency: String,
+    interval: String,
+    intervalCount: Number,
+    billingCycles: Number,
+    name: String,
+    trialPeriodDays: Number,
+    recursTo: String,
+    metadata: {}
+})
+
+const plans = mongoose.model('Plans', PLANS_SCHEMA)
+
+export default plans
 
 
 

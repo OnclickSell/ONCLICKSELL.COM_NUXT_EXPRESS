@@ -1,11 +1,24 @@
 
 import listingsModel from '../models/listings'
+import CustomersModel from '../models/customers'
+import TechnologiesModel from '../models/technology'
 import Responser from '../../packages/responser'
+import PlansModel from '../models/plans'
 import ImageUploader from '../../packages/image_uploader/index'
 const mailer = require('../../packages/mailer')
 import Controller from './controller'
 import Validator from '../../packages/validator/index'
-import { CreateCustomer } from '../../packages/stripe/index'
+import { 
+    CreateSubscription,
+    CreateCustomer } from '../../packages/payment/index'
+import {
+    frontendPlateformsList,
+    frontendFrameworksList,
+    frontendLibrariesList,
+    backendPlateformsList,
+    backendFrameworksList,
+    backendLibrariesList
+} from '../models/technology'
 
 
 /*
@@ -21,18 +34,46 @@ import { CreateCustomer } from '../../packages/stripe/index'
 
 export default class listingController extends Controller {
 
+    async InitSellPages() {
+        let TECHNOLOGIES = {
+            frontend: {
+                framework: '',
+                plateforms: '',
+                libraries: '',
+                html: '',
+                css: ''
+            },
+            backend: {
+                framework: '',
+                plateforms: ''
+            }
+        }
+
+        try {
+            const PLANS_RESULT = await PlansModel.find()
+            TECHNOLOGIES.frontend.framework = await frontendFrameworksList.find()
+            TECHNOLOGIES.frontend.plateforms = await frontendPlateformsList.find()
+            TECHNOLOGIES.frontend.libraries = await frontendLibrariesList.find()
+            TECHNOLOGIES.frontend.html = [{name: 'html', version: '2424'}]
+            TECHNOLOGIES.frontend.css = [{name: 'html', version: '2424'}]
+            TECHNOLOGIES.backend.framework = await backendFrameworksList.find()
+            TECHNOLOGIES.backend.plateforms = await backendPlateformsList.find()
+            Responser.send(this.response, 200, "Success", {plans: PLANS_RESULT, technologies: TECHNOLOGIES})
+        }catch(err) {
+            console.log(err)
+        }
+    }
+
 
     async GetListings() {
         try {
-            const Filter = {
-                limit: this.request.query.limit,
-                offset: this.request.query.offset,
-                order: this.request.query.order
-            }
-            const ListingModel = new listingsModel()
-            const result = await ListingModel.GetAll(Filter.limit, Filter.offset, Filter.order)
-            Responser.send(this.response, 200, "Success", result)
-        }catch(err) {
+            const that = this
+            ListingModel.find((err, listings) => {
+                if(err) throw err
+                Responser.send(that.response, 200, "Success", listings)
+            })
+            
+        }catch(err) {                
             Responser.send(this.response, 500, "Failed", 'Something went wrong on the server. Try again')
         }
     }
@@ -49,9 +90,12 @@ export default class listingController extends Controller {
 
 
     async CreateListing() {
+        // Get the Customer from the Database
+        const customersModel = new CustomersModel
+        const CUSTOMER = await customersModel.FindBy('user_id', this.request.body.user.id)
+        
         try {
-
-            // Image the Screenshots
+            // Upload the Screenshots
             const imageUploader = new ImageUploader(this.request)
             const result = await imageUploader.Upload('/OnclickSell.com/Projects/Thumbnails')
         
@@ -63,28 +107,30 @@ export default class listingController extends Controller {
             const validationResult = Validator(LISTING_VALIDATION, parsedData)
 
             if(validationResult.error) {
-
                 parsedData.screenshots.map(screenshot => {
-                    console.log(screenshot)
+                    // console.log(screenshot)
                     // imageUploader.Delete(screenshot)
                 })
-
                 Responser.send(this.response, 400, "Failed", {validationResult})
 
             }else {
                 try {
-                    // Authorize Credit Card
+                    
+                    const { data } = await CreateSubscription({
+
+                    })
                     // const ListingModel = new listingsModel()
                     // const createdList = await ListingModel.CreateListing(parsedData)
-                    console.log('hi - creating customer')
-                    await CreateCustomer({
-                        user_id: this.request.body.user.id,
-                        email: this.request.body.user.email,
-                        description: this.request.body.user.description
-                    })
-                    // Create A Subscription
+                    // await CreateCustomer({
+                    //     user_id: this.request.body.user.id,
+                    //     email: this.request.body.user.email,
+                    //     description: this.request.body.user.description
+                    // })
+                    // await CreateSubscription({
+                        
+                    // })
                     // Send Email to the user
-                    Responser.send(this.response, 200, "Success", createdList)
+                    Responser.send(this.response, 200, "Success")
                 }catch(err) {
 
                 }

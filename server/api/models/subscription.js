@@ -36,51 +36,6 @@ export default class subscriptionModel extends Model {
     |
     */
 
-    async CreateSubscription(data) {
-
-        const customer = await this.CreateCustomer(data)
-       
-        stripe.subscriptions.create({
-            customer: customer.id,
-            items: [
-              {
-                plan: 1,
-              },
-            ]
-          }, function(err, subscription) {
-            console.log(err, subscription)
-            }
-          );
-        
-    //   await this.Create({
-
-    //   })
-    }
-
-    CreateCustomer(data) {
-        return new Promise((resolve, reject) => {
-            stripe.customers.create({
-                description: 'Customer for zoey.martin@example.com',
-                source: "tok_amex" // obtained with Stripe.js
-              }, function(err, customer) {
-                if(err)
-                    reject(err)
-                resolve(customer)
-            });
-        })
-        
-    }
-
-    async Charge(data) {
-        stripe.charges.create({
-            amount: data.price,
-            currency: "USD",
-            source: data.payment.id, // obtained with Stripe.js
-            description: "Charge for zoey.martin@example.com"
-          }, function(err, charge) {
-            console.log(err, charge)
-          });
-    }
 
 }
 

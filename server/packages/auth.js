@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 const db = require('../database/config');
 const bcrypt = require('bcrypt');
-const tokener = require('../packages/token');
-
-import authModel from '../api/models/auth'
+import Tokener from '../packages/token'
 import UserModel from '../api/models/user'
 import UserController from '../api/controllers/userController'
+import Mongoose from 'mongoose'
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +20,6 @@ import UserController from '../api/controllers/userController'
 export default class auth {
     constructor (request) {
         this.request = request
-        this.authModel = new authModel()
         this.token = ''
         this.decodedToken = ''
         this.auth = ''
@@ -30,10 +28,9 @@ export default class auth {
     async GetAuth () {
         
         try {
-            const userModel = new UserModel()
             this.token = this.request.query.token
             this.decodedToken = await jwt.verify(this.token, 'secret')
-            return await userModel.GetUser(this.decodedToken.identifier)
+            return await UserModel.findOne({ '_id': this.decodedToken.identifier })
         }catch(err) {
             console.log(err)
             throw { type: "BadRequest", message: 'Expired Token' }
@@ -43,22 +40,19 @@ export default class auth {
     async Authenticate(credentials) {
         try {
          //Get the user
-         this.auth = await this.authModel.FindBy('email', credentials.email)
+         this.auth = await UserModel.findOne({ 'email': credentials.email })
          //Check for credentials
          const check = await bcrypt.compare(credentials.password, this.auth.password)
          if (!check) {
              throw {type: "BadRequest", message: "Invalid Creadentials"}
          }
          //Issue Token
-        const userModel = new UserModel()
-        this.auth = await userModel.GetUser(this.auth.id)
         this.token = await jwt.sign({
-            identifier: this.auth.user.id
+            identifier: this.auth._id
          }, "secret", {expiresIn: '1h'});
 
-        this.auth['token'] = this.token
+        this.auth = {user: {name: this.auth.name, email: this.auth.email}, token: this.token}
         return this.auth
-           
         } catch (err) {
             throw { type: "BadRequest", message: err.message }
         }

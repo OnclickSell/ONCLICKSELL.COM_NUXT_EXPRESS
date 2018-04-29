@@ -15,6 +15,8 @@ import PasswordReset from '../../packages/passwordReset/passwordReset'
 import Mailer from '../../packages/mailer/mailer'
 import ImageUploader from '../../packages/image_uploader/index'
 import Formidable from 'formidable'
+import mongoose from 'mongoose'
+import PlansModel from '../models/plans'
 // let validator = require('../../packages/validator');
 // validator = new validator()
 let uploader = require('../../packages/uploader')
@@ -79,15 +81,10 @@ router.get('/updateuser', async (req, res, next) => {
 })
 
 router.get('/createuser', async (req, res, next) => {
-  const test2 = new userModel()
-  const hash = await bcrypt.hash('Ar_newPassword', 10)
+  
   try {
-    console.log(await test2.Create({
-      full_name: 'aliakbar Sultani',
-      email: 'newCreatedUsferw@hotmail.com',
-      sex: 'male',
-      profile_picture: 'fsfsafsaf',
-      password: hash}))
+    const result = await PlansModel.find()
+    console.log(result)
   }catch (err) {
     console.log(err)
   }

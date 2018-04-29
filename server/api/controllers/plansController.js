@@ -1,12 +1,12 @@
 
 const plansModel = require('../models/plans');
-const responser = require('../../packages/responser')
+import Responser from '../../packages/responser'
 const wrapAsync = require('../../packages/wrapAsync')
 let validator = require('../../packages/validator');
 validator = new validator()
 import Controller from './controller'
 import PlanModel from '../models/plans'
-
+import { CreatePlan } from '../../packages/payment/index'
 /*
 |--------------------------------------------------------------------------
 | Application Name
@@ -20,20 +20,45 @@ import PlanModel from '../models/plans'
 export default class PlansController extends Controller {
     async GetPlans() {
         try {
-            const config = {
-                limit: this.request.query.limit,
-                offset: this.request.query.offset,
-                order: this.request.query.order
-            }
-            const planModel = new PlanModel()
-            const result = await planModel.GetAll(config.limit, config.offset, config.order)
-            responser.send(this.response, 200, "Success", result)
+            const that = this
+            PlanModel.find((err, plans) => {
+                if(err) throw err
+                Responser.send(that.response, 200, "Success", plans)
+            })
         }catch(err) {
             throw {type: "InternalServerError", message: "Something went wrong with the server. Please try again"}
         }
     }
-}
 
+    async CreatePlan() {
+        try {
+            const { data } = await CreatePlan(this.request.body)
+            if(data.error) throw data.error
+            const newPlan = new PlanModel({ 
+                id: data.id,
+                created: data.created,
+                objectType: data.objectType,
+                amount: data.amount,
+                currency: data.currency,
+                interval: data.interval,
+                intervalCount: data.intervalCount,
+                billingCycles: data.billingCycles,
+                name: data.name,
+                trialPeriodDays: data.trialPeriodDays,
+                recursTo: data.recursTo,
+                metadata: data.metadata
+             })
+             const that = this
+             newPlan.save(function (err, plan) {
+                if (err) return console.error(err);
+                Responser.send(that.response, 200, "Success", plan)
+              })
+            
+        }catch(err) {
+            console.log(err)
+        }
+    }
+}
 
 
 

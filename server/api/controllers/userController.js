@@ -2,8 +2,7 @@
 import UserModel from '../models/user'
 const validator = require('../../validators/input_validator');
 import auth from '../../packages/auth'
-const response = require('../../packages/response');
-const responser = require('../../packages/responser')
+const Responser = require('../../packages/responser')
 const wrapAsync = require('../../packages/wrapAsync')
 const url = require('url');  
 const bcrypt = require('bcrypt');
@@ -15,19 +14,6 @@ uploader = new uploader()
 import CollectionModel from '../models/collection'
 import ListingModel from '../models/listings'
 
-// import userModel from '../models/user'
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
 
 
 /*
@@ -41,64 +27,6 @@ import ListingModel from '../models/listings'
 |
 */
 
-exports.get_all_users = (req, res, next) => {
-
-    function callback(err, users) {
-        if(err) {
-            res.status(409).json({
-                messgage: "Something is wrong with your request"
-            })
-        }else {
-            res.status(200).json({
-                messgage: 'All the users are listed below',
-                users: users
-            })
-        }
-    }
-      
-    return userModel.get_all_users(callback);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.get_single_user = (req, res, next) => {
-
-    function callback(err, user) {
-        if(err) {
-            res.status(409).json({
-                messgage: "Something is wrong with your request"
-            })
-        }else {
-            res.status(200).json({
-                messgage: 'All the users are listed below',
-                users: user
-            })
-        }
-    }
-      
-    return userModel.get_single_user(req.params.id, callback);
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
 
 export default class userController {
     constructor (request, response, next) {
@@ -130,7 +58,7 @@ export default class userController {
         }catch(err) {
           switch(err.message) {
               case 'Expired Token':
-              responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
+              Responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
           }
         }
           
@@ -140,11 +68,11 @@ export default class userController {
         try {
           const userModel = new UserModel()
           const result = await userModel.FindBy('id', userId)
-          responser.send(this.response, 200, "Success", result)
+          Responser.send(this.response, 200, "Success", result)
         }catch(err) {
           switch(err.message) {
               case 'Expired Token':
-              responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
+              Responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
           }
         }
           
@@ -154,25 +82,28 @@ export default class userController {
       try {
         const Auth = new auth(this.request)
         let result = await Auth.GetAuth()
-        responser.send(this.response, 200, "Success", result)
+        Responser.send(this.response, 200, "Success", result)
       }catch(err) {
         switch(err.message) {
             case 'Expired Token':
-            responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
+            Responser.send(this.response, 400, "Failed", 'Youre Token has been expired!')
         }
       }
         
     }
 
     async CreateUser() {
-      const userModel = new UserModel()
-      const result = await userModel.Create({
-        full_name: this.request.body.full_name,
-        email: this.request.body.email,
-        sex: this.request.body.sex,
-        profile_picture: this.SetProfilePicture(this.request.body.sex),
-        password: await this.HashPassword(this.request.body.password)})
-      return result
+        try {
+            const newUser = new UserModel({
+                name: this.request.body.name,
+                email: this.request.body.email,
+                password: await this.HashPassword(this.request.body.password)
+            })
+            return await newUser.save()
+        }catch(err) {
+            throw err
+        }
+        
     }
 
     async UpdateUser() {
@@ -197,7 +128,7 @@ export default class userController {
         }
         
         updatedUser = {...updatedUser, token: this.request.query.token}
-        responser.send(this.response, 200, "Success", updatedUser)
+        Responser.send(this.response, 200, "Success", updatedUser)
       }catch(err) {
         throw { type: "BadRequest", message: err }
       }
@@ -244,9 +175,9 @@ export default class userController {
             const result = await userModel.FindBy('email', this.request.body.email)
             console.log(result)
             if(!result) 
-                responser.send(this.response, 200, "Success", 'The email is valid')
+                Responser.send(this.response, 200, "Success", 'The email is valid')
             else
-                responser.send(this.response, 400, "Failed", 'The email is already taken')
+                Responser.send(this.response, 400, "Failed", 'The email is already taken')
         }catch(err) {
             throw { type: "BadRequest", message: err }
         }
@@ -254,98 +185,6 @@ export default class userController {
 
 }
 
-
-
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.update_user_avatar = wrapAsync( async function(req, res, next) {
-    try {
-        const avatar_link = await uploader.upload_avatar(req, {folder: 'profile_pictures', field: 'profile_picture'})
-        const result = await userModel.update_user_avatar(req, avatar_link.secure_url)
-        response.E200(req, res, result)
-    } catch(err) {
-        console.log(err)
-        throw new Error(err)
-    } 
-})
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Name
-|--------------------------------------------------------------------------
-|
-| This value is the name of your application. This value is used when the
-| framework needs to place the application's name in a notification or
-| any other location as required by the application or its packages.
-|
-*/
-
-exports.update_profile_picture = (req, res, next) => {
-    //fileName needs to be the currently signed user from session
-    let user_avatar = '';
-    try {
-        fs.statSync('profile_pictures/user_avatar.jpg');
-        user_avatar = 'user_avatar.jpg'
-        cloudinary.v2.uploader.upload('profile_pictures/' + user_avatar, {public_id: "OnclickSell.com/profile_pictures", folder: "OnclickSell.com/profile_pictures/"},(error, result) => {
-            if(error) {
-                response.E400(req, res,'', error)
-
-            }else {
-                user_avatar = result.secure_url
-                update_profile_picture()
-                fs.unlink('profile_pictures/user_avatar.jpg', function(err) {
-                    if(err && err.code == 'ENOENT') {
-                        // file doens't exist
-                        console.info("File doesn't exist, won't remove it.");
-                    } else if (err) {
-                        // other errors, e.g. maybe we don't have enough permission
-                        console.error("Error occurred while trying to remove file");
-                    } else {
-                        console.info(`removed`);
-                    }
-                });
-            }
-        });
-      } catch(e) {
-        user_avatar = create_avatar.detect_gender('male')
-        update_profile_picture()
-      }
-
-    
-    const update_profile_picture = () => {
-    return userModel.update_profile_picture(req, user_avatar)
-        .then(result => {
-            res.status(200).json({
-                status: "OK",
-                code: 200,
-                messgage: 'Profile picture updated successfully',
-                result: {
-                    profile_picture: 'sfa'
-                },
-            })
-        })
-        .catch(err => {
-            res.status(409).json({
-                messgage: "Something is wrong with your request",
-                error: err
-            })
-        })
-    }
-}
 
 
 

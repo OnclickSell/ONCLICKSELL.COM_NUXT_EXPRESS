@@ -9,13 +9,21 @@ import PlansController from '../controllers/plansController'
 // });
 
 router.get('/', async (req, res, next) => {
-    const plansController = new PlansController(req, res, next)
-    return await plansController.GetPlans()
+    try {
+        const plansController = new PlansController(req, res, next)
+        return plansController.GetPlans()
+    }catch(err) {
+        console.log(err)
+    }
 })
-// router.get('/:id/:title', listingsController.get_single_listing);
-// router.post('/', authMiddleware, listingsController.create_single_listings);
-// router.put('/:id', authMiddleware, listingsController.update_single_listings);
-// router.delete('/:id', authMiddleware, listingsController.delete_single_listings);
-// router.get('/technologies/fetch', listingsController.fetch_technologies);
+
+router.post('/', async (req, res, next) => {
+    try {
+        const plansController = new PlansController(req, res, next)
+        return plansController.CreatePlan()
+    }catch(err) {
+        console.log(err)
+    }
+})
 
 module.exports = router;
