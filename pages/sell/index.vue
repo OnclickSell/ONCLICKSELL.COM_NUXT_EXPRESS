@@ -54,7 +54,7 @@ export default {
             'os-pricing',
             'os-preview'
         ],
-        current_page: 'os-basic-details'
+        current_page: 'os-payment'
       }
   },
   components: {

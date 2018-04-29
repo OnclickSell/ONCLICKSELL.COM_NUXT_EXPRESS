@@ -5,6 +5,15 @@ const app = express()
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 4000
 
+import mongoose from 'mongoose'
+mongoose.connect('mongodb+srv://aliakbar:Ar_0785306898@cluster0-wwpjq.mongodb.net/OnclickSell');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Hi You are connected!')
+});
+
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').load();
 }

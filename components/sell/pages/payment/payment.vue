@@ -135,8 +135,8 @@ export default {
     }
   },
   methods: {
-      check() {
-      this.inputs.map(value => this.data[value.name] = value.value)
+    check() {
+    this.inputs.map(value => this.data[value.name] = value.value)
     },
     cardErrorAdded(error) {
       this.addError(error.error, error.field)
@@ -146,15 +146,12 @@ export default {
     },
     storeTokenHandler(token) {
       this.data['token'] = token
-    },
+      if(this.data.token == undefined)
+          this.submit()
+        this.switch_page('os-screenshot')
+      },
     submit() {
-      const that = this
       this.$bus.$emit('createToken')
-      setTimeout(() => {
-        if(that.data.token == undefined)
-          that.submit()
-        that.switch_page('os-screenshot')
-      }, 2000)
     }
   },
   components: {

@@ -1,7 +1,6 @@
 
 const ticketModel = require('../models/ticket');
 const auth = require('../../packages/auth');
-const response = require('../../packages/response');
 const wrapAsync = require('../../packages/wrapAsync')
 let validator = require('../../packages/validator');
 validator = new validator()

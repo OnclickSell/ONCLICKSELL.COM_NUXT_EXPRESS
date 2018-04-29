@@ -10,9 +10,9 @@
                     <os-input 
                       class="auth_signup-input"
                       title="Full Name"
-                      v-model="credentials.email"
+                      v-model="credentials.name"
                       InputType='text'
-                      v-validate="'required|email'"
+                      v-validate="'required'"
                       InputName='name'
                       data-vv-value-path="innerValue"
                       data-vv-name="name"
@@ -137,6 +137,7 @@ export default {
     submit () {
       this.$validator.validateAll().then((result) => {
         if (result) {
+            this.credentials.url = '/signup'
             this.$emit('submit', { ...this.credentials })
         }
       })

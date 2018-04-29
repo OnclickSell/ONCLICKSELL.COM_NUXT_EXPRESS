@@ -20,7 +20,7 @@ module.exports = {
       { href:"https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400|Work+Sans:300,500", rel:"stylesheet"}
     ],
     script: [
-      { src: 'https://js.stripe.com/v3/', body: true}
+      { src: 'https://securionpay.com/js/securionpay.js', body: true}
     ]
   },
   /*

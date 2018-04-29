@@ -72,12 +72,9 @@ export const actions = {
         })
     },
     FetchCreateListing ({state, commit}, payload) {
-      return Promise.all([
-        axios.get('http://localhost:4000/api/v1/technologies'),
-        axios.get('http://localhost:4000/api/v1/plans?limit=10&offset=0&order=id')
-      ]).then(response => {
-        commit('setTechnologies', response[0].data.Context)
-        commit('SetPlans', response[1].data.Context)
+      return axios.get('http://localhost:4000/api/v1/listings/initSellPages').then(response => {
+        commit('setTechnologies', response.data.Context.technologies)
+        commit('SetPlans', response.data.Context.plans)
       })
     },
     fetchSingleListing (vuexContext, payload) {
