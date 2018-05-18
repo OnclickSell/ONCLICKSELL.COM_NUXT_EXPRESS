@@ -6,15 +6,15 @@
       </div>
 
       <div class="pricing_container">
-          <div class="pricing_columns" v-for="each in plans">
-              <h1 class="pricing_columns-title">{{each.plan_name}}</h1>
+          <div class="pricing_columns" v-for="plan in plans">
+              <h1 class="pricing_columns-title">{{plan.name}}</h1>
               <h1 class="pricing_columns-price">
                 <span class="price_sign">$</span>
-                <span class="price">{{each.price}}</span>
+                <span class="price">{{plan.amount}}</span>
                 <span class="price_currency">USD/Month</span>
               </h1>
-              <p class="pricing_columns-description">{{each.description}}</p>
-              <button class="pricing_columns-buttons" @click="switch_page('os-payment', each)">Get Started</button>
+              <p class="pricing_columns-description">{{plan.name}}</p>
+              <button class="pricing_columns-buttons" @click="switch_page('os-payment', plan._id)">Get Started</button>
           </div>
       </div>
       <div class="pricing_footer">
@@ -26,7 +26,7 @@
       </div>
 
       <div class="l-project_items-buttons">
-        <button class="project_items-buttons" @click="switch_page('os-basic-details')">Back</button>
+        <button class="project_items-buttons" @click="switch_page('os-backend')">Back</button>
       </div>
      
    </div>
@@ -41,17 +41,11 @@ export default {
   layout: 'main--layout',
   data () {
     return {
-      pricing: [
-        {title: 'Blue package', price: 29, description: 'This is just a dummy text and will be soon deleted!'},
-        {title: 'Green package', price: 50, description: 'This is just a dummy text and will be soon deleted!'},
-        {title: 'Red package', price: 30, description: 'This is just a dummy text and will be soon deleted!'}
-      ]
     }
   },
   methods: {
-    switch_page(page, plan) {
-      this.data = {plan: plan}
-      this.$emit('switched', {page: page, context: this.data})
+    switch_page(page, planId) {
+      this.$emit('switched', {page: page, context: {plan: planId}})
     }
   },
   components: {

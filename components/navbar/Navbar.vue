@@ -17,7 +17,7 @@
                 :auth="user" 
                 v-on:clicked="openNav" 
                 class="navbar_slider" 
-                :class="{'space_top': !isAuth}" 
+                :class="{'space_top': !user}" 
                 v-if="isNavOpen"/>
         </transition>
 
@@ -48,7 +48,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isAuth: 'authentication/isAuth',
       user: 'authentication/GetAuthUser'
     })
   },

@@ -4,7 +4,7 @@
         <!-- Thumbnail-->
         <div class="card_thumbnail" @click="cardClicked">
           <div class="card_feature">New</div>
-          <img :src="listing.thumbnail">
+          <img :src="listing.thumbnails[0].url">
         </div>
         <!-- Post Content-->
         <div class="card_content" @click.self="cardClicked">
@@ -55,7 +55,7 @@ export default {
     //     this.$router.push('/listings/' + list.id + '/' + list.title)
     // },
     cardClicked() {
-      this.$emit('clicked', this.listing.id)
+      this.$emit('clicked', this.listing._id)
     },
     addToCollection() {
       alert('Added to collection')

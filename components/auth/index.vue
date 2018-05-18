@@ -49,7 +49,7 @@ export default {
         this.$store.commit('startLoading')
         await this.$store.dispatch('authentication/authentication', data)
         this.$store.commit('stopLoading')
-        this.$route.push('/')
+        this.$router.push('/')
       }catch(err) {
         this.$store.commit('stopLoading')
         console.log(err)

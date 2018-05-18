@@ -26,9 +26,6 @@ import axios from 'axios'
 
 export default {
   layout: 'main--layout',
-  fetch({store}) {
-    store.dispatch('authentication/fetchAuthUser')
-  },
   data() {
     return {
       intro: {
@@ -67,8 +64,8 @@ export default {
   },
   methods: {
     displayListing(id) {
-      const project = this.listings.find(listing => listing.id == id)
-      this.$router.push('/project/' + project.title + '/' + project.id )
+      const project = this.listings.find(listing => listing._id == id)
+      this.$router.push('/project/' + project.title + '/' + project._id )
     }
   }
 }

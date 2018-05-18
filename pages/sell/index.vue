@@ -41,7 +41,7 @@ export default {
     // ]
   },
   fetch({store}) {
-    return store.dispatch('listings/FetchCreateListing')
+    return store.dispatch('listings/initCreateListing')
   },
   data() {
       return {
@@ -54,7 +54,7 @@ export default {
             'os-pricing',
             'os-preview'
         ],
-        current_page: 'os-payment'
+        current_page: 'os-basic-details'
       }
   },
   components: {

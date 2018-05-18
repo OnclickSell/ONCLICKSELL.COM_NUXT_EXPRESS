@@ -63,7 +63,7 @@ export default {
   methods: {
     logout () {
       this.$store.dispatch('authentication/logOut')
-      this.$router.push('/login')
+      this.$router.push('/auth/signin')
     },
     clicked() {
       this.$emit('clicked')
