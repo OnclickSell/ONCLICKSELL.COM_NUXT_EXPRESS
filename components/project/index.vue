@@ -1,20 +1,37 @@
 <template>
-	<div class="project">
-		<div class="item">{{project.summary}}</div>
-		<!-- <h3 class="item">{{project.price}}</h3> -->
-		<div class="item item1">{{project.summary}}</div>
-		<p class="item">{{project.description}}</p>
+	<div class="l-projec">
+		<os-thumbnail :data="project.thumbnails"/>
+		<div class="l-project__details_wraper">
+			<os-details :data="project"/>
+			<os-technology :data="project"/>
+			<os-owner :data="project.user"/>
+			<os-thumbnail :data="project.thumbnails"/>
+		</div>
+		<os-comments/>
+
 	</div>
 </template>
 
 
 <script>
+import Thumbnail from '@/components/project/Thumbnails/index'
+import Details from '@/components/project/details/index'
+import Technology from '@/components/project/technologies/index'
+import Owner from '@/components/project/owner/index'
+import Comments from '@/components/project/comments/index'
 export default {
   props: {
   	project: {
   		type: Object,
   		required: true
   	}
+  },
+  components: {
+  	'os-thumbnail': Thumbnail,
+  	'os-details': Details,
+  	'os-technology': Technology,
+  	'os-owner': Owner,
+  	'os-comments': Comments
   }
 }
 </script>
@@ -22,25 +39,16 @@ export default {
 
 <style lang='scss' scoped>
 @import '~assets/sass/grid.scss';
-@import '~assets/sass/OnclickSell.com--css--config.scss';
+@import '~assets/sass/default.scss';
 
 
-.project {
-	@include row;
-	height: 1000px;
+.l-project {
+	width: 100%;
 }
 
-.item {
-	@include col-xl(4);
-	@media screen and (max-width: 768px) {
-		@include col-xl(4);
-	}
+.l-project__details_wraper {
+	padding: 12px;
 }
-
-.item1 {
-	/*@include col-xl-push(3);*/
-}
-
 
 	
 </style>

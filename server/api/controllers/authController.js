@@ -1,18 +1,15 @@
-import Auth from '../../packages/auth'
+import { Authenticate, GetAuthByToken } from '../../packages/auth'
 import userController from './userController'
 import userModel from '../models/user'
 import PasswordReset from '../../packages/passwordReset/passwordReset'
 import Mailer from '../../packages/mailer/mailer'
 import Controller from './controller'
 import ResetPasswordModel from '../models/ResetPassword'
-const jwt = require('jsonwebtoken');
-// const validator = require('../../validators/check');
-const tokener = require('../../packages/token');
+import jwt from 'jsonwebtoken'
 const Responser = require('../../packages/responser')
 const bcrypt = require('bcrypt');
 const validators = require('../../packages/validator')
 let InternalServerError = require('../../packages/customError')
-// Errorer = new Errorer()
 let validator = require('../../packages/validator');
 validator = new validator()
 
@@ -31,19 +28,24 @@ validator = new validator()
 
 export default class authController extends Controller {
 
-    async Authenticate() {
-        const auth = new Auth(this.request)
-        try {
-            let AuthUser = await auth.Authenticate(this.request.body)
-            Responser.send(this.response, 200, "Success", AuthUser)
-        }catch(err) {
-            throw { type: "BadRequest", message: err.message }
-            // switch(err.type) {
-            //     case 'BadRequest':
-            //     Responser.send(this.response, 400, "Failed", err.message )
-            // }
-        }
-        
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    initAuth() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const AuthenticatedUser = await GetAuthByToken(this.request.body.token)
+                Responser.send(this.response, 200, "Success", AuthenticatedUser )
+            }catch(err) { reject({ type: "BadRequest", message: err.message }) }
+        })
     }
 
     /*
@@ -57,19 +59,39 @@ export default class authController extends Controller {
     |
     */
 
-    async SignUp() {
-        try {
-            const auth = new Auth(this.request)
-            const UserController = new userController(this.request, this.response, this.next)
-            const result = await UserController.CreateUser()
-            const AuthUser = await auth.Authenticate({email: result.email, password: this.request.body.password})
-            console.log(AuthUser)
-            Responser.send(this.response, 200, "Success", AuthUser)
-        }catch(err) {
-            console.log(err)
-            throw { type: "BadRequest", message: err.message }
-            
-        }
+    SignIn() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const AuthenticatedUser = await Authenticate(this.request.body)
+                Responser.send(this.response, 200, "Success", AuthenticatedUser)
+            }catch(err) { reject({ type: "BadRequest", message: err.message }) }
+        })
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    SignUp() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                //ADD THE USER TO THE DATABASE
+                const UserController = new userController(this.request, this.response, this.next)
+                const result = await UserController.CreateUser()
+    
+                //AUTHENTICATE NEW CREATED USER
+                const AuthenticatedUser = await Authenticate({email: result.email, password: this.request.body.password})
+                Responser.send(this.response, 200, "Success", AuthenticatedUser)
+            }catch(err) { reject({ type: "BadRequest", message: err.message }) }
+                
+        }) 
     }
 
     /*

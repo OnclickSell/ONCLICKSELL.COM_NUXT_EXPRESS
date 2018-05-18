@@ -1,5 +1,6 @@
-import db from '../../database/config'
-import Model from './model'
+import bcrypt from 'bcrypt'
+import Mongoose from 'mongoose'
+const Schema = Mongoose.Schema
 
 /*
 |--------------------------------------------------------------------------
@@ -11,14 +12,14 @@ import Model from './model'
 | any other location as required by the application or its packages.
 |
 */
-
-export default class Customers extends Model {
-    constructor () {
-        super()
-        this.table = 'customers'
-    }
+const CUSTOMERS_SCHEMA = {
+    user: { type: Schema.Types.ObjectId, ref: 'users' },
+    customer: {type: Schema.Types.Mixed}
 }
 
+const Customers = Mongoose.model('customers', CUSTOMERS_SCHEMA)
+
+export default Customers
 
 
 

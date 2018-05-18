@@ -3,49 +3,22 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import FromInput from '@/components/form/input.vue'
-import swal from 'sweetalert'
-import Signup from '@/components/auth/signup/signup'
-import Signin from '@/components/auth/signin/signin'
-
 import Auth from '@/components/auth/index'
 
 export default {
   layout: 'main--layout',
-  // middleware: 'notAuth',
+  middleware: 'onlyNotAuth',
   data () {
     return {
-      url: '/signin',
-      errors: '',
-      credentials: {
-        full_name: '',
-        email: '',
-        sex: '',
-        password: '',
-        password_confirm: ''
-      }
+      url: '/signin'
     }
   },
   computed: {
     ...mapGetters({
-      loading: 'isLoading',
       ActiveComponent: 'authentication/GetAuthModuleState'
     })
   },
   methods: {
-    async submit(data) {
-      try {
-        this.$store.commit('startLoading')
-        await this.$store.dispatch('authentication/authentication', { values: data, url: this.url })
-        this.$store.commit('stopLoading')
-        this.$route.push('/')
-      }catch(err) {
-        this.$store.commit('stopLoading')
-        console.log(err)
-      }
-      
-         
-    },
     switchComponent(data) {
       this.credentials = data.values
       const CurrentState = this.$router.params.state
@@ -65,10 +38,7 @@ export default {
     next()
   },
   components: {
-      'os-input': FromInput,
-      'signup': Signup,
-      'signin': Signin,
-      'os-auth': Auth
+    'os-auth': Auth
   }
 }
 </script>

@@ -31,11 +31,7 @@ const getExpirationDate = (expiresIn) => {
 |
 */
 export const state = () => ({
-  user: 'fasfsaf',
-  collection: null,
-  listings: null,
-  token: null,
-  tokenExpiration: null,
+  user: {},
   authModuleState: 'signin'
 })
 
@@ -67,38 +63,21 @@ export const mutations = {
   UpdateAuthModuleState(state, payload) {
     state.authModuleState = payload
   },
-  setAuthUser (state, payload) {
-    state.user = payload
+  setAuth (state, payload) {
+    state.user = {
+      ...payload,
+      token: {
+        value: payload.token.value,
+        expiry: payload.token.expiry
+      }
+    },
+    Cookie.set('token', payload.token.value)
+    Cookie.set('token_expiry', payload.token.expiry)
   },
-  setToken (state, payload) {
-    state.token = payload
-    Cookie.set('token', payload)
-  },
-  setTokenExpiration (state, payload) {
-    state.tokenExpiration = getExpirationDate(3600000)
-    Cookie.set('tokenExpiration', getExpirationDate(3600000))
-  },
-  persistToken (state, payload) {
-    localStorage.setItem('token', payload)
-    localStorage.setItem('tokenExpiration', getExpirationDate)
-    Cookie.set('token', payload)
-    Cookie.set('tokenExpiration', getExpirationDate)
-  },
-  clearToken(state) {
-    state.token = null
+  clearAuth(state) {
+    state.user = {}
     Cookie.remove('token')
-    Cookie.remove('tokenExpiration')
-    // localStorage.removeItem('token')
-    // localStorage.removeItem('tokenExpiration')
-  },
-  clearAuthUser(state) {
-    state.user = null
-  },
-  SetAuthCollection (state, payload) {
-    state.collection = payload
-  },
-  SetAuthListings (state, payload) {
-    state.listings = payload
+    Cookie.remove('token_expiry')
   }
 }
 
@@ -116,46 +95,27 @@ let token = null
 let tokenExpiration = null
 
 export const actions = {
+  fetchAuthUser ({commit, state}, token) {
+      return axios.post('http://localhost:4000/api/v1/auth/init', {token: token})
+      .then(response => {
+        commit('setAuth', response.data.Context)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
   authentication ({commit, dispatch, state}, credentials) {
     return new Promise((resolve, reject) => {
       axios.post('http://localhost:4000/api/v1/auth/' + credentials.url, credentials)
       .then(response => {
-        commit('setAuthUser', response.data.Context.user)
-        commit('setToken', response.data.Context.token)
-        commit('setTokenExpiration')
-        // commit('SetAuthListings', response.data.Context.listings)
-        // commit('SetAuthCollection', response.data.Context.collection)
+        commit('setAuth', response.data.Context)
         resolve()
       })
       .catch(err => reject(err.response.data))
     })  
   },
-  updateUser ({commit, state}, data) {
-    return new Promise( async(resolve, reject) => {
-      try {
-        const response = await axios.post('http://localhost:4000/api/v1/users?token=' + state.user.token , data)
-        commit('setAuthUser', response.data.Context)
-        resolve()
-      }catch(err) {
-        console.log(err)
-        reject(err)
-      }
-    })
-  },
   logOut ({commit, state}, vuexContext) {
-    commit('clearToken')
-    commit('clearAuthUser')
-  },
-  fetchAuthUser ({commit, state}) {
-      return axios.get('http://localhost:4000/api/v1/users?token=' + state.token)
-      .then(response => {
-        commit('setAuthUser', response.data.Context.user)
-        commit('SetAuthListings', response.data.Context.listings)
-        commit('SetAuthCollection', response.data.Context.collection)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    commit('clearAuth')
   },
   initAuth(vuexContext, req) {
     if(process.server) {
@@ -164,32 +124,16 @@ export const actions = {
       }
 
       token = req.headers.cookie.split(';').find(c => c.trim().startsWith("token=")).split("=")[1]
-      tokenExpiration = req.headers.cookie.split(';').find(c => c.trim().startsWith("tokenExpiration=")).split("=")[1]
+      tokenExpiration = req.headers.cookie.split(';').find(c => c.trim().startsWith("token_expiry=")).split("=")[1]
+      if (new Date().getTime() > +tokenExpiration || !token || !tokenExpiration) {
+        console.log("No token or invalid token");
+        vuexContext.dispatch("logOut");
+        return
+      }
 
-    } else {
-      token = vuexContext.state.token
-      tokenExpiration = vuexContext.state.tokenExpiration
+      return vuexContext.dispatch('fetchAuthUser', token)
     }
 
-    if (new Date().getTime() > +tokenExpiration || !token || !tokenExpiration) {
-      console.log("No token or invalid token");
-      vuexContext.dispatch("logOut");
-      return
-    }
-    vuexContext.commit('setToken', token)
-    vuexContext.state.tokenExpiration = tokenExpiration
-    return vuexContext.dispatch('fetchAuthUser')
-  },
-  resetPassword({commit, state}, data) {
-    axios.post('http://localhost:4000/api/v1/auth/set-new-password', data)
-      .then(response => {
-        console.log(response)
-        // commit('setAuthUser', response.data)
-        // this.$router.push('/')
-      })
-      .then(error => {
-        console.log(error)
-      })
   }
 }
 
@@ -205,19 +149,10 @@ export const actions = {
 
 export const getters = {
   isAuth (state, getters, rootState) {
-    return state.token != null
+    return true
   },
   GetAuthUser (state, getters, rootState) {
-    return state.user
-  },
-  getToken (state, getters, rootState) {
-    return state.token
-  },
-  GetAuthCollection(state, getters, rootState) {
-    return state.collection
-  },
-  GetAuthListings(state, getters, rootState) {
-    return state.listings
+    return Object.keys(state.user).length > 0 ? state.user : false
   },
   GetAuthModuleState(state, getters, rootState) {
     return state.authModuleState

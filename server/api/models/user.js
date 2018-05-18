@@ -1,8 +1,5 @@
 
 import Bcrypt from 'bcrypt'
-import Auth from '../../packages/auth'
-import CollectionModel from './collection'
-import ListingModel from './listings'
 import Mongoose from 'mongoose'
 const Schema = Mongoose.Schema;
 /*
@@ -23,13 +20,13 @@ const USERS_SCHEMA = new Schema({
     email: String,
     password: String,
     description: String,
-    avatar: String,
+    avatar: {type: String, default: 'http://res.cloudinary.com/onclicksell-com/image/upload/v1513504833/OnclickSell.com/Icons/Conceptional-Avatar-Male-Final-Design.jpg'},
     rule: [{type: Array, default: 'user'}]
 })
 
-const users = Mongoose.model('Users', USERS_SCHEMA)
+const User = Mongoose.model('Users', USERS_SCHEMA)
 
-export default users
+export default User
 
 
    

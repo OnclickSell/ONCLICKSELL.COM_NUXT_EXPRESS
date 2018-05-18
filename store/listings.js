@@ -39,12 +39,13 @@ export const mutations = {
     state.SingleListing = payload
   },
   setTechnologies (state, payload) {
-    state.technologies.frontend.framework = payload.frontend.framework
+    console.log(payload)
+    state.technologies.frontend.framework = payload.frontend.frameworks
     state.technologies.frontend.plateform = payload.frontend.plateforms
     state.technologies.frontend.libraries = payload.frontend.libraries
     state.technologies.frontend.html = payload.frontend.html
     state.technologies.frontend.css = payload.frontend.css
-    state.technologies.backend.framework = payload.backend.framework
+    state.technologies.backend.framework = payload.backend.frameworks
     state.technologies.backend.plateform = payload.backend.plateforms
     state.technologies.backend.libraries = payload.backend.libraries
   },
@@ -56,6 +57,7 @@ export const actions = {
     fetchListings ({state, commit}, payload) {
       return axios.get('http://localhost:4000/api/v1/listings?limit=' + payload.limit + '&offset=' + payload.offset + '&order=' + payload.order + '')
         .then(function (response) {
+          console.log(response.data.Context)
           commit('setListings', response.data.Context)
         })
         .catch(function (error) {
@@ -71,9 +73,9 @@ export const actions = {
           console.log(error)
         })
     },
-    FetchCreateListing ({state, commit}, payload) {
+    initCreateListing ({state, commit}, payload) {
       return axios.get('http://localhost:4000/api/v1/listings/initSellPages').then(response => {
-        commit('setTechnologies', response.data.Context.technologies)
+        commit('setTechnologies', response.data.Context)
         commit('SetPlans', response.data.Context.plans)
       })
     },
@@ -88,8 +90,8 @@ export const actions = {
     },
     submit(vuexContext, payload) {
       console.log(vuexContext)
-      const token = vuexContext.rootGetters['authentication/getToken']
-      return axios.post(`http://localhost:4000/api/v1/listings?token=${token}`, payload)
+      const token = vuexContext.rootGetters['authentication/GetAuthUser']
+      return axios.post(`http://localhost:4000/api/v1/listings?token=${token.token.value}`, payload)
         .then(response => {
           console.log(response.data)
         })

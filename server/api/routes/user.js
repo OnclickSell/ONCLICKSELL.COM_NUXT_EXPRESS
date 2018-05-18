@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 import UserController from '../controllers/userController'
 import AuthMiddleware from '../middlewares/authMiddleware'
-import auth from '../../packages/auth'
 // const upload  = require('../../packages/multer');
 
 const multer  = require('multer')

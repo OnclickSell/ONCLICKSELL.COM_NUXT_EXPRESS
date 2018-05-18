@@ -83,7 +83,7 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   layout: 'main--layout',
-  middleware: 'auth',
+  middleware: 'onlyAuth',
   data () {
     return {
       moreOptions: false,

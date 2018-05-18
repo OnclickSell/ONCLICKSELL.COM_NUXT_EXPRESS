@@ -15,7 +15,7 @@ import swal from 'sweetalert'
 import { mapGetters } from 'vuex'
 
 export default {
-  middleware: 'checkAuth',
+  middleware: 'initAuth',
   computed: {
     ...mapGetters({
       loading: 'isLoading'

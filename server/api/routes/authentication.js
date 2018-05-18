@@ -3,8 +3,8 @@ const router = express.Router();
 import authController from '../controllers/authController'
 import authMiddleware from '../middlewares/authMiddleware'
 import userController from '../controllers/userController';
-import Auth from '../../packages/auth'
 import userModel from '../models/user';
+import { asyncMiddleware } from '../../packages/utils'
 var ExpressBrute = require('express-brute');
 
 var store = new ExpressBrute.MemoryStore(); // stores state locally, don't use this in production
@@ -28,16 +28,26 @@ var bruteforce = new ExpressBrute(store, {
 |
 */
 
+router.post('/init', asyncMiddleware((req, res, next) => {
+	const AuthController = new authController(req, res, next)
+	return AuthController.initAuth()
+}))
 
-router.post('/signIn', async (req, res, next) => {
-	try {
-		const AuthController = new authController(req, res, next)
-		return await AuthController.Authenticate()
-	}catch(err) {
-		next(err)
-		console.log(err)
-	}
-})
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+router.post('/signIn', asyncMiddleware((req, res, next) => {
+	const AuthController = new authController(req, res, next)
+	return AuthController.SignIn()
+}))
 
 /*
 |--------------------------------------------------------------------------
@@ -50,15 +60,10 @@ router.post('/signIn', async (req, res, next) => {
 |
 */
 
-router.post('/signUp', async (req, res, next) => {
-	try {
-		const auth = new authController(req, res, next)
-		return await auth.SignUp()
-	}catch(err) {
-		next(err)
-		console.log(err, 'from auth router')
-	}
-})
+router.post('/signUp', asyncMiddleware((req, res, next) => {
+	const AuthController = new authController(req, res, next)
+	return AuthController.SignUp()
+}))
 
 /*
 |--------------------------------------------------------------------------

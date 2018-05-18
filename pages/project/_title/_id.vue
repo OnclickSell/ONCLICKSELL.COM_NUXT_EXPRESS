@@ -19,7 +19,7 @@ export default {
       listings: 'listings/getListings'
     }),
   	project() {
-  		return this.listings.find(listing => listing.id == this.projectId && listing.title == this.projectTitle)
+  		return this.listings.find(listing => listing._id == this.projectId && listing.title == this.projectTitle)
   	}
   },
   components: {

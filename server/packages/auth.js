@@ -1,10 +1,42 @@
-const jwt = require('jsonwebtoken');
-const db = require('../database/config');
-const bcrypt = require('bcrypt');
-import Tokener from '../packages/token'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 import UserModel from '../api/models/user'
-import UserController from '../api/controllers/userController'
 import Mongoose from 'mongoose'
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Application Name
+|--------------------------------------------------------------------------
+|
+| This value is the name of your application. This value is used when the
+| framework needs to place the application's name in a notification or
+| any other location as required by the application or its packages.
+|
+*/
+export const Authenticate = async (credentials) => {
+    try {
+
+        //FIND THE USER ON THE DATABASE
+        let User = await UserModel.findOne({ 'email': credentials.email })
+        if(User == null) throw {type: "BadRequest", message: "User doesn't exist in the database"}
+
+        //CHECK IF THE PROVIDED PASSWORD MATCH WITH THE PASSWORD STORED IN THE DATABASE
+        const CHECK_PASSWORD_MATCH = await bcrypt.compare(credentials.password, User.password)
+        if (!CHECK_PASSWORD_MATCH) throw {type: "BadRequest", message: "Invalid Creadentials"}
+               
+        //ISSUE THE TOKEN
+        const Token = await jwt.sign({
+            identifier: User._id
+        }, "secret", {expiresIn: '1h'});
+
+        //RETURN THE RETRIVED USER ALONG WITH THE TOKEN
+        return {...User._doc, token: { value: Token, expiry: new Date().getTime() + 3600000}}
+
+    } catch (err) { throw { type: "BadRequest", message: err.message } }
+}
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,61 +49,24 @@ import Mongoose from 'mongoose'
 |
 */
 
-export default class auth {
-    constructor (request) {
-        this.request = request
-        this.token = ''
-        this.decodedToken = ''
-        this.auth = ''
-    }
+export const GetAuthByToken = async (TOKEN) => {
+    try {
+        //VERYFY THE TOKEN
+        const Token = await jwt.verify(TOKEN, 'secret')
 
-    async GetAuth () {
-        
-        try {
-            this.token = this.request.query.token
-            this.decodedToken = await jwt.verify(this.token, 'secret')
-            return await UserModel.findOne({ '_id': this.decodedToken.identifier })
-        }catch(err) {
-            console.log(err)
-            throw { type: "BadRequest", message: 'Expired Token' }
-        }
-    }
+        //RETRIEVE THE USER FROM THE DATABASE
+        let User = await UserModel.findOne({ '_id': Token.identifier })
+        if(User == null) throw { type: "BadRequest", message: err.message }
 
-    async Authenticate(credentials) {
-        try {
-         //Get the user
-         this.auth = await UserModel.findOne({ 'email': credentials.email })
-         //Check for credentials
-         const check = await bcrypt.compare(credentials.password, this.auth.password)
-         if (!check) {
-             throw {type: "BadRequest", message: "Invalid Creadentials"}
-         }
-         //Issue Token
-        this.token = await jwt.sign({
-            identifier: this.auth._id
-         }, "secret", {expiresIn: '1h'});
+        //ISSUE THE TOKEN
+        const NewToken = await jwt.sign({
+            identifier: User._id
+        }, "secret", {expiresIn: '1h'});
 
-        this.auth = {user: {name: this.auth.name, email: this.auth.email}, token: this.token}
-        return this.auth
-        } catch (err) {
-            throw { type: "BadRequest", message: err.message }
-        }
-    }
+       //RETURN THE RETRIVED USER ALONG WITH THE TOKEN
+        return {...User._doc, token: { value: NewToken, expiry: 'fsfsf'}}
 
-    async Check(token) {
-        try {
-            this.token = token || this.request.query.token
-            this.decodedToken = await jwt.verify(this.token, 'secret')
-            return true
-        }catch(err) {
-            // Log the err
-            return false
-        }
-    }
-
-    IsParamDefined(param) {
-        return param !== undefined || param !== null || param !== '' ? param : false
-    }
+    }catch(err) { throw { type: "BadRequest", message: err.message } }
 }
 
 

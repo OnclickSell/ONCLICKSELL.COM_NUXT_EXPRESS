@@ -80,9 +80,9 @@ export default class userController {
 
     async GetAuth() {
       try {
-        const Auth = new auth(this.request)
-        let result = await Auth.GetAuth()
-        Responser.send(this.response, 200, "Success", result)
+        // const Auth = new auth(this.request)
+        // let result = await Auth.GetAuth()
+        Responser.send(this.response, 200, "Success", {name: 'aliakbar'})
       }catch(err) {
         switch(err.message) {
             case 'Expired Token':

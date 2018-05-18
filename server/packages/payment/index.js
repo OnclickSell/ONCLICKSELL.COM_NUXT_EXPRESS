@@ -29,33 +29,14 @@ const stripe = require("stripe")("sk_test_sOd8jdJ2NqUte8M0HKTbHCBT");
 */
 
 export const CreateSubscription = options => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const subscriptionModel = new SubscriptionsModel
-            const { data } = await axios({
-                url: `${url}customers/${options.customer_id}/subscriptions`,
-                method: 'post',
-                data: {
-                    planId: options.planId,
-                    customerId: options.customer_id,
-                    card: options.card,
-                    quantity: options.quantity != 1,
-                    captureCharges: options.captureCharges != true,
-                    trialEnd: options.trialEnd
-                }, 
-                auth: auth
-            })
-            await subscriptionModel.Create({
-                customer_id: options.customer_id,
-                planId: options.planId,
-                user_id: options.user.id,
-                created_at: options.timestamp,
-                updated_at: options.timestamp
-            })
-            resolve(data => data)
-         }catch(err) {
-             reject(err)
-         }
+    return axios({
+        url: `${url}customers/${options.customer_id}/subscriptions`,
+        method: 'post',
+        data: {
+            captureCharges: options.captureCharges, 
+            planId: options.planId
+        }, 
+        auth: auth
     })
 }
 
@@ -79,17 +60,17 @@ export const CancelSubscription = subscriptionId => stripe.subscriptions.del(sub
 
 export const CreateCustomer = async options => {
     return axios({
-        url: url + 'customers',
-        method: 'post',
-        data: {
-            email: options.email,
-            card: options.card
-        }, 
-        auth: {
-            username: 'sk_test_sPFoHvts7SCTDO1HmadpUmPD',
-            password: ''
-        }
-    })
+            url: url + 'customers',
+            method: 'post',
+            data: {
+                email: options.email,
+                card: options.card
+            }, 
+            auth: {
+                username: 'sk_test_sPFoHvts7SCTDO1HmadpUmPD',
+                password: ''
+            }
+        })
 }
 export const GetCustomer = customerId => stripe.customers.retrieve(customerId)
 

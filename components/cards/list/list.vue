@@ -20,7 +20,7 @@
     <div class="l-list">
         <div class="list" :key="listing.id"  @click="listClicked">
             <span class="list_feature">New</span>
-            <div class="list_thumbnail" v-bind:style="{background: 'url(' + listing.thumbnail + ')'}"></div>
+            <div class="list_thumbnail" v-bind:style="{background: 'url(' + listing.thumbnails[0].url + ')'}"></div>
             <div class="list_drop"></div>
             <div class="list_content">
               <h1 class="list_title">{{ listing.title }}</h1>
@@ -59,7 +59,7 @@ export default {
       return string
     },
     listClicked() {
-      this.$emit('clicked', this.listing.id)
+      this.$emit('clicked', this.listing._id)
     }
   },
   components: {

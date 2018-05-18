@@ -20,14 +20,13 @@ const Schema = Mongoose.Schema
 
 
 const LISTING_SCHEMA = {
-    _id: Schema.Types.ObjectId,
     title: String,
     summary: String,
     description: String,
     plan: { type: Schema.Types.ObjectId, ref: 'Plans' },
     user: { type: Schema.Types.ObjectId, ref: 'Users' },
-    thumbnails: [],
-    codeSnippets: [],
+    thumbnails: [{}],
+    codeSnippets: [{}],
     completed: Boolean,
     created_at: Date,
     updated_at: Date,

@@ -5,9 +5,8 @@
             <img src="http://nickmorgandesigns.com/images/profile-circle.png" 
             class='profile_avatar-img'/>
         </a>
-        <p class="avatar_text">{{auth.full_name}}</p>
+        <p class="avatar_text">{{auth.name}}</p>
       </header>
-        <!-- v-bind:style="{background: 'url(' + auth.profile_picture + ')'}" -->
     </div>
 </template>
 
